@@ -1,0 +1,92 @@
+import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getCookie } from "shared/helper/tokens";
+import { Icon } from "shared/icons";
+import { IUser } from "types/auth";
+
+const AppContext: any = createContext(null)
+
+export interface IMenu {
+  Icon: any
+  name: string
+  link: string
+}
+
+const AppProvider = ({ children }: any) => {
+
+  const { push, pathname } = useRouter()
+  const MENULIST: Array<IMenu> = [
+    {
+      Icon: (props: any) => <Icon type="sider01" fill={props.fill} />,
+      name: "Dashboard",
+      link: "/dashboard"
+    },
+    {
+      Icon: (props: any) => <Icon type="sider02" fill={props.fill} />,
+      name: "Workitems",
+      link: "/workitems"
+    },
+    {
+      Icon: (props: any) => <Icon type="sider03" fill={props.fill} />,
+      name: "Groups",
+      link: "/groups"
+    },
+    {
+      Icon: (props: any) => <Icon type="sider04" fill={props.fill} />,
+      name: "Cover Pages",
+      link: "/cover-pages"
+    },
+    {
+      Icon: (props: any) => <Icon type="sider05" fill={props.fill} />,
+      name: "Documents",
+      link: "/documents"
+    },
+    {
+      Icon: (props: any) => <Icon type="sider06" fill={props.fill} />,
+      name: "Settings",
+      link: "/settings"
+    }
+  ]
+  const [account, setAccount] = useState<IUser>()
+
+  useEffect(() => {
+    const user = getCookie('user')
+    if (user) {
+      setAccount(JSON.parse(user))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (account) {
+      // push("/dashboard")
+    } else {
+      push("/")
+    }
+    console.log(account)
+  }, [account, pathname])
+
+  const value = useMemo(
+    () => ({
+      MENULIST,
+      account,
+      setAccount
+    }),
+    [
+      MENULIST,
+      account,
+      setAccount
+    ]
+  )
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
+}
+
+export const useApp = () => {
+  const context: any = useContext(AppContext)
+  if (!context) {
+    throw new Error("useApp must be used within AppProvider")
+  }
+  return context
+}
+
+export default AppProvider
