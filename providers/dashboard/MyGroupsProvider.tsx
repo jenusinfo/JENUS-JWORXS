@@ -1,34 +1,32 @@
+import { useHookGroup } from "hooks/GroupHook";
 import { createContext, useContext, useMemo, useState } from "react";
-import { IGroup } from "types/dashboard";
 
 const MyGroupsContext: any = createContext(null)
 
 const MyGroupsProvider = ({ children }: any) => {
 
-	const [groups, setGroups] = useState<Array<IGroup>>([
-		{
-			title: 'Fintech Innovations',
-			description: "5 interview | 0 in progress",
-			people: ['BB', 'DL', 'KM']
-    },
-		{
-			title: 'Fintech Innovations',
-			description: "5 interview | 0 in progress",
-			people: ['BB', 'DL', 'KM']
-    },
-		{
-			title: 'Fintech Innovations',
-			description: "5 interview | 0 in progress",
-			people: ['BB', 'DL', 'KM']
-    }
-	])
+	const { groups } = useHookGroup()
+	const groupStatuses = ["all", "in progress", "draft", "completed", "canceled"]
+	const optionList = ["TESTERS", "First Level"]
+	const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
+	const [curStatus, setCurStatus] = useState("all")
 
 	const value = useMemo(
 		() => ({
-			groups
+			groups,
+			groupStatuses,
+			optionList,
+			assignedList,
+			curStatus,
+			setCurStatus
 		}),
 		[
-			groups
+			groups,
+			groupStatuses,
+			optionList,
+			assignedList,
+			curStatus,
+			setCurStatus
 		]
 	)
 

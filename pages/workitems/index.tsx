@@ -1,7 +1,7 @@
 import Layout from "components/layouts"
 import WorkitemsPage from "components/pages/Workitems"
 
-const Dashboard = () => {
+const Workitems = () => {
   return (
     <Layout type="main" pageTitle="Workitems">
         <WorkitemsPage />
@@ -9,4 +9,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Workitems

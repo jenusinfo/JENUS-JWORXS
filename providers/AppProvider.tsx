@@ -48,6 +48,7 @@ const AppProvider = ({ children }: any) => {
     }
   ]
   const [account, setAccount] = useState<IUser>()
+  const [group, setGroup] = useState(null)
 
   useEffect(() => {
     const user = getCookie('user')
@@ -57,24 +58,27 @@ const AppProvider = ({ children }: any) => {
   }, [])
 
   useEffect(() => {
-    if (account) {
+    if (getCookie('token')) {
       // push("/dashboard")
     } else {
       push("/")
     }
-    console.log(account)
-  }, [account, pathname])
+  }, [pathname])
 
   const value = useMemo(
     () => ({
       MENULIST,
       account,
-      setAccount
+      setAccount,
+      group,
+      setGroup
     }),
     [
       MENULIST,
       account,
-      setAccount
+      setAccount,
+      group,
+      setGroup
     ]
   )
 

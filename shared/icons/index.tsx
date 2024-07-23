@@ -16,8 +16,8 @@ export type IconType =
 
 const iconsMap = {
   ['sider01']: ({fill}: {fill?: string}) => <Sider01 fill={fill} />,
-  ['sider02']: Sider02,
-  ['sider03']: Sider03,
+  ['sider02']: ({fill}: {fill?: string}) => <Sider02 fill={fill} />,
+  ['sider03']: ({fill}: {fill?: string}) => <Sider03 fill={fill} />,
   ['sider04']: Sider04,
   ['sider05']: Sider05,
   ['sider06']: Sider06
