@@ -32,7 +32,9 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <div style={{ color: COLOR.PRIMARY }}>
         <AppProvider>
-          <Component {...pageProps} />
+          <div style={{ fontFamily: 'Inter' }}>
+            <Component {...pageProps} />
+          </div>
         </AppProvider>
       </div>
     </Fragment>
