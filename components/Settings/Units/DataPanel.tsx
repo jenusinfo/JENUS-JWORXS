@@ -1,10 +1,16 @@
 import { IUnit, useUnits } from "providers/settings/UnitsProvider"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDelete } from "react-icons/md";
+import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
+import UnitsModal from "./Modal";
+import { useState } from "react";
 
 const DataPanel = () => {
-	const { units: data, curPageNumber, setCurPageNumber } = useUnits()
+	const { units: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useUnits()
+	const [isOpen, setIsOpen] = useState(false)
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -80,7 +86,22 @@ const DataPanel = () => {
 								<tr key={index} className="border-b border-gray-200">
 									<td className="py-5">
 										<div className="flex justify-center">
-											<IoEllipsisVerticalSharp />
+											<DropDown
+												target={<IoEllipsisVerticalSharp className="hover:cursor-pointer" />}
+												left={15}
+												top={-5}
+											>
+												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(inbox); setCurIndex(index); }}>
+														<CiEdit color="#2454DE" size={18} />
+														<Text text="Update" size={12} weight="500" />
+													</div>
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(inbox.Id, index)}>
+														<MdOutlineDelete color="red" size={18} />
+														<Text text="Delete" size={12} weight="500" />
+													</div>
+												</div>
+											</DropDown>
 										</div>
 									</td>
 									<td className="px-2">{inbox.Id}</td>
@@ -102,6 +123,7 @@ const DataPanel = () => {
 					}
 				</tbody>
 			</table>
+			<UnitsModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
 		</div>
 	)
 }

@@ -1,5 +1,6 @@
 import { useHookUnits } from "hooks/Settings/UnitsHook";
-import { createContext, useContext, useMemo, useState } from "react";
+import { CreateUnit, DeleteUnit, GetUnits, UpdateUnit } from "lib/settings/units";
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 
 const UnitsContext: any = createContext(null)
 
@@ -27,19 +28,67 @@ export interface IUnit {
 
 const UnitsProvider = ({ children }: any) => {
 
-	const { units, setUnits } = useHookUnits()
+	const { units, setUnits, parentBankList } = useHookUnits()
 	const [curPageNumber, setCurPageNumber] = useState(1)
+	const [curIndex, setCurIndex] = useState(-1)
+	const [info, setInfo] = useState<any>({})
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setInfo({
+			...info,
+			[e.target.name]: e.target.value
+		})
+	}
+
+	const handleCreate = async () => {
+		const res = await CreateUnit(info)
+
+		if (res.Data != null)
+			setUnits([...units, res.Data])
+	}
+
+	const handleDelete = async (id: any, index: number) => {
+		await DeleteUnit(id)
+		let res = [...units]
+		res.splice(index, 1)
+		setUnits(res)
+	}
+
+	const handleUpdate = async () => {
+		const res = await UpdateUnit(info.Id, info)
+		let temp = [...units]
+		temp[curIndex] = res.Data
+		setUnits(temp)
+	}
 
 	const value = useMemo(
 		() => ({
 			units,
+			parentBankList,
 			curPageNumber,
-			setCurPageNumber
+			setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
 		}),
 		[
 			units,
+			parentBankList,
 			curPageNumber,
-			setCurPageNumber
+			setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
 		]
 	)
 

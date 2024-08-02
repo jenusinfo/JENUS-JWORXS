@@ -1,7 +1,10 @@
 import { useEvents } from "providers/settings/EventsProvider"
 import { IFlowDefinitions, useFlowDefinitions } from "providers/settings/FlowDefinitionsProvider"
+import { CiEdit } from "react-icons/ci"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
+import { MdOutlineDelete } from "react-icons/md"
+import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 import { IEvent } from "types/settings/events"
 
@@ -62,7 +65,22 @@ const DataPanel = () => {
 								<tr key={index} className="border-b border-gray-200">
 									<td className="py-5">
 										<div className="flex justify-center">
-											<IoEllipsisVerticalSharp />
+											<DropDown
+												target={<IoEllipsisVerticalSharp className="hover:cursor-pointer" />}
+												left={15}
+												top={-5}
+											>
+												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+														<CiEdit color="#2454DE" size={18} />
+														<Text text="Update" size={12} weight="500" />
+													</div>
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+														<MdOutlineDelete color="red" size={18} />
+														<Text text="Delete" size={12} weight="500" />
+													</div>
+												</div>
+											</DropDown>
 										</div>
 									</td>
 									<td className="px-2">{event.Name}</td>
