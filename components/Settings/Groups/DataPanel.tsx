@@ -5,9 +5,12 @@ import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
 import { MdOutlineDelete } from "react-icons/md"
 import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
+import GroupsModal from "./Modal"
+import { useState } from "react"
 
 const DataPanel = () => {
-	const { groups: data, curPageNumber, setCurPageNumber } = useGroups()
+	const { groups: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useGroups()
+	const [isOpen, setIsOpen] = useState(false)
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -64,11 +67,11 @@ const DataPanel = () => {
 												top={-5}
 											>
 												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
-													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(group); setCurIndex(index); }}>
 														<CiEdit color="#2454DE" size={18} />
 														<Text text="Update" size={12} weight="500" />
 													</div>
-													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(group.Id, index)}>
 														<MdOutlineDelete color="red" size={18} />
 														<Text text="Delete" size={12} weight="500" />
 													</div>
@@ -90,6 +93,7 @@ const DataPanel = () => {
 					}
 				</tbody>
 			</table>
+			<GroupsModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
 		</div>
 	)
 }

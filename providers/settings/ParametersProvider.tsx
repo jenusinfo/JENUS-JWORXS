@@ -1,5 +1,6 @@
 import { useHookParameters } from "hooks/Settings/ParametersHook";
-import { createContext, useContext, useMemo, useState } from "react";
+import { CreateParameter, DeleteParameter, UpdateParameter } from "lib/settings/parameters";
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 
 const ParametersContext: any = createContext(null)
 
@@ -20,17 +21,63 @@ const ParametersProvider = ({ children }: any) => {
 
     const { parameters, setParameters } = useHookParameters()
     const [curPageNumber, setCurPageNumber] = useState(1)
+    const [curIndex, setCurIndex] = useState(-1)
+	const [info, setInfo] = useState<any>({})
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setInfo({
+			...info,
+			[e.target.name]: e.target.value
+		})
+	}
+
+	const handleCreate = async () => {
+		const res = await CreateParameter(info)
+
+		if (res.Data != null)
+			setParameters([...parameters, res.Data])
+	}
+
+	const handleDelete = async (id: any, index: number) => {
+		await DeleteParameter(id)
+		let res = [...parameters]
+		res.splice(index, 1)
+		setParameters(res)
+	}
+
+	const handleUpdate = async () => {
+		const res = await UpdateParameter(info.Id, info)
+		let temp = [...parameters]
+		temp[curIndex] = res.Data
+		setParameters(temp)
+	}
 
     const value = useMemo(
         () => ({
             parameters,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
         }),
         [
             parameters,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
         ]
     )
 

@@ -1,13 +1,16 @@
 import { IParameter, useParameters } from "providers/settings/ParametersProvider"
+import { useState } from "react"
 import { CiEdit } from "react-icons/ci"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
 import { MdOutlineDelete } from "react-icons/md"
 import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
+import ParametersModal from "./Modal"
 
 const DataPanel = () => {
-	const { parameters: data, curPageNumber, setCurPageNumber } = useParameters()
+	const { parameters: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useParameters()
+	const [isOpen, setIsOpen] = useState(false)
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -74,11 +77,11 @@ const DataPanel = () => {
 												top={-5}
 											>
 												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
-													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(inbox); setCurIndex((curPageNumber - 1) * 10 + index); }}>
 														<CiEdit color="#2454DE" size={18} />
 														<Text text="Update" size={12} weight="500" />
 													</div>
-													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(inbox.Id, index)}>
 														<MdOutlineDelete color="red" size={18} />
 														<Text text="Delete" size={12} weight="500" />
 													</div>
@@ -102,6 +105,7 @@ const DataPanel = () => {
 					}
 				</tbody>
 			</table>
+            <ParametersModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
 		</div>
 	)
 }
