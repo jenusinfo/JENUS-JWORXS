@@ -20,3 +20,10 @@ export const convertToRGB = (index: number, str: string, opacity?: number) => {
     else
         return `rgb(${red}, ${green}, ${blue})`;
 }
+
+export function convertToTitleCase(text: string) {
+    return text
+      .split('-')
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
