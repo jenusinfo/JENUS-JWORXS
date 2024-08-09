@@ -47,6 +47,7 @@ const DataPanel = () => {
         </thead>
         <tbody className="text-sm">
           {
+            groupItems &&
             groupItems
             .sort((a: IGroupItem, b:IGroupItem) => a.Id - b.Id)
             .slice((curPageNumber-1)*10, curPageNumber*10)

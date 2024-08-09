@@ -20,7 +20,7 @@ const GroupItemHeader = () => {
             </div>
             <div className="flex justify-between border-b border-[#DEDFEA] pb-2 mt-4">
                 <div className="flex flex-col gap-3">
-                    <Text text={group.Name.toUpperCase()} size={28} weight="700" />
+                    <Text text={group?.Name.toUpperCase()} size={28} weight="700" />
                     <p className="text-sm">157 in Progress Workitems | Updated 12 hours ago</p>
                 </div>
                 <div className="flex gap-2">

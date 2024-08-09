@@ -4,6 +4,8 @@ import type { AppProps } from "next/app";
 import AppProvider from "providers/AppProvider";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Fragment } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -34,6 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <AppProvider>
           <div style={{ fontFamily: 'Inter' }}>
             <Component {...pageProps} />
+            <ToastContainer />
           </div>
         </AppProvider>
       </div>

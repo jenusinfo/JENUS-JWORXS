@@ -3,8 +3,13 @@ import Head from 'next/head'
 import { ILayout } from 'types/layout'
 import SideBar from '../partial/SideBar'
 import Header from '../partial/Header'
+import { LoadingScreen } from 'components/LoadingScreen'
+import { useApp } from 'providers/AppProvider'
 
 const MainLayout = ({ children, pageTitle, showMeta }: ILayout) => {
+
+  const { loading } = useApp()
+
   return (
     <div>
       <Head>
@@ -16,6 +21,7 @@ const MainLayout = ({ children, pageTitle, showMeta }: ILayout) => {
           {children}
         </div>
       </div>
+      { loading && <LoadingScreen /> }
     </div>
   )
 }

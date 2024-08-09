@@ -1,18 +1,20 @@
-import { useHookCabinet } from "hooks/Documents/CabinetHook";
+import { useHookDocument } from "hooks/Documents/DocumentHook";
+import { useApp } from "providers/AppProvider";
 import { createContext, useContext, useMemo, useState } from "react";
 
 const DocumentsContext: any = createContext(null)
 
 const DocumentsProvider = ({ children }: any) => {
 
-    const { documentCabinets, setDocumentCabinets } = useHookCabinet()
+    const { userInfo } = useApp()
+    const { documentCabinets } = useHookDocument({userInfo})
 
     const value = useMemo(
         () => ({
-            documentCabinets, setDocumentCabinets
+            documentCabinets
         }),
         [
-            documentCabinets, setDocumentCabinets
+            documentCabinets
         ]
     )
 

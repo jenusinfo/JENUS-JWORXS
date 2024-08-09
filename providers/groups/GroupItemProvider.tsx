@@ -11,7 +11,7 @@ const GroupItemProvider = ({ children }: any) => {
   const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
   const [curStatus, setCurStatus] = useState("all")
   const { group } = useApp()
-  const { groupItems } = useGroupItemHook(group.Id)
+  const { groupItems } = useGroupItemHook(group?.Id)
   const [curPageNumber, setCurPageNumber] = useState(1)
 
   const value = useMemo(

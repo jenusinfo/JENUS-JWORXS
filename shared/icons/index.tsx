@@ -7,6 +7,9 @@ import Sider06 from './svg/sider-06';
 import LockOpen from './svg/lock-open';
 import LockClose from './svg/lock-close';
 import Box from './svg/box';
+import NoDocument from './svg/no-document';
+import DocSvg from './svg/doc';
+import NoteSvg from './svg/note';
 
 export type IconType =
   | 'sider01'
@@ -18,7 +21,9 @@ export type IconType =
   | 'lock-open'
   | 'lock-close'
   | 'box'
-
+  | 'no-document'
+  | 'doc'
+  | 'note'
 
 const iconsMap = {
   ['sider01']: ({fill}: {fill?: string}) => <Sider01 fill={fill} />,
@@ -30,6 +35,9 @@ const iconsMap = {
   ['lock-open']: ({fill}: {fill?: string}) => <LockOpen fill={fill} />,
   ['lock-close']: ({fill}: {fill?: string}) => <LockClose fill={fill} />,
   ['box']: ({fill}: {fill?: string}) => <Box fill={fill} />,
+  ['no-document']: () => <NoDocument />,
+  ['doc']: () => <DocSvg />,
+  ['note']: () => <NoteSvg />
 };
 
 interface SvgIconProps {
