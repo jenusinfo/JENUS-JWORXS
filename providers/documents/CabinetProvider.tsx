@@ -9,6 +9,7 @@ import { CreateAuditLog } from "lib/settings/audit-logs";
 import http from "services/http-common";
 import mime from "mime-types"
 import { toast } from "react-toastify";
+import DOCSTATUS from 'shared/static/DOCSTATUS.json';
 
 const CabinetContext: any = createContext(null)
 
@@ -241,6 +242,7 @@ const CabinetProvider = ({ children }: any) => {
 	}
 
 	const handleChangeStatus = async (curData: any, status: string) => {
+		setLoading(true)
 		let temp = {
 			documentDef: curData.documentDef,
 			keys: curData.keys,
@@ -251,6 +253,7 @@ const CabinetProvider = ({ children }: any) => {
 		if (res?.status) {
 			fetchDocuments()
 		}
+		setLoading(false)
 	}
 
 	const handleReleaseEmail = async (email: string) => {
@@ -342,7 +345,9 @@ const CabinetProvider = ({ children }: any) => {
 			let statusTempList: any = searchDocuments.map((each: any) => each.keys.status)
 			let set = new Set(statusTempList)
 			statusTempList = Array.from(set)
-			setStatusList(statusTempList)
+			// setStatusList(statusTempList)
+			let temp: any = [undefined, DOCSTATUS.REVIEWED, DOCSTATUS.CHECKED, DOCSTATUS.PENDINGORIGINALS, DOCSTATUS.ARCHIVE, DOCSTATUS.UNARCHIVE, DOCSTATUS.CANCEL, DOCSTATUS.UNCANCELLED]
+			setStatusList(temp)
 
 			statusTempList = searchDocuments.map((each: any) => each.keys['document-category'])
 			set = new Set(statusTempList)
