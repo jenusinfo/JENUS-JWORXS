@@ -1,5 +1,7 @@
+import { useHookDocument } from "hooks/Documents/DocumentHook";
 import { useHookDocumentCategories } from "hooks/Settings/DocumentCategories";
-import { createContext, useContext, useMemo, useState } from "react";
+import { CreateDocumentCategory, DeleteDocumentCategory, UpdateDocumentCategory } from "lib/settings/document-categories";
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 
 const DocumentCategoriesContext: any = createContext(null)
 
@@ -23,19 +25,70 @@ export interface IDocumentCategories {
 
 const DocumentCategoriesProvider = ({ children }: any) => {
 
-    const { documentCategories } = useHookDocumentCategories()
+    const { searchApplications, associatedImports } = useHookDocument({userInfo: undefined})
+    const { documentCategories, setDocumentCategories } = useHookDocumentCategories()
     const [curPageNumber, setCurPageNumber] = useState(1)
+    const [curIndex, setCurIndex] = useState(-1)
+	const [info, setInfo] = useState<any>({})
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setInfo({
+			...info,
+			[e.target.name]: e.target.value
+		})
+	}
+
+	const handleCreate = async () => {
+		const res = await CreateDocumentCategory(info)
+
+		if (res.Data != null)
+			setDocumentCategories([...documentCategories, res.Data])
+	}
+
+	const handleDelete = async (id: any, index: number) => {
+		await DeleteDocumentCategory(id)
+		let res = [...documentCategories]
+		res.splice(index, 1)
+		setDocumentCategories(res)
+	}
+
+	const handleUpdate = async () => {
+		const res = await UpdateDocumentCategory(info.Id, info)
+		let temp = [...documentCategories]
+		temp[curIndex] = res.Data
+		setDocumentCategories(temp)
+	}
 
     const value = useMemo(
         () => ({
             documentCategories,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate,
+            searchApplications,
+            associatedImports
         }),
         [
             documentCategories,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate,
+            searchApplications,
+            associatedImports
         ]
     )
 

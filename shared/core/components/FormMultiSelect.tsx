@@ -8,6 +8,7 @@ interface IFormSelect {
 	handleMultiChange: any
 	optionList: any
 	zIndex: number
+	list?: any
 }
 
 export default function FormMultiSelect({
@@ -16,7 +17,8 @@ export default function FormMultiSelect({
 	info,
 	handleMultiChange,
 	optionList,
-	zIndex
+	zIndex,
+	list
 }: IFormSelect) {
 
 	const classes = {
@@ -41,9 +43,17 @@ export default function FormMultiSelect({
 		let flag = 0
 
 		info[`${name}`]?.forEach((item: any) => {
-			if (item.Id == id) {
-				flag = 1
-			}
+			if (name == "HashTags") {
+                if (item == id)
+                    flag = 1
+            } else if (name == 'InterviewFormPermit') {
+				if (item.GroupId == id)
+					flag = 1
+			} else {
+                if (item.Id == id) {
+                    flag = 1
+                }
+            }
 		})
 
 		if (flag == 0)
@@ -68,7 +78,11 @@ export default function FormMultiSelect({
 					<div className="border border-gray-200 rounded-[4px] px-2 py-2 flex items-center" style={{ height: 34 }}>
 						{
 							info[`${name}`]?.map((option: any, index: number) => (
-								<Text key={index} text={`${option.Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
+								name == 'HashTags'
+								? <Text key={index} text={`${option}${index == info[`${name}`].length-1 ? '' : ','}`} />
+								: name == 'InterviewFormPermit'
+								? <Text key={index} text={`${list.filter((each: any) => each.Id == option.GroupId)[0].Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
+								: <Text key={index} text={`${option.Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 							))
 						}
 					</div>

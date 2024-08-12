@@ -42,10 +42,10 @@ export default function OperationsPanel() {
                     <TbStatusChange color="#0073DD" size={20} />
                     <Text text="Change Status" weight="500" />
                 </div>
-                <div className={classes.operationButton}>
+                {/* <div className={classes.operationButton}>
                     <MdEditNote color="#0073DD" size={20} />
                     <Text text="Edit Metadata" weight="500" />
-                </div>
+                </div> */}
                 <div className={classes.operationButton}>
                     <FaShareAlt color="#0073DD" size={20} />
                     <Text text="Add to Workitem" weight="500" />

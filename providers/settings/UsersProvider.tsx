@@ -50,8 +50,6 @@ const UsersProvider = ({ children }: any) => {
 		})
 	}
 
-	console.log(info)
-
 	const isOptionSelected = (list: any, id: any) => {
 		let flag = 0
 

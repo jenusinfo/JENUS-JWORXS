@@ -1,3 +1,4 @@
+import { GetAssociatedImport, GetSearchApplications } from "lib/documents";
 import { useApp } from "providers/AppProvider";
 import { useEffect, useState } from "react";
 import http from "services/http-common";
@@ -6,6 +7,8 @@ export const useHookDocument = ({userInfo}: any) => {
 
 	const { setLoading } = useApp()
 	const [documentCabinets, setDocumentCabients] = useState([])
+	const [searchApplications, setSearchApplications] = useState([])
+	const [associatedImports, setAssociatedImports] = useState([])
 
 	const getDocumentCabinets = async () => {
 		setLoading(true)
@@ -40,13 +43,32 @@ export const useHookDocument = ({userInfo}: any) => {
 		setLoading(false)
 	}
 
+	const getSearchApplications = async () => {
+		const res = await GetSearchApplications()
+
+		setSearchApplications(res)
+	}
+
+	const getAssociatedImports = async () => {
+		const res = await GetAssociatedImport()
+
+		setAssociatedImports(res)
+	}
+
 	useEffect(() => {
 		if (userInfo) {
 			getDocumentCabinets()
 		}
 	}, [userInfo])
 
+	useEffect(() => {
+		getSearchApplications()
+		getAssociatedImports()
+	}, [])
+
 	return {
-		documentCabinets
+		documentCabinets,
+		searchApplications,
+		associatedImports
 	}
 }
