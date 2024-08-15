@@ -1,5 +1,6 @@
 import { useHookEmailTemplates } from "hooks/Settings/EmailTemplatesHook";
-import { createContext, useContext, useMemo, useState } from "react";
+import { CreateEmailTemplate, DeleteEmailTemplate, UpdateEmailTemplate } from "lib/settings/email-templates";
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 
 const EmailTemplatesContext: any = createContext(null)
 
@@ -16,19 +17,65 @@ export interface IEmailTemplates {
 
 const EmailTemplatesProvider = ({ children }: any) => {
 
-    const { emailTemplates } = useHookEmailTemplates()
+    const { emailTemplates, setEmailTemplates } = useHookEmailTemplates()
     const [curPageNumber, setCurPageNumber] = useState(1)
+    const [curIndex, setCurIndex] = useState(-1)
+	const [info, setInfo] = useState<any>({})
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setInfo({
+			...info,
+			[e.target.name]: e.target.value
+		})
+	}
+
+	const handleCreate = async () => {
+		const res = await CreateEmailTemplate(info)
+
+		if (res.Data != null)
+			setEmailTemplates([...emailTemplates, res.Data])
+	}
+
+	const handleDelete = async (id: any, index: number) => {
+		await DeleteEmailTemplate(id)
+		let res = [...emailTemplates]
+		res.splice(index, 1)
+		setEmailTemplates(res)
+	}
+
+	const handleUpdate = async () => {
+		const res = await UpdateEmailTemplate(info.Id, info)
+		let temp = [...emailTemplates]
+		temp[curIndex] = res.Data
+		setEmailTemplates(temp)
+	}
 
     const value = useMemo(
         () => ({
             emailTemplates,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
         }),
         [
             emailTemplates,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+			info,
+			setInfo,
+			curIndex,
+			setCurIndex,
+			handleChange,
+			handleCreate,
+			handleDelete,
+			handleUpdate
         ]
     )
 

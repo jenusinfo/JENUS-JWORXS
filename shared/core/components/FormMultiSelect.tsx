@@ -9,6 +9,7 @@ interface IFormSelect {
 	optionList: any
 	zIndex: number
 	list?: any
+	index?: number
 }
 
 export default function FormMultiSelect({
@@ -18,7 +19,8 @@ export default function FormMultiSelect({
 	handleMultiChange,
 	optionList,
 	zIndex,
-	list
+	list,
+	index
 }: IFormSelect) {
 
 	const classes = {
@@ -90,12 +92,12 @@ export default function FormMultiSelect({
 				{isOpen && (
 					<div className='absolute bg-white border border-red-600 rounded-[4px] px-2 py-2 w-full' style={{ left: 0, top: 36 }}>
 						{
-							optionList.map((option: any, index: number) => (
+							optionList.map((option: any, i: number) => (
 								<div 
-									key={index} 
+									key={i} 
 									className={"px-2 hover:cursor-pointer hover:bg-blue-100 text-sm "}
 									style={{ paddingTop: 4, paddingBottom: 4, backgroundColor: isOptionSelected(option.value) ? "#eeeeff" : "" }} 
-									onClick={() => handleMultiChange(name, option)}
+									onClick={() => handleMultiChange(name, option, index)}
 								>
 									{option.name}
 								</div>

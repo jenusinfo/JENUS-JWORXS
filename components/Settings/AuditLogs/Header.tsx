@@ -19,7 +19,6 @@ const AuditLogsHeader = () => {
                     <CiSearch className="absolute left-2 top-2" size={20} />
                 </div>
                 <button className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit">Export As</button>
-				<button className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit">Create New+</button>
             </div>
         </div>
     )

@@ -10,7 +10,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 	handleClose: () => void
 }) => {
 
-	const { info, handleChange, handleCreate, curIndex, handleUpdate } = useFormDefinitions()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, activities } = useFormDefinitions()
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -24,10 +24,12 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 					<FormInput label="Comments" name="comments" info={info} handleChange={handleChange} />
                     <FormSelect
 						label="Select Default Activity *"
-						name="isActive"
+						name="defaultActivityName"
 						info={info}
 						handleChange={handleChange}
-						optionList={[]}
+						optionList={[{value: "", name: "Choose"}, ...activities.map((each: any) => ({
+                            value: each, name: each
+                        }))]}
 					/>
 					<FormSelect
 						label="Is Active"
