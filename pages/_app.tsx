@@ -6,6 +6,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Fragment } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import 'react-quill/dist/quill.snow.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 

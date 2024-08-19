@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { ILayout } from 'types/layout'
 
 const BaseLayout = ({ children, pageTitle, showMeta }: ILayout) => {
+
   return (
     <div>
       <Head>

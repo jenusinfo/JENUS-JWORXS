@@ -1,11 +1,14 @@
 import Layout from "components/layouts"
 import InterviewPage from "components/pages/Workitems/Interview"
+import InterviewProvider from "providers/dashboard/InterviewProvider"
 
 const Interview = () => {
   return (
-    <Layout type="blank" pageTitle="Workitems - Interview">
+    <InterviewProvider>
+      <Layout type="blank" pageTitle="Workitems - Interview">
         <InterviewPage />
-    </Layout>
+      </Layout>
+    </InterviewProvider>
   )
 }
 

@@ -1,13 +1,33 @@
-import { createContext, useContext, useMemo } from "react";
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 
 const InterviewContext: any = createContext(null)
 
 const InterviewProvider = ({ children }: any) => {
 
+  const [step, setStep] = useState(1)
+  const [info, setInfo] = useState({})
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInfo({
+      ...info,
+      [e.target.name] : e.target.value
+    })
+  }
+
   const value = useMemo(
     () => ({
+      step,
+      setStep,
+      info,
+      setInfo,
+      handleChange
     }),
     [
+      step,
+      setStep,
+      info,
+      setInfo,
+      handleChange
     ]
   )
 

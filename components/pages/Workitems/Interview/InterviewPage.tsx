@@ -1,9 +1,7 @@
-import InterviewProvider from "providers/dashboard/InterviewProvider";
+import InterviewSteps from "components/Workitems/Interview/InterviewSteps";
 
 export default function InterviewPage() {
     return (
-        <InterviewProvider>
-            
-        </InterviewProvider>
+        <InterviewSteps />
     )
 }

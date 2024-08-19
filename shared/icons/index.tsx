@@ -10,6 +10,10 @@ import Box from './svg/box';
 import NoDocument from './svg/no-document';
 import DocSvg from './svg/doc';
 import NoteSvg from './svg/note';
+import FormSvg from './svg/form';
+import DocumentSvg from './svg/document';
+import FlowSvg from './svg/flow';
+import ActivitySvg from './svg/activity';
 
 export type IconType =
   | 'sider01'
@@ -24,6 +28,10 @@ export type IconType =
   | 'no-document'
   | 'doc'
   | 'note'
+  | 'form'
+  | 'document'
+  | 'flow'
+  | 'activity'
 
 const iconsMap = {
   ['sider01']: ({fill}: {fill?: string}) => <Sider01 fill={fill} />,
@@ -37,7 +45,11 @@ const iconsMap = {
   ['box']: ({fill}: {fill?: string}) => <Box fill={fill} />,
   ['no-document']: () => <NoDocument />,
   ['doc']: () => <DocSvg />,
-  ['note']: () => <NoteSvg />
+  ['note']: () => <NoteSvg />,
+  ['form']: ({fill}: {fill?: string}) => <FormSvg fill={fill} />,
+  ['document']: ({fill}: {fill?: string}) => <DocumentSvg fill={fill} />,
+  ['flow']: ({fill}: {fill?: string}) => <FlowSvg fill={fill} />,
+  ['activity']: ({fill}: {fill?: string}) => <ActivitySvg fill={fill} />
 };
 
 interface SvgIconProps {
