@@ -1,7 +1,5 @@
 import { useRouter } from "next/router"
 import { IMenu, useApp } from "providers/AppProvider"
-import { useState } from "react"
-import { FaCaretDown, FaCaretLeft } from "react-icons/fa"
 import Text from "shared/core/ui/Text"
 
 const Menu = () => {

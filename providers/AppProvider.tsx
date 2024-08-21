@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import http from "services/http-common";
 import { getCookie } from "shared/helper/tokens";
 import { Icon } from "shared/icons";
 import { IUser } from "types/auth";
@@ -48,33 +49,52 @@ const AppProvider = ({ children }: any) => {
     }
   ]
   const [account, setAccount] = useState<IUser>()
+  const [userInfo, setUserInfo] = useState()
+  const [loading, setLoading] = useState(false)
+  const [group, setGroup] = useState(null)
+
+  const getUserInfo = async () => {
+    const res = await http.get("/Org/Account/GetUserInfo")
+
+    setUserInfo(res?.data.Data)
+  }
 
   useEffect(() => {
     const user = getCookie('user')
     if (user) {
       setAccount(JSON.parse(user))
     }
+    getUserInfo()
   }, [])
 
   useEffect(() => {
-    if (account) {
+    if (getCookie('token')) {
       // push("/dashboard")
     } else {
       push("/")
     }
-    console.log(account)
-  }, [account, pathname])
+  }, [pathname])
 
   const value = useMemo(
     () => ({
       MENULIST,
       account,
-      setAccount
+      setAccount,
+      group,
+      setGroup,
+      userInfo,
+      loading,
+      setLoading
     }),
     [
       MENULIST,
       account,
-      setAccount
+      setAccount,
+      group,
+      setGroup,
+      userInfo,
+      loading,
+      setLoading
     ]
   )
 

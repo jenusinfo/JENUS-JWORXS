@@ -1,3 +1,5 @@
+import DOCSTATUS from 'shared/static/DOCSTATUS.json'
+
 export const convertToRGB = (index: number, str: string, opacity?: number) => {
     if (index == 0) { return opacity != undefined ? `rgba(40, 100, 255, ${opacity / 100})` : 'rgb(40, 100, 255)' }
     if (index == 1) { return opacity != undefined ? `rgba(154, 117, 236, ${opacity / 100})` : 'rgb(154, 117, 236)' }
@@ -19,4 +21,32 @@ export const convertToRGB = (index: number, str: string, opacity?: number) => {
         return `rgba(${red}, ${green}, ${blue}, ${opacity / 100})`;
     else
         return `rgb(${red}, ${green}, ${blue})`;
+}
+
+export function convertToTitleCase(text: string) {
+    return text
+        .split('-')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+export function getNextStatuses(status: string | undefined) {
+    if (status == DOCSTATUS.CANCEL) {
+        return [DOCSTATUS.UNCANCELLED]
+    }
+    if (status == DOCSTATUS.UNCANCELLED || status == undefined) {
+        return [DOCSTATUS.REVIEWED, DOCSTATUS.PENDINGORIGINALS, DOCSTATUS.CANCEL]
+    }
+    if (status == DOCSTATUS.REVIEWED) {
+        return [DOCSTATUS.CHECKED, DOCSTATUS.PENDINGORIGINALS, DOCSTATUS.CANCEL]
+    }
+    if (status == DOCSTATUS.PENDINGORIGINALS) {
+        return [DOCSTATUS.REVIEWED, DOCSTATUS.CHECKED, DOCSTATUS.CANCEL]
+    }
+    if (status == DOCSTATUS.CHECKED) {
+        return [DOCSTATUS.ARCHIVE]
+    }
+    if (status == DOCSTATUS.ARCHIVE) {
+        return [DOCSTATUS.UNARCHIVE]
+    }
 }

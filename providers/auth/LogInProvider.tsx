@@ -24,6 +24,10 @@ const LogInProvider = ({ children }: any) => {
   const handleLogIn = async () => {
     const res = await LogInUser(info.email, info.password)
 
+    if (res == undefined) {
+      alert("Error")
+      return;
+    }
     setAccount(res)
     setCookie('user', JSON.stringify(res))
     setCookie('token', res.access_token)

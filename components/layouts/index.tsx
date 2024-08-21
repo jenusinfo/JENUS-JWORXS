@@ -1,10 +1,12 @@
 import { ILayout } from 'types/layout'
 import BaseLayout from './containers/Base'
 import MainLayout from './containers/Main'
+import BlankLayout from './containers/Blank'
 
 const layoutContainers = {
     base: BaseLayout,
-    main: MainLayout
+    main: MainLayout,
+    blank: BlankLayout
 }
 
 interface ILayoutFactory extends ILayout {

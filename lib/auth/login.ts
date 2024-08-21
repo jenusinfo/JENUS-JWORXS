@@ -12,6 +12,6 @@ export const LogInUser = async (username: string, password: string) => {
         }
     })
 
-    if (res)
+    if (res?.status == 200)
         return res.data
 }

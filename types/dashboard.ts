@@ -33,9 +33,23 @@ export interface IInbox {
 }
 
 export interface IGroup {
-    title: string
-    description: string
-    people: Array<string>
+    Id: number
+    Name: string
+    Description: string
+    IsActive: boolean
+    IsUnitSensitive: boolean
+    IsTargetSensitive: boolean
+    Abbreviation: string
+}
+
+export interface IGroupItem {
+    Id: number
+    Name: string
+    Description: string
+    IsActive: boolean
+    IsUnitSensitive: boolean
+    IsTargetSensitive: boolean
+    Abbreviation: string
 }
 
 export interface IQuickAction {

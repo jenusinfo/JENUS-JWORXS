@@ -1,0 +1,9 @@
+{
+    "REVIEWED": "Reviewed",
+    "CHECKED": "Checked",
+    "PENDINGORIGINALS": "Pending Originals",
+    "ARCHIVE": "Archive",
+    "UNARCHIVE": "Unarchive",
+    "CANCEL": "Cancel",
+    "UNCANCELLED": "Uncancelled"
+}

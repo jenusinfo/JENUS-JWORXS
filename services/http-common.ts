@@ -20,22 +20,38 @@ const setHeaders = async () => {
 }
 
 const http = {
-    async get(endpoint: string, config?: AxiosRequestConfig<any>) {
-        await setHeaders();
+  async get(endpoint: string, config?: AxiosRequestConfig<any>) {
+    await setHeaders();
 
-        try {
-            const res = await axios.get(`${API_URL}${endpoint}`, config)
-            return res;
-        } catch(e: any) {}
-    },
-    async post(endpoint: string, params: any, config?: AxiosRequestConfig<any>) {
-        await setHeaders();
+    try {
+      const res = await axios.get(`${API_URL}${endpoint}`, config)
+      return res;
+    } catch (e: any) { }
+  },
+  async post(endpoint: string, params: any, config?: AxiosRequestConfig<any>) {
+    await setHeaders();
 
-        try {
-            const res = await axios.post(`${API_URL}${endpoint}`, params, config)
-            return res;
-        } catch(e: any) {}
-    }
+    try {
+      const res = await axios.post(`${API_URL}${endpoint}`, params, config)
+      return res;
+    } catch (e: any) { }
+  },
+  async put(endpoint: string, params: any, config?: AxiosRequestConfig<any>) {
+    await setHeaders()
+
+    try {
+      const res = await axios.put(`${API_URL}${endpoint}`, params, config)
+      return res
+    } catch (e: any) { }
+  },
+  async delete(endpoint: string, config?: AxiosRequestConfig<any>) {
+    await setHeaders()
+
+    try {
+      const res = await axios.delete(`${API_URL}${endpoint}`, config)
+      return res
+    } catch (e: any) { }
+  }
 }
 
 export default http

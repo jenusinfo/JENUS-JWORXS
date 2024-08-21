@@ -13,11 +13,11 @@ const DataPanel = () => {
 				groups &&
 				groups.map((group: IGroup, index: number) => (
 					<div key={index} className="border border-[#DEDFEA] px-6 py-5 rounded-[4px] bg-white">
-						<Text text={group.title} weight="700" />
-						<Text text={group.description} size={12} />
+						<Text text={group.Name} weight="700" />
+						<Text text={group.Description} size={12} />
 						<div className="mt-4 relative h-[34px]">
 							{
-								group.people.map((person: string, i: number) => (
+								["BB", "DL", "KM", "+13"].map((person: string, i: number) => (
 									<div key={i} className="flex items-center justify-center w-[34px] h-[34px] rounded-full absolute" style={{ backgroundColor: convertToRGB(i, person, 20), left: i*30 }}>
 										<Text text={person} size={12} weight="600" color={convertToRGB(i, person)} />
 									</div>
