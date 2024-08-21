@@ -1,4 +1,7 @@
+import { useHookForm } from "hooks/FormHook";
+import { useHookInterview } from "hooks/InterviewHook";
 import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { IForm } from "types/dashboard";
 
 const InterviewContext: any = createContext(null)
 
@@ -6,6 +9,9 @@ const InterviewProvider = ({ children }: any) => {
 
   const [step, setStep] = useState(1)
   const [info, setInfo] = useState({})
+  const { forms } = useHookForm()
+  const [curForm, setCurForm] = useState<IForm>()
+  const { formStructure } = useHookInterview({formId: curForm?.Id})
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInfo({
@@ -16,18 +22,18 @@ const InterviewProvider = ({ children }: any) => {
 
   const value = useMemo(
     () => ({
-      step,
-      setStep,
-      info,
-      setInfo,
-      handleChange
+      step, setStep,
+      info, setInfo, handleChange,
+      forms,
+      curForm, setCurForm,
+      formStructure
     }),
     [
-      step,
-      setStep,
-      info,
-      setInfo,
-      handleChange
+      step, setStep,
+      info, setInfo, handleChange,
+      forms,
+      curForm, setCurForm,
+      formStructure
     ]
   )
 

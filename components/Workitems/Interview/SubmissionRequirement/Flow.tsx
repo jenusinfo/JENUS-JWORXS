@@ -1,6 +1,7 @@
-import FormSelect from "shared/core/components/FormSelect"
-import ReactQuill from 'react-quill';
 import { useState } from "react";
+import dynamic from "next/dynamic";
+import FormSelect from "shared/core/components/FormSelect"
+const ReactQuill: any = dynamic(() => import('react-quill'), { ssr: false })
 
 const Flow = () => {
 
