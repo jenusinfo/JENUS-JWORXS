@@ -14,7 +14,7 @@ const DataPanel = () => {
 				forms &&
 				forms.map((group: IForm, index: number) => (
 					group.IsFavourite &&
-                    <div key={index} className="border border-[#DEDFEA] px-6 py-4 rounded-[4px] bg-white flex items-center gap-2">
+                    <div key={index} className="border border-[#DEDFEA] px-6 py-4 rounded-[4px] bg-white flex items-center gap-2 hover:cursor-pointer hover:border-blue-200 hover:bg-blue-100 transition-all duration-500">
 						<div>
 							<BsBookmarkCheck color="#2454DE" />
 						</div>

@@ -17,6 +17,6 @@ export const useHookWorkitem = () => {
     }, [])
 
     return {
-        inboxList, setInboxList
+        inboxList, setInboxList, getInbox
     }
 }

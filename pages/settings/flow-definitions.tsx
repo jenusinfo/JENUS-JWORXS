@@ -1,12 +1,12 @@
 import Layout from "components/layouts"
-import FlowDefinitionsPage from "components/pages/Settings/FlowDefinitions"
+import FormDefinitionsPage from "components/pages/Settings/FormDefinitions"
 
-const FlowDefinitions = () => {
+const FormDefinitions = () => {
     return (
         <Layout type="main" pageTitle="Settings - Application Settings">
-            <FlowDefinitionsPage />
+            <FormDefinitionsPage />
         </Layout>
     )
 }
 
-export default FlowDefinitions
+export default FormDefinitions
