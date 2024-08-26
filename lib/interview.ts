@@ -27,3 +27,10 @@ export const GetInterviewSection = async (id: any) => {
     if (res?.status)
         return res.data
 }
+
+export const submitInterview = async (payload: any) => {
+    const res = await http.post(`/Interviews/Sessions`, payload)
+
+    if (res?.status)
+        return res.data
+}

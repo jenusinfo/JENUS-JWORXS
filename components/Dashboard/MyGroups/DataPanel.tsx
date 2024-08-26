@@ -12,9 +12,9 @@ const DataPanel = () => {
 			{
 				groups &&
 				groups.map((group: IGroup, index: number) => (
-					<div key={index} className="border border-[#DEDFEA] px-6 py-5 rounded-[4px] bg-white">
-						<Text text={group.Name} weight="700" />
-						<Text text={group.Description} size={12} />
+					<div key={index} className="border border-[#DEDFEA] px-6 py-5 rounded-[4px] bg-white hover:border-blue-400 hover:cursor-pointer transition duration-500">
+						<Text text={group.Name} weight="700" className="truncate w-[188px]" />
+						<Text text={group.Description ? group.Description : "-"} size={12} className="truncate w-[188px]" />
 						<div className="mt-4 relative h-[34px]">
 							{
 								["BB", "DL", "KM", "+13"].map((person: string, i: number) => (

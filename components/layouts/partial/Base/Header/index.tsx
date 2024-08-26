@@ -5,15 +5,17 @@ import { useInterview } from "providers/dashboard/InterviewProvider";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { useState } from "react";
 import SubmitModal from "components/Workitems/Interview/SubmissionRequirement/SubmitModal";
+import { useRouter } from "next/router";
 
 const BaseHeader = () => {
 
-	const { step, setStep } = useInterview()
+	const { push } = useRouter()
+	const { step, setStep, formSubmitHandler } = useInterview()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (
 		<div className="flex items-center justify-between px-10 py-4 w-full border-b border-gray-200">
-			<div className="flex items-center gap-2 hover:cursor-pointer" onClick={() => setStep(step - 1)}>
+			<div className="flex items-center gap-2 hover:cursor-pointer" onClick={step == 1 ? () => push("/workitems") : () => setStep(step - 1)}>
 				<IoMdClose />
 				<Text text="Close" size={16} weight="500" />
 			</div>
@@ -26,7 +28,13 @@ const BaseHeader = () => {
 					step == 2 &&
 					<>
 						<button className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit text-sm">Back To Edit</button>
-						<button className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm" onClick={() => setStep(step + 1)}>Next</button>
+						<button 
+							className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm" 
+							onClick={async () => {
+								await formSubmitHandler()
+								await setStep(step + 1)
+							}}
+						>Next</button>
 					</>
 				}
 				{

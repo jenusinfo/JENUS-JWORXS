@@ -13,6 +13,7 @@ const LogInProvider = ({ children }: any) => {
   const [info, setInfo] = useState({
     email: "", password: ""
   })
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInfo({
@@ -22,6 +23,7 @@ const LogInProvider = ({ children }: any) => {
   }
 
   const handleLogIn = async () => {
+    setLoading(true)
     const res = await LogInUser(info.email, info.password)
 
     if (res == undefined) {
@@ -32,6 +34,7 @@ const LogInProvider = ({ children }: any) => {
     setCookie('user', JSON.stringify(res))
     setCookie('token', res.access_token)
     router.push("/dashboard")
+    setLoading(false)
   }
 
   const value = useMemo(
@@ -39,13 +42,15 @@ const LogInProvider = ({ children }: any) => {
       info,
       setInfo,
       handleChange,
-      handleLogIn
+      handleLogIn,
+      loading
     }),
     [
       info,
       setInfo,
       handleChange,
-      handleLogIn
+      handleLogIn,
+      loading
     ]
   )
 

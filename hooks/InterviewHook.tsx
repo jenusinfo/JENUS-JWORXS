@@ -3,10 +3,10 @@ import { useEffect, useState } from "react"
 
 export const useHookInterview = (props: any) => {
 
-    const [formStructure, setFormStructure] = useState()
+    const [formStructure, setFormStructure] = useState<any>()
     const [interviewRuels, setInterviewRules] = useState()
-    const [formFullInfo, setFormFullInfo] = useState()
-    const [interviewSection, setInterviewSection] = useState()
+    const [formFullInfo, setFormFullInfo] = useState<any>()
+    const [interviewSection, setInterviewSection] = useState<any>()
 
     const getFormStructure = async (id: any) => {
         const res = await GetFormStructure(id)

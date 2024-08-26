@@ -8,15 +8,15 @@ const QuickActionsProvider = ({ children }: any) => {
   const [quickActions, setQuickActions] = useState<Array<IQuickAction>>([
     {
       name: 'Start Interview Form',
-      link: ''
+      link: '/interviews'
     },
     {
       name: 'Start Cover Page',
-      link: ''
+      link: '/cover-pages'
     },
     {
       name: 'Document Search',
-      link: ''
+      link: '/documents'
     }
   ])
 

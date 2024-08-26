@@ -4,25 +4,66 @@ import Text from "shared/core/ui/Text"
 
 const PersonalDetails = () => {
 
-    const { info, handleChange } = useInterview()
+    const { info, handleChange, formFullInfo, curForm } = useInterview()
+
+//   console.log(formFullInfo)
+
+    if (!formFullInfo) {
+        return <></>
+    }
 
     return (
-        <div className="flex flex-col gap-10 w-[440px]">
-            <Text text="Corporate Account Opening" size={14} weight="500" />
-            <div className="flex justify-between items-end">
-                <Text text="Personal Details" size={28} weight="700" />
-                <Text text="Clear section" size={14} weight="500" color="#2454DE" />
-            </div>
-            <div className="flex flex-col gap-4">
-                <FormInput label="CIF Code" name="CIFCode" info={info} handleChange={handleChange} />
-                <FormInput label="Branch / Unit" name="BranchUnit" info={info} handleChange={handleChange} />
-                <FormInput label="Title" name="Title" info={info} handleChange={handleChange} />
-                <FormInput label="First Name" name="Firstname" info={info} handleChange={handleChange} />
-                <FormInput label="Father's Name (Optional)" name="Fathername" info={info} handleChange={handleChange} />
-                <FormInput label="Last Name" name="Lastname" info={info} handleChange={handleChange} />
-                <FormInput label="Gender" name="gender" info={info} handleChange={handleChange} />
-                <FormInput label="Date of Birth" name="DateOfBirth" info={info} handleChange={handleChange} />
-            </div>
+        <div className="space-y-10">
+            {
+                formFullInfo[0].Sections.map((section: any, index: number) => (
+                    <div key={index} className="flex flex-col gap-5 w-[440px]">
+                        <Text text={section.Label} size={14} weight="500" />
+                        <div className="flex justify-between items-end">
+                            <Text text={section.Description} size={20} weight="700" />
+                            <Text text="Clear section" size={14} weight="500" color="#2454DE" />
+                        </div>
+                        <div className="flex flex-col gap-4">
+                            {
+                                section.Questions.map((que: any, j: number) => (
+                                    <FormInput 
+                                        key={j} 
+                                        label={que.Description} 
+                                        name={que.TagName} 
+                                        info={info[que.InterviewSectionId] || {}} 
+                                        handleChange={(e: any) => handleChange(e, que.InterviewSectionId)} 
+                                    />
+                                ))
+                            }
+                        </div>
+                    </div>
+                ))
+            }
+            {/* {
+                formFullInfo.map((formInfo: any, i: number) => (
+                    formInfo.Sections.map((section: any, index: number) => (
+                        <div key={index} className="flex flex-col gap-5 w-[440px]">
+                            <Text text={section.Label} size={14} weight="500" />
+                            <div className="flex justify-between items-end">
+                                <Text text={section.Description} size={20} weight="700" />
+                                <Text text="Clear section" size={14} weight="500" color="#2454DE" />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                {
+                                    section.Questions.map((que: any, j: number) => (
+                                        <FormInput 
+                                            key={j} 
+                                            label={que.Description} 
+                                            name={que.TagName} 
+                                            info={(info[que.InterviewSectionId] && info[que.InterviewSectionId][i]) || {}} 
+                                            handleChange={(e: any) => handleChange(e, que.InterviewSectionId, i)} 
+                                        />
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    ))
+                ))
+            } */}
         </div>
     )
 }

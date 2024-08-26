@@ -3,6 +3,7 @@ import { PiEyeSlashLight } from "react-icons/pi"
 import { IoEyeOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useLogIn } from "providers/auth/LogInProvider";
+import ReactLoading from 'react-loading'
 
 const LogInPanel = () => {
 
@@ -12,7 +13,7 @@ const LogInPanel = () => {
   }
   const { push } = useRouter()
   const [isPasswordShow, setIsPasswordShow] = useState(false)
-  const { info, handleChange, handleLogIn } = useLogIn()
+  const { info, handleChange, handleLogIn, loading } = useLogIn()
 
   return (
     <div className="">
@@ -24,14 +25,14 @@ const LogInPanel = () => {
           <input name="password" value={info.password} onChange={handleChange} className={classes.input} type={isPasswordShow ? "text" : "password"} placeholder="Password" />
           {
             !isPasswordShow
-            ? <PiEyeSlashLight size={20} className="absolute right-0 top-6" onClick={() => setIsPasswordShow(true)} />
-            : <IoEyeOutline size={20} className="absolute right-0 top-6" onClick={() => setIsPasswordShow(false)} />
+            ? <PiEyeSlashLight size={20} className="absolute right-4 top-6" onClick={() => setIsPasswordShow(true)} />
+            : <IoEyeOutline size={20} className="absolute right-4 top-6" onClick={() => setIsPasswordShow(false)} />
           }
         </div>
         <p className="text-xl font-medium text-[#2454de] hover:cursor-pointer" onClick={() => push("/forgot-password")}>Forgot Password?</p>
       </div>
       <div className="mt-16">
-        <button className="bg-[#2454de] text-white w-full rounded-[10px] py-2 text-lg font-medium" onClick={handleLogIn}>
+        <button className="bg-[#2454de] hover:bg-blue-500 transition duration-500 text-white w-full rounded-[10px] py-2 text-lg font-medium" onClick={handleLogIn}>
           Log in
         </button>
       </div>

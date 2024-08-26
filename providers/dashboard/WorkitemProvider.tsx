@@ -1,37 +1,53 @@
 import { useHookWorkitem } from "hooks/WorkitemHook";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { IInbox } from "types/dashboard";
 
 const WorkitemContext: any = createContext(null)
 
 const WorkitemProvider = ({ children }: any) => {
 
-  const WorkitemStatuses = ["all", "in progress", "draft", "completed", "canceled"]
+  const WorkitemStatuses = ["All", "InProgress", "Draft", "Completed", null]
   const optionList = ["TESTERS", "First Level"]
   const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
-  const [curStatus, setCurStatus] = useState("all")
-  const { inboxList, setInboxList } = useHookWorkitem()
+  const [curStatus, setCurStatus] = useState("All")
+  const { inboxList, setInboxList, getInbox: handleGetWorkitems } = useHookWorkitem()
   const [curPageNumber, setCurPageNumber] = useState(1)
+  const [search, setSearch] = useState("")
+  const [data, setData] = useState<IInbox[]>([])
+
+  useEffect(() => {
+    let temp = inboxList.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
+                        .filter((each: IInbox) => curStatus == "All" ? true : each.StatusCode == curStatus)
+
+    setData(temp)
+  }, [inboxList, search, curStatus])
 
   const value = useMemo(
     () => ({
-      inboxList,
+      inboxList, data,
       WorkitemStatuses,
       curStatus,
       setCurStatus,
       curPageNumber,
       setCurPageNumber,
       assignedList,
-      optionList
+      optionList,
+      search,
+      setSearch,
+      handleGetWorkitems
     }),
     [
-      inboxList,
+      inboxList, data,
       WorkitemStatuses,
       curStatus,
       setCurStatus,
       curPageNumber,
       setCurPageNumber,
       assignedList,
-      optionList
+      optionList,
+      search,
+      setSearch,
+      handleGetWorkitems
     ]
   )
 
