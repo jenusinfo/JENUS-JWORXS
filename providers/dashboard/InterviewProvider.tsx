@@ -4,7 +4,7 @@ import { useApp } from "providers/AppProvider";
 import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
-import { XmlGenerator } from "shared/helper/xmlGenerator";
+import { XmlGenerator } from "shared/helper/XmlGenerator";
 import { submitInterview } from "lib/interview";
 
 const InterviewContext: any = createContext(null)

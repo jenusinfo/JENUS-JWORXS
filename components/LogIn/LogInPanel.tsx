@@ -32,8 +32,8 @@ const LogInPanel = () => {
         <p className="text-xl font-medium text-[#2454de] hover:cursor-pointer" onClick={() => push("/forgot-password")}>Forgot Password?</p>
       </div>
       <div className="mt-16">
-        <button className="bg-[#2454de] hover:bg-blue-500 transition duration-500 text-white w-full rounded-[10px] py-2 text-lg font-medium" onClick={handleLogIn}>
-          Log in
+        <button className="bg-[#2454de] hover:bg-blue-500 transition duration-500 text-white w-full rounded-[10px] py-2 text-lg font-medium flex justify-center" onClick={loading ? () => {} : handleLogIn}>
+          {loading ? <ReactLoading type="spin" width={28} height={28} /> : "Log in"}
         </button>
       </div>
     </div>
