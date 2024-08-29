@@ -19,7 +19,7 @@ export interface ITarget {
 
 const TargetsProvider = ({ children }: any) => {
 
-    const { targets, setTargets } = useHookTargets()
+    const { targets, setTargets, getTargets } = useHookTargets()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -40,9 +40,7 @@ const TargetsProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteTarget(id)
-		let res = [...targets]
-		res.splice(index, 1)
-		setTargets(res)
+		getTargets()
 	}
 
 	const handleUpdate = async () => {

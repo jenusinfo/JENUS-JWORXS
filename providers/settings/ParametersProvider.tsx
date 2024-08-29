@@ -19,7 +19,7 @@ export interface IParameter {
 
 const ParametersProvider = ({ children }: any) => {
 
-    const { parameters, setParameters } = useHookParameters()
+    const { parameters, setParameters, getParameters } = useHookParameters()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -40,9 +40,7 @@ const ParametersProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteParameter(id)
-		let res = [...parameters]
-		res.splice(index, 1)
-		setParameters(res)
+		getParameters()
 	}
 
 	const handleUpdate = async () => {

@@ -5,7 +5,7 @@ const MyGroupsContext: any = createContext(null)
 
 const MyGroupsProvider = ({ children }: any) => {
 
-	const { groups } = useHookGroup()
+	const { groups, loading } = useHookGroup()
 	const groupStatuses = ["all", "in progress", "draft", "completed", "canceled"]
 	const optionList = ["TESTERS", "First Level"]
 	const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
@@ -18,7 +18,8 @@ const MyGroupsProvider = ({ children }: any) => {
 			optionList,
 			assignedList,
 			curStatus,
-			setCurStatus
+			setCurStatus,
+			loading
 		}),
 		[
 			groups,
@@ -26,7 +27,8 @@ const MyGroupsProvider = ({ children }: any) => {
 			optionList,
 			assignedList,
 			curStatus,
-			setCurStatus
+			setCurStatus,
+			loading
 		]
 	)
 

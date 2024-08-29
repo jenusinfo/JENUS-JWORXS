@@ -9,14 +9,14 @@ const UnitsHeader = () => {
     const classes = {
         input: "border border-gray-300 rounded-[4px] pl-8 py-2 focus:outline-none text-sm w-[338px]"
     }
-    const { setCurIndex, setInfo } = useUnits()
+    const { setCurIndex, setInfo, units: data } = useUnits()
     const [isOpen, setIsOpen] = useState(false)
 
     return (
         <div className="flex justify-between border-b border-[#DEDFEA] pb-2">
             <div className="flex flex-col gap-3">
                 <Text text="Units" size={28} weight="700" />
-                <p className="text-sm">10 Active Units | Updated 20 mins ago</p>
+                <p className="text-sm">{data?.filter((each: any) => each.IsActive == true).length} Active Units</p>
             </div>
             <div className="flex gap-2">
                 <div className="relative">

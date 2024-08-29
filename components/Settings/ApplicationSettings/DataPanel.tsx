@@ -14,7 +14,7 @@ const DataPanel = () => {
 			<div className="pl-6 pr-2 py-2 flex items-center justify-between border-b border-gray-200">
 				<IoRefresh />
 				<div className="flex items-center gap-2">
-					<Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data.length}`} />
+					<Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data?.length}`} />
 					<IoIosArrowBack className="hover:cursor-pointer" onClick={curPageNumber > 1 ? () => setCurPageNumber(curPageNumber - 1) : () => { }} />
 					<IoIosArrowForward className="hover:cursor-pointer" onClick={() => setCurPageNumber(curPageNumber + 1)} />
 				</div>
@@ -43,7 +43,7 @@ const DataPanel = () => {
 				<tbody className="text-sm">
 					{
 						data
-							.slice((curPageNumber - 1) * 10, curPageNumber * 10)
+							?.slice((curPageNumber - 1) * 10, curPageNumber * 10)
 							.map((inbox: IApplicationSettings, index: number) => (
 								<tr key={index} className="border-b border-gray-200">
 									<td className="py-5">
@@ -66,8 +66,8 @@ const DataPanel = () => {
 											</DropDown>
 										</div>
 									</td>
-									<td className="px-2 text-right">{inbox.key}</td>
-									<td className="px-2 text-[#FB5656]">{inbox.value}</td>
+									<td className="px-2 text-right">{inbox.Key}</td>
+									<td className="px-2 text-[#FB5656]">{inbox.Value}</td>
 								</tr>
 							))
 					}

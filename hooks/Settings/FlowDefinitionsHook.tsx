@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react"
 import { GetFlowDefinitions } from "lib/settings/flow-definitions"
+import { useApp } from "providers/AppProvider"
 
 export const useHookFlowDefinitions = () => {
+    const {setLoading} = useApp()
     const [flowDefinitions, setFlowDefinitions] = useState<any[]>([])
 
     const getFlowDefinitions = async () => {
+        setLoading(true)
         const data = await GetFlowDefinitions()
 
         if (data)
             setFlowDefinitions(data.Data)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -16,6 +20,6 @@ export const useHookFlowDefinitions = () => {
     }, [])
 
     return {
-        flowDefinitions, setFlowDefinitions
+        flowDefinitions, setFlowDefinitions, getFlowDefinitions
     }
 }

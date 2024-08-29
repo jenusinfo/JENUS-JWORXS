@@ -1,16 +1,17 @@
 import { useFormDefinitions } from "providers/settings/FormDefinitionsProvider"
+import { toast } from "react-toastify"
 import FormInput from "shared/core/components/FormInput"
+import FormMultiSelect from "shared/core/components/FormMultiSelect"
 import FormSelect from "shared/core/components/FormSelect"
 import RightSide from "shared/core/ui/RightSide"
 import Text from "shared/core/ui/Text"
-import Activities from "./Activities"
 
 const FormDefinitionsModal = ({ isOpen, handleClose }: {
 	isOpen: boolean
 	handleClose: () => void
 }) => {
 
-	const { info, handleChange, handleCreate, curIndex, handleUpdate, activities } = useFormDefinitions()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, formDefinitions, groups, hashTags, handleMultiChange} = useFormDefinitions()
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -19,17 +20,40 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 					<Text text="Form Definition Details" size={16} weight="700" color="black" />
 				</div>
 				<div className="mt-6 flex flex-col gap-5 px-[34px]">
-					<FormInput label="Name" name="name" info={info} handleChange={handleChange} />
-					<FormInput label="Description" name="description" info={info} handleChange={handleChange} />
-					<FormInput label="Comments" name="comments" info={info} handleChange={handleChange} />
-                    <FormSelect
-						label="Select Default Activity *"
-						name="defaultActivityName"
+					<FormInput label="Name" name="Name" info={info} handleChange={handleChange} />
+					<FormInput label="Description" name="Description" info={info} handleChange={handleChange} />
+					<FormInput label="Subject" name="Subject" info={info} handleChange={handleChange} />
+					<FormInput label="Root Tag Name" name="RootTagName" info={info} handleChange={handleChange} />
+					<FormMultiSelect
+						label="Available to Group(s)"
+						name="InterviewFormPermit"
 						info={info}
+						handleMultiChange={handleMultiChange}
+						zIndex={53}
+						optionList={groups.map((item: any) => ({
+							value: item.Id, name: item.Name
+						}))}
+						list={groups}
+					/>
+					<FormMultiSelect
+						label="Hash Tag"
+						name="HashTags"
+						info={info}
+						handleMultiChange={handleMultiChange}
+						zIndex={52}
+						optionList={hashTags.map((item: any) => ({
+							value: item, name: item
+						}))}
+					/>
+					<FormSelect
+						label="Task Type"
+						name="TaskDefinitionId"
+						info={info}
+						optionList={[{value: "", name: ""}, ...formDefinitions.map((each: any) => ({
+							value: each.Id,
+							name: each.Name
+						}))]}
 						handleChange={handleChange}
-						optionList={[{value: "", name: "Choose"}, ...activities.map((each: any) => ({
-                            value: each, name: each
-                        }))]}
 					/>
 					<FormSelect
 						label="Is Active"
@@ -41,9 +65,9 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 							{ value: true, name: 'Yes' }
 						]}
 					/>
-                    <FormSelect
-						label="Allow Multiple Tasks Per Interview"
-						name="allowMultipleTasksPerInterview"
+					<FormSelect
+						label="Checker Required"
+						name="CheckerRequired"
 						info={info}
 						handleChange={handleChange}
 						optionList={[
@@ -51,9 +75,9 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 							{ value: true, name: 'Yes' }
 						]}
 					/>
-                    <FormSelect
-						label="Allow Multiple Tasks Per Document"
-						name="allowMultipleTasksPerDocument"
+					<FormSelect
+						label="CoverPageForm"
+						name="CoverPageForm"
 						info={info}
 						handleChange={handleChange}
 						optionList={[
@@ -62,9 +86,16 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 						]}
 					/>
 				</div>
-                <Activities />
 				<div className="flex mt-4 px-[34px]">
-					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={curIndex != -1 ? () => handleUpdate() : () => handleCreate()}>Save</button>
+					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={async () => {
+						toast.success("Record has been updated successfully")
+						if (curIndex != -1) {
+							await handleUpdate()
+						} else {
+							await handleCreate()
+						}
+						handleClose()
+					}}>Save</button>
 				</div>
 			</div>
 		</RightSide>

@@ -28,7 +28,7 @@ export interface IUnit {
 
 const UnitsProvider = ({ children }: any) => {
 
-	const { units, setUnits, parentBankList } = useHookUnits()
+	const { units, setUnits, parentBankList, getUnits } = useHookUnits()
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -49,9 +49,7 @@ const UnitsProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteUnit(id)
-		let res = [...units]
-		res.splice(index, 1)
-		setUnits(res)
+		getUnits()
 	}
 
 	const handleUpdate = async () => {

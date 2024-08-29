@@ -6,14 +6,16 @@ const FormsContext: any = createContext(null)
 
 const FormsProvider = ({ children }: any) => {
 
-  const { forms } = useHookForm()
+  const { forms, loading } = useHookForm()
 
   const value = useMemo(
     () => ({
-      forms
+      forms,
+      loading
     }),
     [
-      forms
+      forms,
+      loading
     ]
   )
 
