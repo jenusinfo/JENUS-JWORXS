@@ -38,7 +38,7 @@ const UsersProvider = ({ children }: any) => {
 	const { documentCategories } = useHookDocumentCategories()
 	const { units } = useHookUnits()
 	const { groups } = useHookGroups()
-	const { users, setUsers } = useHookUsers()
+	const { users, setUsers, getUsers } = useHookUsers()
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -106,9 +106,7 @@ const UsersProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteUser(id)
-		let res = [...users]
-		res.splice(index, 1)
-		setUsers(res)
+		getUsers()
 	}
 
 	const handleUpdate = async () => {

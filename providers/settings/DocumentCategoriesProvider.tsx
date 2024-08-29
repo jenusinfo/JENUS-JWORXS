@@ -26,7 +26,7 @@ export interface IDocumentCategories {
 const DocumentCategoriesProvider = ({ children }: any) => {
 
     const { searchApplications, associatedImports } = useHookDocument({userInfo: undefined})
-    const { documentCategories, setDocumentCategories } = useHookDocumentCategories()
+    const { documentCategories, setDocumentCategories, getDocumentCategories } = useHookDocumentCategories()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -47,9 +47,7 @@ const DocumentCategoriesProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteDocumentCategory(id)
-		let res = [...documentCategories]
-		res.splice(index, 1)
-		setDocumentCategories(res)
+		getDocumentCategories()
 	}
 
 	const handleUpdate = async () => {

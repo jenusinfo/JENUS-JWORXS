@@ -4,8 +4,8 @@ import { createContext, useContext, useMemo, useState } from "react";
 const ApplicationSettingsContext: any = createContext(null)
 
 export interface IApplicationSettings {
-    key: string
-    value: string
+    Key: string
+    Value: string
 }
 
 const ApplicationSettingsProvider = ({ children }: any) => {

@@ -1,6 +1,5 @@
-import { GetFormDefinitionById } from "lib/settings/form-definitions"
-import { IFormDefinitions, useFormDefinitions } from "providers/settings/FormDefinitionsProvider"
 import { useState } from "react"
+import { IFormDefinitions, useFormDefinitions } from "providers/settings/FormDefinitionsProvider"
 import { CiEdit } from "react-icons/ci"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
@@ -10,10 +9,8 @@ import Text from "shared/core/ui/Text"
 import FormDefinitionsModal from "./Modal"
 
 const DataPanel = () => {
-	const { formDefinitions: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex, groups, info } = useFormDefinitions()
+	const { formDefinitions: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useFormDefinitions()
 	const [isOpen, setIsOpen] = useState(false)
-
-	console.log(info)
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -51,16 +48,6 @@ const DataPanel = () => {
 						</th>
 						<th className="py-3">
 							<div className="px-2 border-l border-gray-200 text-left">
-								COMMENTS
-							</div>
-						</th>
-						{/* <th className="py-3">
-							<div className="px-2 border-l border-gray-200 text-left">
-								FLOW
-							</div>
-						</th> */}
-						<th className="py-3">
-							<div className="px-2 border-l border-gray-200 text-left">
 								STATUS
 							</div>
 						</th>
@@ -90,30 +77,7 @@ const DataPanel = () => {
 												top={-5}
 											>
 												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
-													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={async () => { 
-														setIsOpen(true);
-														const res = await GetFormDefinitionById(inbox.Id)
-														let temp = {...res.Data}
-														temp.Activities = temp.Activities.map((each: any) => ({
-															...each,
-															GroupIds: each.GroupIds.map((item: any) => {
-																let tmp = groups.filter((group: any) => group.Id == item)[0]
-																return {
-																	Id: tmp.Id,
-																	Name: tmp.Name
-																}
-															})
-														}))
-														temp = {
-															...temp,
-															name: temp.Name,
-															description: temp.Description,
-															defaultActivityName: temp.DefaultActivityName,
-															comments: temp.Comments
-														}
-														setInfo(temp)
-														setCurIndex(index); 
-													}}>
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(inbox); setCurIndex(index); }}>
 														<CiEdit color="#2454DE" size={18} />
 														<Text text="Update" size={12} weight="500" />
 													</div>
@@ -128,8 +92,6 @@ const DataPanel = () => {
 									<td className="px-2">{inbox.Id}</td>
 									<td className="px-2">{inbox.Name}</td>
 									<td className="px-2">{inbox.Description}</td>
-									<td className="px-2">{inbox.Comments}</td>
-									{/* <td className="px-2">{inbox.flow}</td> */}
 									<td className="px-2">
 										<div className="flex items-center gap-1 font-semibold">
 											<div className={"border-2 w-2 h-2 rounded-full " + (inbox.IsActive ? 'border-[#1ed6bb]' : 'border-[#fb5656]')} />

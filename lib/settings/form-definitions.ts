@@ -1,35 +1,28 @@
 import http from "services/http-common"
 
-export const CreateTaskDefinition = async (params: any) => {
-    const res = await http.post(`/TaskDefinitions`, params)
+export const CreateFormDefinition = async (params: any) => {
+    const res = await http.post(`/Interviews/Forms`, params)
 
     if (res?.status)
         return res?.data
 }
 
 export const GetFormDefinitions = async () => {
-    const res = await http.get(`/TaskDefinitions`)
+    const res = await http.get(`/Interviews/Forms`)
 
     if (res?.status)
         return res.data
 }
 
-export const GetFormDefinitionById = async (id: any) => {
-    const res = await http.get(`/TaskDefinitions/FullInfo/${id}`)
+export const UpdateFormDefinition = async (id: any, params: any) => {
+    const res = await http.put(`/Interviews/Forms/${id}`, params)
 
     if (res?.status)
         return res.data
 }
 
-export const UpdateTaskDefinition = async (id: any, params: any) => {
-    const res = await http.put(`/TaskDefinitions/${id}`, params)
-
-    if (res?.status)
-        return res.data
-}
-
-export const DeleteTaskDefinition = async (id: any) => {
-    const res = await http.delete(`/TaskDefinitions/${id}`)
+export const DeleteFormDefinition = async (id: any) => {
+    const res = await http.delete(`/Interviews/Forms/${id}`)
 
     if (res?.status)
         return res?.data

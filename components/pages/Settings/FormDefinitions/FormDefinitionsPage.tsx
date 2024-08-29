@@ -1,5 +1,5 @@
 import DataPanel from "components/Settings/FormDefinitions/DataPanel"
-import ApplicationSettingsHeader from "components/Settings/FormDefinitions/Header"
+import FlowDefinitionsHeader from "components/Settings/FormDefinitions/Header"
 import FormDefinitionsProvider from "providers/settings/FormDefinitionsProvider"
 
 const FormDefinitionsPage = () => {
@@ -7,7 +7,7 @@ const FormDefinitionsPage = () => {
         <div className="py-8">
             <FormDefinitionsProvider>
                 <div className="space-y-6">
-                    <ApplicationSettingsHeader />
+                    <FlowDefinitionsHeader />
                     <DataPanel />
                 </div>
             </FormDefinitionsProvider>

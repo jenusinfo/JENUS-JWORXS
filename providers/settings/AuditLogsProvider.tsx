@@ -4,6 +4,15 @@ import { createContext, useContext, useMemo, useState } from "react";
 const AuditLogsContext: any = createContext(null)
 
 export interface IAuditLogs {
+    ResourceId: number
+    ResourceName: string
+    ChangeFrom: string
+    ChangeTo: string
+    Action: string
+    ActionBy: string
+    ActionPerformedById: number
+    ActionOn: string
+    Comments: null | string
 }
 
 const AuditLogsProvider = ({ children }: any) => {

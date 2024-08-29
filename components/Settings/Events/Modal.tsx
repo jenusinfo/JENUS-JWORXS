@@ -1,4 +1,5 @@
 import { useEvents } from "providers/settings/EventsProvider"
+import { toast } from "react-toastify"
 import FormInput from "shared/core/components/FormInput"
 import FormSelect from "shared/core/components/FormSelect"
 import RightSide from "shared/core/ui/RightSide"
@@ -32,7 +33,15 @@ const EventsModal = ({ isOpen, handleClose }: {
 					/>
 				</div>
 				<div className="flex mt-4 px-[34px]">
-					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={curIndex != -1 ? () => handleUpdate() : () => handleCreate()}>Save</button>
+					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={async () => {
+						toast.success("Record has been updated successfully")
+						if (curIndex != -1) {
+							await handleUpdate()
+						} else {
+							await handleCreate()
+						}
+						handleClose()
+					}}>Save</button>
 				</div>
 			</div>
 		</RightSide>

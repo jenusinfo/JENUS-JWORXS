@@ -9,14 +9,14 @@ const DocumentCategoriesHeader = () => {
     const classes = {
         input: "border border-gray-300 rounded-[4px] pl-8 py-2 focus:outline-none text-sm w-[338px]"
     }
-    const { setCurIndex, setInfo } = useDocumentCategories()
+    const { setCurIndex, setInfo, documentCategories: data } = useDocumentCategories()
     const [isOpen, setIsOpen] = useState(false)
 
     return (
         <div className="flex justify-between border-b border-[#DEDFEA] pb-2">
             <div className="flex flex-col gap-3">
                 <Text text="Document Categories" size={28} weight="700" />
-                <p className="text-sm">10 Active Units | Updated 20 mins ago</p>
+                <p className="text-sm">{data?.filter((each: any) => each.IsActive == true).length} Active Document Categories</p>
             </div>
             <div className="flex gap-2">
                 <div className="relative">

@@ -4,12 +4,15 @@ import { IInbox } from "types/dashboard"
 
 export const useHookWorkitem = () => {
     const [inboxList, setInboxList] = useState<IInbox[]>([])
+    const [loading, setLoading] = useState(false)
 
     const getInbox = async () => {
+        setLoading(true)
         const data = await GetInbox()
 
         if (data)
             setInboxList(data.Data)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -17,6 +20,6 @@ export const useHookWorkitem = () => {
     }, [])
 
     return {
-        inboxList, setInboxList, getInbox
+        inboxList, setInboxList, getInbox, loading
     }
 }

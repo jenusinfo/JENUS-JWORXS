@@ -11,7 +11,7 @@ const EventsProvider = ({ children }: any) => {
 
     const WIDTH = ["4%", "3%", "27%", "27%", "13%", "15%", "11%"]
     const Headers = ["", "", "EVENT SERVICES", "DESCRIPTION", "STATUS", "MODIFIED BY", "MODIFIED ON"]
-    const { events, setEvents } = useHookEvents()
+    const { events, setEvents, getEvents } = useHookEvents()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -32,9 +32,7 @@ const EventsProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteEvent(id)
-		let res = [...events]
-		res.splice(index, 1)
-		setEvents(res)
+		getEvents()
 	}
 
 	const handleUpdate = async () => {

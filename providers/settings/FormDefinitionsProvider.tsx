@@ -1,221 +1,171 @@
+import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { useHookHashTag } from "hooks/HasTagHook";
+import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
 import { useHookFormDefinitions } from "hooks/Settings/FormDefinitions";
 import { useHookGroups } from "hooks/Settings/GroupsHook";
-import { CreateTaskDefinition, DeleteTaskDefinition, UpdateTaskDefinition } from "lib/settings/form-definitions";
-import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { CreateFormDefinition, DeleteFormDefinition, UpdateFormDefinition } from "lib/settings/form-definitions";
 
 const FormDefinitionsContext: any = createContext(null)
 
 export interface IFormDefinitions {
     CreatedById: number
-    CreatedOn: string
     CreatedBy: string
+    CreatedOn: string
     ModifiedById: number
-    ModifiedOn: string
     ModifiedBy: string
+    ModifiedOn: string
+    IsFavourite: boolean
     Id: number
     Name: string
-    Description: string
-    DefaultActivityName: null | string
-    Comments: string
+    RootTagName: string
     IsActive: boolean
-    AllowMultipleTasksPerInterview: boolean
-    AllowMultipleTasksPerDocument: boolean
+    Description: null | string
+    LinkToDashboard: boolean
+    InterviewFormPermit: Array<
+        {
+            GroupId: number
+        }
+    >
+    IsCheckerRequired: boolean
+    HashTags: Array<string>
+    IsCoverPageInterviewForm: boolean
+    Subject: null | string
+    TaskDefinitionId: null
 }
 
 const FormDefinitionsProvider = ({ children }: any) => {
 
+    const { flowDefinitions, setFlowDefinitions } = useHookFlowDefinitions()
+    const { formDefinitions, setFormDefinitions, getFormDefinitions } = useHookFormDefinitions()
     const { groups } = useHookGroups()
-    const { formDefinitions, setFormDefinitions} = useHookFormDefinitions()
+    const { hashTags } = useHookHashTag()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
-    const [activities, setActivities] = useState([])
-	const [info, setInfo] = useState<any>({
-        Activities: []
-    })
+    const [info, setInfo] = useState<any>({})
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setInfo({
-			...info,
-			[e.target.name]: e.target.value
-		})
-	}
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setInfo({
+            ...info,
+            [e.target.name]: e.target.value
+        })
+    }
+    const handleCreate = async () => {
+        const res = await CreateFormDefinition(info)
 
-    const handleActivityChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-        let temp = {...info}
-        temp.Activities[index][e.target.name] = e.target.value
-        setInfo(temp)
+        if (res.Data != null)
+            setFormDefinitions([...formDefinitions, res.Data])
     }
 
-    const handleDecisionChange = (e: ChangeEvent<HTMLInputElement>, index: number, i: number) => {
-        let temp = {...info}
-        temp.Activities[index].Decisions[i][e.target.name] = e.target.value
-        setInfo(temp)
+    const handleDelete = async (id: any, index: number) => {
+        await DeleteFormDefinition(id)
+        getFormDefinitions()
     }
 
-	const handleCreate = async () => {
-        let temp = {...info}
-        let tmp = temp.Activities
-        tmp = tmp.map((each: any) => ({
-            ...each,
-            GroupIds: each.GroupIds.map((each: any) => each.Id)
-        }))
-        temp.Activities = tmp
-		const res = await CreateTaskDefinition(temp)
+    const handleUpdate = async () => {
+        const res = await UpdateFormDefinition(info.Id, info)
+        let temp = [...formDefinitions]
+        temp[curIndex] = res.Data
+        setFormDefinitions(temp)
+    }
 
-		if (res.Data != null)
-			setFormDefinitions([...formDefinitions, res.Data])
-	}
+    const isOptionSelected = (list: any, id: any, name: string) => {
+        let flag = 0
 
-	const handleDelete = async (id: any, index: number) => {
-		await DeleteTaskDefinition(id)
-		let res = [...formDefinitions]
-		res.splice(index, 1)
-		setFormDefinitions(res)
-	}
+        list?.forEach((item: any) => {
+            if (name == "HashTags") {
+                if (item == id)
+                    flag = 1
+            } else if (name == 'InterviewFormPermit') {
+				if (item.GroupId == id)
+					flag = 1
+			} else {
+                if (item.Id == id) {
+                    flag = 1
+                }
+            }
+        })
 
-	const handleUpdate = async () => {
-		const res = await UpdateTaskDefinition(info.Id, info)
-		let temp = [...formDefinitions]
-		temp[curIndex] = res.Data
-		setFormDefinitions(temp)
-	}
-
-    const isOptionSelected = (list: any, id: any) => {
-		let flag = 0
-
-		list?.forEach((item: any) => {
-			if (item.Id == id) {
-				flag = 1
-			}
-		})
-
-		if (flag == 0)
-			return false
-		else if (flag == 1)
-			return true
-	}
+        if (flag == 0)
+            return false
+        else if (flag == 1)
+            return true
+    }
 
     const handleMultiChange = (name: string, value: any) => {
-		let temp = {...info}
+        let temp = { ...info }
 
-		let tmp: any = []
-		if (temp[`${name}`] == undefined) {
-			temp[`${name}`] = []
-			tmp.push({
-				Name: value.name,
-				Id: value.value
-			})
-		} else {
-			temp[`${name}`].forEach((item: any) => {
-				if (item.Id != value.value) {
-					tmp.push({
-						Name: item.Name,
-						Id: item.Id
-					})
-				}
-			})
-
-			if (!isOptionSelected(temp[`${name}`], value.value)) {
-				tmp.push({
-					Name: value.name,
-					Id: value.value
-				})
-			}
-		}
-		temp[`${name}`] = tmp
-
-		setInfo(temp)
-	}
-
-    const handleMultiActivityChange = (name: string, value: any, index: number) => {
-		let temp = {...info}
-
-		let tmp: any = []
-		if (temp.Activities[index][`${name}`] == undefined) {
-			temp.Activities[index][`${name}`] = []
-			tmp.push({
-				Name: value.name,
-				Id: value.value
-			})
-		} else {
-			temp.Activities[index][`${name}`].forEach((item: any) => {
-				if (item.Id != value.value) {
-					tmp.push({
-						Name: item.Name,
-						Id: item.Id
-					})
-				}
-			})
-
-			if (!isOptionSelected(temp.Activities[index][`${name}`], value.value)) {
-				tmp.push({
-					Name: value.name,
-					Id: value.value
-				})
-			}
-		}
-		temp.Activities[index][`${name}`] = tmp
-
-		setInfo(temp)
-	}
-
-    useEffect(() => {
-        let temp: any = []
-
-        if (
-            info &&
-            info.Activities
-        ) {
-            info.Activities.forEach((each: any) => {
-                if (each.Name) {
-                    temp.push(each.Name)
+        let tmp: any = []
+        if (temp[`${name}`] == undefined) {
+            temp[`${name}`] = []
+            if (name == "InterviewFormPermit") {
+                tmp.push({
+                    GroupId: value.value
+                })
+            } else if (name == "HashTags") {
+                tmp.push(value.value)
+            }
+        } else {
+            temp[`${name}`].forEach((item: any) => {
+                if (name == "HashTags" ? item != value.value : name == "InterviewFormPermit" ? item.GroupId != value.value : item.Id != value.value) {
+                    if (name == "InterviewFormPermit") {
+                        tmp.push({
+                            GroupId: item.GroupId
+                        })
+                    } else if (name == "HashTags") {
+                        tmp.push(item)
+                    }
                 }
             })
-        }
 
-        setActivities(temp)
-    }, [info])
+            if (!isOptionSelected(temp[`${name}`], value.value, name)) {
+                if (name == "InterviewFormPermit") {
+                    tmp.push({
+                        GroupId: value.value
+                    })
+                } else if (name == "HashTags") {
+                    tmp.push(value.value)
+                }
+            }
+        }
+        temp[`${name}`] = tmp
+
+        setInfo(temp)
+    }
 
     const value = useMemo(
         () => ({
-            formDefinitions,
+            flowDefinitions,
             curPageNumber,
             setCurPageNumber,
-			info,
-			setInfo,
-			curIndex,
-			setCurIndex,
-			handleChange,
-			handleCreate,
-			handleDelete,
-			handleUpdate,
+            info,
+            setInfo,
+            curIndex,
+            setCurIndex,
+            handleChange,
+            handleCreate,
+            handleDelete,
+            handleUpdate,
+            formDefinitions,
             groups,
-            handleMultiChange,
-            handleActivityChange,
-            handleDecisionChange,
-            handleMultiActivityChange,
-            activities,
-            setActivities
+            hashTags,
+            handleMultiChange
         }),
         [
-            formDefinitions,
+            flowDefinitions,
             curPageNumber,
             setCurPageNumber,
-			info,
-			setInfo,
-			curIndex,
-			setCurIndex,
-			handleChange,
-			handleCreate,
-			handleDelete,
-			handleUpdate,
+            info,
+            setInfo,
+            curIndex,
+            setCurIndex,
+            handleChange,
+            handleCreate,
+            handleDelete,
+            handleUpdate,
+            formDefinitions,
             groups,
-            handleMultiChange,
-            handleActivityChange,
-            handleDecisionChange,
-            handleMultiActivityChange,
-            activities,
-            setActivities
+            hashTags,
+            handleMultiChange
         ]
     )
 
@@ -225,7 +175,7 @@ const FormDefinitionsProvider = ({ children }: any) => {
 export const useFormDefinitions = () => {
     const context: any = useContext(FormDefinitionsContext)
     if (!context) {
-        throw new Error("useFormDefinitions must be used within FormDefinitionsProvider")
+        throw new Error("useFormDefinitions must be used within FlowDefinitionsProvider")
     }
     return context
 }

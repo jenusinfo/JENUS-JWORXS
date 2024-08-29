@@ -16,7 +16,7 @@ export interface ISettingGroup {
 
 const GroupsProvider = ({ children }: any) => {
 
-	const { groups, setGroups } = useHookGroups()
+	const { groups, setGroups, getGroups } = useHookGroups()
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -37,9 +37,7 @@ const GroupsProvider = ({ children }: any) => {
 
 	const handleDelete = async (id: any, index: number) => {
 		await DeleteGroup(id)
-		let res = [...groups]
-		res.splice(index, 1)
-		setGroups(res)
+		getGroups()
 	}
 
 	const handleUpdate = async () => {

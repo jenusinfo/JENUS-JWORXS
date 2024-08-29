@@ -10,7 +10,7 @@ const WorkitemProvider = ({ children }: any) => {
   const optionList = ["TESTERS", "First Level"]
   const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
   const [curStatus, setCurStatus] = useState("All")
-  const { inboxList, setInboxList, getInbox: handleGetWorkitems } = useHookWorkitem()
+  const { inboxList, setInboxList, getInbox: handleGetWorkitems, loading } = useHookWorkitem()
   const [curPageNumber, setCurPageNumber] = useState(1)
   const [search, setSearch] = useState("")
   const [data, setData] = useState<IInbox[]>([])
@@ -34,7 +34,8 @@ const WorkitemProvider = ({ children }: any) => {
       optionList,
       search,
       setSearch,
-      handleGetWorkitems
+      handleGetWorkitems,
+      loading
     }),
     [
       inboxList, data,
@@ -47,7 +48,8 @@ const WorkitemProvider = ({ children }: any) => {
       optionList,
       search,
       setSearch,
-      handleGetWorkitems
+      handleGetWorkitems,
+      loading
     ]
   )
 
