@@ -2,6 +2,7 @@ import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
 import { useHookGroups } from "hooks/Settings/GroupsHook";
 import { CreateTaskDefinition, DeleteTaskDefinition, UpdateTaskDefinition } from "lib/settings/flow-definitions";
 import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 const FlowDefinitionsContext: any = createContext(null)
 
@@ -62,8 +63,17 @@ const FlowDefinitionsProvider = ({ children }: any) => {
         temp.Activities = tmp
 		const res = await CreateTaskDefinition(temp)
 
-		if (res.Data != null)
+		if (res.Data != null) {
 			setFlowDefinitions([...flowDefinitions, res.Data])
+			return true
+		}
+		
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
 	}
 
 	const handleDelete = async (id: any, index: number) => {

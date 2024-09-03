@@ -48,6 +48,11 @@ const DataPanel = () => {
 						</th>
 						<th className="py-3">
 							<div className="px-2 border-l border-gray-200 text-left">
+								GROUP NAME
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
 								STATUS
 							</div>
 						</th>
@@ -68,7 +73,7 @@ const DataPanel = () => {
 						data
 							.slice((curPageNumber - 1) * 10, curPageNumber * 10)
 							.map((inbox: IFormDefinitions, index: number) => (
-								<tr key={index} className="border-b border-gray-200">
+								<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500">
 									<td className="py-5">
 										<div className="flex justify-center">
 											<DropDown
@@ -92,6 +97,9 @@ const DataPanel = () => {
 									<td className="px-2">{inbox.Id}</td>
 									<td className="px-2">{inbox.Name}</td>
 									<td className="px-2">{inbox.Description}</td>
+									<td className="px-2">
+										<Text text={inbox.HashTags.join(",")} />
+									</td>
 									<td className="px-2">
 										<div className="flex items-center gap-1 font-semibold">
 											<div className={"border-2 w-2 h-2 rounded-full " + (inbox.IsActive ? 'border-[#1ed6bb]' : 'border-[#fb5656]')} />

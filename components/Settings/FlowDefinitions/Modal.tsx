@@ -66,13 +66,16 @@ const FlowDefinitionsModal = ({ isOpen, handleClose }: {
                 <Activities />
 				<div className="flex mt-4 px-[34px]">
 					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={async () => {
-						toast.success("Record has been updated successfully")
+						let res: any
 						if (curIndex != -1) {
-							await handleUpdate()
+							res = await handleUpdate()
 						} else {
-							await handleCreate()
+							res = await handleCreate()
 						}
-						handleClose()
+						if (res) {
+							toast.success("Record has been updated successfully")
+							handleClose()
+						}
 					}}>Save</button>
 				</div>
 			</div>

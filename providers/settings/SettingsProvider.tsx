@@ -6,7 +6,7 @@ const SettingsProvider = ({ children }: any) => {
 
     const [data, setData] = useState([
         { title: 'Units', description: 'Define and manage measurement units for various application functionalities.', link: '/settings/units' },
-        { title: 'Groups', description: 'Organize users into manageable groups for streamlined permissions and access.', link: '/settings/groups' },
+        { title: 'User Groups', description: 'Organize users into manageable groups for streamlined permissions and access.', link: '/settings/groups' },
         { title: 'Users', description: 'Add, and manage user accounts and their roles.', link: '/settings/users' },
         { title: 'Events', description: 'Define and manage measurement units for various application functionalities.', link: '/settings/events' },
         { title: 'Parameters', description: 'Organize users into manageable groups for streamlined permissions and access.', link: '/settings/parameters' },
@@ -17,6 +17,7 @@ const SettingsProvider = ({ children }: any) => {
         { title: 'Document Categories', description: 'Define and manage measurement units for various application functionalities.', link: '/settings/document-categories' },
         { title: 'Email Templates', description: 'Organize users into manageable groups for streamlined permissions and access.', link: '/settings/email-templates' },
         { title: 'Targets', description: 'Add, and manage user accounts and their roles.', link: '/settings/targets' },
+        { title: 'Work Groups', description: 'Define and manage measurement units for various application functionalities.', link: '/settings/work-group' }
     ])
 
   const value = useMemo(

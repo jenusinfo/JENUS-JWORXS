@@ -68,7 +68,7 @@ const DataPanel = () => {
 						data
 							.slice((curPageNumber - 1) * 10, curPageNumber * 10)
 							.map((inbox: ITarget, index: number) => (
-								<tr key={index} className="border-b border-gray-200">
+								<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500">
 									<td className="py-5">
 										<div className="flex justify-center">
 											<DropDown

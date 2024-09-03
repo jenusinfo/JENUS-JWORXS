@@ -36,7 +36,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 						list={groups}
 					/>
 					<FormMultiSelect
-						label="Hash Tag"
+						label="Grouping Hash Tag"
 						name="HashTags"
 						info={info}
 						handleMultiChange={handleMultiChange}

@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function Account() {
 
   const { push } = useRouter()
-  const { account } = useApp()
+  const { account, isMinimize, setIsMinimize } = useApp()
   const [open, setOpen] = useState(false)
 
   const handleLogout = () => {
@@ -32,11 +32,11 @@ export default function Account() {
                 <Text text={account.firstName[0] + account.lastName[0]} size={12} color="#FF7B93" />
               </div>
             </div>
-            <div>
+            {!isMinimize && <div>
               <p className="text-primary text-sm w-[115px] truncate">Hi,
                 <span className="font-semibold">{account.firstName + " " + account.lastName}</span>
               </p>
-            </div>
+            </div>}
           </div>
         }
         left={0}
