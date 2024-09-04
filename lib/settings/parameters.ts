@@ -14,6 +14,13 @@ export const GetParameters = async () => {
         return res.data
 }
 
+export const GetGlobalParams = async () => {
+    const res = await http.get(`/Org/GlobalParams`)
+
+    if (res?.status)
+        return res.data
+}
+
 export const UpdateParameter = async (id: any, params: any) => {
     const res = await http.put(`/Org/GlobalParams/${id}`, params)
 

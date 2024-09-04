@@ -7,8 +7,13 @@ import { MdOutlineDelete } from "react-icons/md"
 import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 import FormDefinitionsModal from "./Modal"
+import { getFormattedDate } from "shared/helper/common"
+import { useRouter } from "next/router"
+import { IoIosSettings } from "react-icons/io";
 
 const DataPanel = () => {
+
+	const { push } = useRouter()
 	const { formDefinitions: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useFormDefinitions()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -41,11 +46,11 @@ const DataPanel = () => {
 								NAME
 							</div>
 						</th>
-						<th className="py-3">
+						{/* <th className="py-3">
 							<div className="px-2 border-l border-gray-200 text-left">
 								DESCRIPTION
 							</div>
-						</th>
+						</th> */}
 						<th className="py-3">
 							<div className="px-2 border-l border-gray-200 text-left">
 								GROUP NAME
@@ -54,6 +59,11 @@ const DataPanel = () => {
 						<th className="py-3">
 							<div className="px-2 border-l border-gray-200 text-left">
 								STATUS
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-right">
+								CREATED BY
 							</div>
 						</th>
 						<th className="py-3">
@@ -82,6 +92,10 @@ const DataPanel = () => {
 												top={-5}
 											>
 												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => push(`/settings/form-definitions/${inbox.Id}`)}>
+														<IoIosSettings color="#2454DE" size={18} />
+														<Text text="Setting" size={12} weight="500" />
+													</div>
 													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(inbox); setCurIndex(index); }}>
 														<CiEdit color="#2454DE" size={18} />
 														<Text text="Update" size={12} weight="500" />
@@ -96,7 +110,7 @@ const DataPanel = () => {
 									</td>
 									<td className="px-2">{inbox.Id}</td>
 									<td className="px-2">{inbox.Name}</td>
-									<td className="px-2">{inbox.Description}</td>
+									{/* <td className="px-2">{inbox.Description}</td> */}
 									<td className="px-2">
 										<Text text={inbox.HashTags.join(",")} />
 									</td>
@@ -106,8 +120,9 @@ const DataPanel = () => {
 											<Text text={inbox.IsActive ? 'Active' : 'Inactive'} weight="500" />
 										</div>
 									</td>
+									<td className="px-2">{inbox.CreatedBy}</td>
 									<td className="px-2 text-right">{inbox.ModifiedBy}</td>
-									<td className="px-2">{inbox.ModifiedOn}</td>
+									<td className="px-2">{getFormattedDate(inbox.ModifiedOn)}</td>
 								</tr>
 							))
 					}

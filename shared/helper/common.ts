@@ -50,3 +50,7 @@ export function getNextStatuses(status: string | undefined) {
         return [DOCSTATUS.UNARCHIVE]
     }
 }
+
+export function getFormattedDate (date: string) {
+    return date == null ? "" : date.substring(0, 10) + " " + date.substring(11, 16)
+}

@@ -51,6 +51,9 @@ export default function FormMultiSelect({
             } else if (name == 'InterviewFormPermit') {
 				if (item.GroupId == id)
 					flag = 1
+			} else if (name == 'RequestParameterMapping' || name == 'ResponseParameterMapping') {
+				if (item.ServiceAttributeId == id)
+					flag = 1
 			} else {
                 if (item.Id == id) {
                     flag = 1
@@ -72,25 +75,29 @@ export default function FormMultiSelect({
 		};
 	}, []);
 
+	console.log(optionList)
+
 	return (
 		<div className={classes.form}>
 			<Text text={label} color="#84858c" />
 			<div className={"relative"} style={{ zIndex }} ref={dropdownRef}>
 				<div onClick={toggleDropdown}>
-					<div className="border border-gray-200 rounded-[4px] px-2 py-2 flex items-center" style={{ height: 34 }}>
+					<div className="border border-gray-200 rounded-[4px] px-2 py-2 flex items-center" style={{ minHeight: 34, flexWrap: 'wrap' }}>
 						{
 							info[`${name}`]?.map((option: any, index: number) => (
 								name == 'HashTags'
 								? <Text key={index} text={`${option}${index == info[`${name}`].length-1 ? '' : ','}`} />
 								: name == 'InterviewFormPermit'
 								? <Text key={index} text={`${list.filter((each: any) => each.Id == option.GroupId)[0].Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
+								: name == 'RequestParameterMapping' || name == 'ResponseParameterMapping'
+								? <Text key={index} text={`${optionList.filter((each: any) => each.value == option.ServiceAttributeId)[0]?.name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 								: <Text key={index} text={`${option.Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 							))
 						}
 					</div>
 				</div>
 				{isOpen && (
-					<div className='absolute bg-white border border-red-600 rounded-[4px] px-2 py-2 w-full' style={{ left: 0, top: 36 }}>
+					<div className='absolute bg-white border border-red-600 rounded-[4px] px-2 py-2 w-full' style={{ left: 0, top: '100%' }}>
 						{
 							optionList.map((option: any, i: number) => (
 								<div 
