@@ -1,4 +1,4 @@
-import HeaderPanel from "components/Settings/Events/Item/HeaderPanel"
+import HeaderPanel from "components/Settings/Parameters/Item/HeaderPanel"
 import OptionParamsDataPanel from "components/Settings/Parameters/Item/OptionParam/DataPanel"
 import { useRouter } from "next/router"
 import OptionParamProvider from "providers/settings/Parameter/Item/OptionParamProvider"
