@@ -4,7 +4,7 @@ import ForgotPasswordPage from "components/pages/ForgotPassword"
 const ForgotPassword = () => {
   return (
     <Layout type="base" pageTitle="Forgot Password">
-        <ForgotPasswordPage />
+      <ForgotPasswordPage />
     </Layout>
   )
 }

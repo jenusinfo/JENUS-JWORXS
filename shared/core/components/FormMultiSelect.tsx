@@ -54,6 +54,9 @@ export default function FormMultiSelect({
 			} else if (name == 'RequestParameterMapping' || name == 'ResponseParameterMapping') {
 				if (item.ServiceAttributeId == id)
 					flag = 1
+			} else if (name == 'RequestParameters' || name == 'ResponseParameters') {
+				if (item == id)
+					flag = 1
 			} else {
                 if (item.Id == id) {
                     flag = 1
@@ -75,8 +78,6 @@ export default function FormMultiSelect({
 		};
 	}, []);
 
-	console.log(optionList)
-
 	return (
 		<div className={classes.form}>
 			<Text text={label} color="#84858c" />
@@ -91,6 +92,8 @@ export default function FormMultiSelect({
 								? <Text key={index} text={`${list.filter((each: any) => each.Id == option.GroupId)[0].Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 								: name == 'RequestParameterMapping' || name == 'ResponseParameterMapping'
 								? <Text key={index} text={`${optionList.filter((each: any) => each.value == option.ServiceAttributeId)[0]?.name}${index == info[`${name}`].length-1 ? '' : ','}`} />
+								: name == 'ResponseParameters' || name == 'RequestParameters'
+								?  <Text key={index} text={`${optionList.filter((each: any) => each.value == option)[0]?.name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 								: <Text key={index} text={`${option.Name}${index == info[`${name}`].length-1 ? '' : ','}`} />
 							))
 						}

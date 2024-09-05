@@ -4,7 +4,7 @@ import ResetPasswordPage from "components/pages/ResetPassword"
 const ResetPassword = () => {
   return (
     <Layout type="base" pageTitle="Reset Password">
-        <ResetPasswordPage />
+      <ResetPasswordPage />
     </Layout>
   )
 }

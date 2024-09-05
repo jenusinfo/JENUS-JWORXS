@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-const DropDown = ({ children, target, left, top, zIndex = 30, setOpen }: any) => {
+const DropDown = ({ children, target, left, top, zIndex = 30, open, setOpen }: any) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -20,6 +20,12 @@ const DropDown = ({ children, target, left, top, zIndex = 30, setOpen }: any) =>
         setOpen(false)
     }
   };
+
+  useEffect(() => {
+    if (!open) {
+      setIsOpen(false)
+    }
+  }, [open])
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);

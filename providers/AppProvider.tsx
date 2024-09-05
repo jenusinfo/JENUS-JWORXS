@@ -69,6 +69,12 @@ const AppProvider = ({ children }: any) => {
   }, [])
 
   useEffect(() => {
+    if (
+      pathname == '/forgot-password' ||
+      pathname == "/check-email" ||
+      pathname == '/reset-password'
+    )
+      return;
     if (getCookie('token')) {
       // push("/dashboard")
     } else {

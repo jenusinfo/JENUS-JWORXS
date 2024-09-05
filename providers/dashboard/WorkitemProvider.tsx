@@ -22,6 +22,10 @@ const WorkitemProvider = ({ children }: any) => {
     setData(temp)
   }, [inboxList, search, curStatus])
 
+  useEffect(() => {
+    setCurPageNumber(1)
+  }, [curStatus])
+
   const value = useMemo(
     () => ({
       inboxList, data,

@@ -144,8 +144,6 @@ const ServiceProvider = ({ children }: any) => {
 		// })
 	}, [info.EventId, info.ServiceId])
 
-	console.log(info)
-
 	const value = useMemo(
 		() => ({
 			formFullInfo,

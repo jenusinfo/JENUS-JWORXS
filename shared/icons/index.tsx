@@ -14,6 +14,7 @@ import FormSvg from './svg/form';
 import DocumentSvg from './svg/document';
 import FlowSvg from './svg/flow';
 import ActivitySvg from './svg/activity';
+import NotFoundSvg from './svg/not-found';
 
 export type IconType =
   | 'sider01'
@@ -32,6 +33,7 @@ export type IconType =
   | 'document'
   | 'flow'
   | 'activity'
+  | 'not-found'
 
 const iconsMap = {
   ['sider01']: ({fill}: {fill?: string}) => <Sider01 fill={fill} />,
@@ -49,7 +51,8 @@ const iconsMap = {
   ['form']: ({fill}: {fill?: string}) => <FormSvg fill={fill} />,
   ['document']: ({fill}: {fill?: string}) => <DocumentSvg fill={fill} />,
   ['flow']: ({fill}: {fill?: string}) => <FlowSvg fill={fill} />,
-  ['activity']: ({fill}: {fill?: string}) => <ActivitySvg fill={fill} />
+  ['activity']: ({fill}: {fill?: string}) => <ActivitySvg fill={fill} />,
+  ['not-found']: () => <NotFoundSvg />
 };
 
 interface SvgIconProps {

@@ -15,7 +15,7 @@ export const Middleware = () => {
         {
           WorkitemStatuses.map((status: string, index: number) => (
             <div key={index} className={"pb-2 hover:cursor-pointer " + (curStatus == status ? "border-b border-[#0146C5]" : "")} onClick={() => setCurStatus(status)}>
-              <Text text={status} className="capitalize" color={curStatus == status ? "#0146C5" : "#1F2933"} weight="500" />
+              <Text text={status == null ? 'Cancelled' : status} className="capitalize" color={curStatus == status ? "#0146C5" : "#1F2933"} weight="500" />
             </div>
           ))
         }

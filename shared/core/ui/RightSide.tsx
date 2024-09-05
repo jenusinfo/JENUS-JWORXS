@@ -34,7 +34,7 @@ const RightSide = ({ children, isOpen, handleClose, width, anchorY, anchorX, isO
     <>
       <div
         className={'bg-white dark:bg-[#121418] rounded-[15px] overflow-y-auto h-screen'}
-        style={{ position: 'fixed', width: width, right: isOpen ? 0 : -540, zIndex: 50, top: 0, transition: 'all', transitionDuration: '500ms' }}
+        style={{ position: 'fixed', width: width, right: isOpen ? 0 : -width, zIndex: 50, top: 0, transition: 'all', transitionDuration: '500ms' }}
         ref={dropdownRef}
       >
         <IoMdClose className='absolute hover:cursor-pointer' style={{ right: 16, top: 16 }} onClick={handleClose} />

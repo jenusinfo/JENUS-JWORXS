@@ -10,12 +10,12 @@ export default function Logo() {
       flex items-center gap-3 
       w-full p-2 rounded-[5px] 
       hover:bg-[#f4f6ff] hover:cursor-pointer 
-      transition duration-300
-    ` + (isMinimize ? 'justify-center' : '')}
+      transition duration-300 justify-center
+      `}
       onClick={() => setIsMinimize(!isMinimize)}
     >
       <img src='/assets/jenus-symbol.png' width={24} height={20} />
-      {!isMinimize && <Text text="jWorxs" size={14} color="#2454DE" weight="600" />}
+      {/* {!isMinimize && <Text text="jWorxs" size={14} color="#2454DE" weight="600" />} */}
     </div>
   )
 }
