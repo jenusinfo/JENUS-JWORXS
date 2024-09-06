@@ -7,13 +7,17 @@ import FormsProvider from "providers/dashboard/FormsProvider"
 import MyGroupsProvider from "providers/dashboard/MyGroupsProvider"
 import QuickActionsProvider from "providers/dashboard/QuickActionsProvider"
 import WorkitemProvider from "providers/dashboard/WorkitemProvider"
+import useWindowSize from "shared/hooks/useWindowSize"
 
 const DashboardPage = () => {
+
+  const width = useWindowSize().width
+
   return (
     <div className="py-8">
       <DashboardHeader />
-      <div className="grid grid-cols-3 gap-6 mt-8">
-        <div className="col-span-2 space-y-6">
+      <div className={"grid gap-6 mt-8 " + (width > 1160 ? 'grid-cols-3' : 'grid-cols-1')}>
+        <div className={"space-y-6 " + (width > 1160 ? 'col-span-2' : '')}>
           <WorkitemProvider>
             <MyWorkitems />
           </WorkitemProvider>
@@ -21,7 +25,7 @@ const DashboardPage = () => {
             <MyGroups />
           </MyGroupsProvider>
         </div>
-        <div className="col-span-1 space-y-6">
+        <div className={"space-y-6 " + (width > 1160 ? 'col-span-1' : '')}>
           <QuickActionsProvider>
             <QuickActions />
           </QuickActionsProvider>

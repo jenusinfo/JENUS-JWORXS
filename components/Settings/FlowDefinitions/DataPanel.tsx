@@ -94,7 +94,7 @@ const DataPanel = () => {
 														let temp = {...res.Data}
 														temp.Activities = temp.Activities.map((each: any) => ({
 															...each,
-															GroupIds: each.GroupIds.map((item: any) => {
+															GroupIds: each.GroupIds?.map((item: any) => {
 																let tmp = groups.filter((group: any) => group.Id == item)[0]
 																return {
 																	Id: tmp.Id,

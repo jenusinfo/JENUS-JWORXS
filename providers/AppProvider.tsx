@@ -52,7 +52,7 @@ const AppProvider = ({ children }: any) => {
   const [userInfo, setUserInfo] = useState()
   const [loading, setLoading] = useState(false)
   const [group, setGroup] = useState(null)
-  const [isMinimize, setIsMinimize] = useState(false)
+  const [isMinimize, setIsMinimize] = useState(true)
 
   const getUserInfo = async () => {
     const res = await http.get("/Org/Account/GetUserInfo")

@@ -7,32 +7,32 @@ import { toast } from "react-toastify";
 const FlowDefinitionsContext: any = createContext(null)
 
 export interface IFlowDefinitions {
-    CreatedById: number
-    CreatedOn: string
-    CreatedBy: string
-    ModifiedById: number
-    ModifiedOn: string
-    ModifiedBy: string
-    Id: number
-    Name: string
-    Description: string
-    DefaultActivityName: null | string
-    Comments: string
-    IsActive: boolean
-    AllowMultipleTasksPerInterview: boolean
-    AllowMultipleTasksPerDocument: boolean
+	CreatedById: number
+	CreatedOn: string
+	CreatedBy: string
+	ModifiedById: number
+	ModifiedOn: string
+	ModifiedBy: string
+	Id: number
+	Name: string
+	Description: string
+	DefaultActivityName: null | string
+	Comments: string
+	IsActive: boolean
+	AllowMultipleTasksPerInterview: boolean
+	AllowMultipleTasksPerDocument: boolean
 }
 
 const FlowDefinitionsProvider = ({ children }: any) => {
 
-    const { groups } = useHookGroups()
-    const { flowDefinitions, setFlowDefinitions, getFlowDefinitions} = useHookFlowDefinitions()
-    const [curPageNumber, setCurPageNumber] = useState(1)
-    const [curIndex, setCurIndex] = useState(-1)
-    const [activities, setActivities] = useState([])
+	const { groups } = useHookGroups()
+	const { flowDefinitions, setFlowDefinitions, getFlowDefinitions } = useHookFlowDefinitions()
+	const [curPageNumber, setCurPageNumber] = useState(1)
+	const [curIndex, setCurIndex] = useState(-1)
+	const [activities, setActivities] = useState([])
 	const [info, setInfo] = useState<any>({
-        Activities: []
-    })
+		Activities: []
+	})
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -41,33 +41,33 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 		})
 	}
 
-    const handleActivityChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-        let temp = {...info}
-        temp.Activities[index][e.target.name] = e.target.value
-        setInfo(temp)
-    }
+	const handleActivityChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+		let temp = { ...info }
+		temp.Activities[index][e.target.name] = e.target.value
+		setInfo(temp)
+	}
 
-    const handleDecisionChange = (e: ChangeEvent<HTMLInputElement>, index: number, i: number) => {
-        let temp = {...info}
-        temp.Activities[index].Decisions[i][e.target.name] = e.target.value
-        setInfo(temp)
-    }
+	const handleDecisionChange = (e: ChangeEvent<HTMLInputElement>, index: number, i: number) => {
+		let temp = { ...info }
+		temp.Activities[index].Decisions[i][e.target.name] = e.target.value
+		setInfo(temp)
+	}
 
 	const handleCreate = async () => {
-        let temp = {...info}
-        let tmp = temp.Activities
-        tmp = tmp.map((each: any) => ({
-            ...each,
-            GroupIds: each.GroupIds.map((each: any) => each.Id)
-        }))
-        temp.Activities = tmp
+		let temp = { ...info }
+		let tmp = temp.Activities ?? []
+		tmp = tmp.map((each: any) => ({
+			...each,
+			GroupIds: each.GroupIds ? each.GroupIds.map((each: any) => each.Id) : []
+		}))
+		temp.Activities = tmp
 		const res = await CreateTaskDefinition(temp)
 
 		if (res.Data != null) {
 			setFlowDefinitions([...flowDefinitions, res.Data])
 			return true
 		}
-		
+
 		if (res.ModelErrors) {
 			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
 				toast.error(value[0])
@@ -82,13 +82,26 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 	}
 
 	const handleUpdate = async () => {
-		const res = await UpdateTaskDefinition(info.Id, info)
-		let temp = [...flowDefinitions]
-		temp[curIndex] = res.Data
-		setFlowDefinitions(temp)
+		let temp = { ...info }
+		let tmp = temp.Activities ?? []
+		tmp = tmp.map((each: any) => ({
+			...each,
+			GroupIds: each.GroupIds ? each.GroupIds.map((each: any) => each.Id) : []
+		}))
+		temp.Activities = tmp
+		const res = await UpdateTaskDefinition(info.Id, temp)
+		if (res.Data != null) {
+			getFlowDefinitions()
+		}
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
 	}
 
-    const isOptionSelected = (list: any, id: any) => {
+	const isOptionSelected = (list: any, id: any) => {
 		let flag = 0
 
 		list?.forEach((item: any) => {
@@ -103,8 +116,8 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			return true
 	}
 
-    const handleMultiChange = (name: string, value: any) => {
-		let temp = {...info}
+	const handleMultiChange = (name: string, value: any) => {
+		let temp = { ...info }
 
 		let tmp: any = []
 		if (temp[`${name}`] == undefined) {
@@ -135,8 +148,8 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 		setInfo(temp)
 	}
 
-    const handleMultiActivityChange = (name: string, value: any, index: number) => {
-		let temp = {...info}
+	const handleMultiActivityChange = (name: string, value: any, index: number) => {
+		let temp = { ...info }
 
 		let tmp: any = []
 		if (temp.Activities[index][`${name}`] == undefined) {
@@ -167,28 +180,28 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 		setInfo(temp)
 	}
 
-    useEffect(() => {
-        let temp: any = []
+	useEffect(() => {
+		let temp: any = []
 
-        if (
-            info &&
-            info.Activities
-        ) {
-            info.Activities.forEach((each: any) => {
-                if (each.Name) {
-                    temp.push(each.Name)
-                }
-            })
-        }
+		if (
+			info &&
+			info.Activities
+		) {
+			info.Activities.forEach((each: any) => {
+				if (each.Name) {
+					temp.push(each.Name)
+				}
+			})
+		}
 
-        setActivities(temp)
-    }, [info])
+		setActivities(temp)
+	}, [info])
 
-    const value = useMemo(
-        () => ({
-            flowDefinitions,
-            curPageNumber,
-            setCurPageNumber,
+	const value = useMemo(
+		() => ({
+			flowDefinitions,
+			curPageNumber,
+			setCurPageNumber,
 			info,
 			setInfo,
 			curIndex,
@@ -197,18 +210,18 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			handleCreate,
 			handleDelete,
 			handleUpdate,
-            groups,
-            handleMultiChange,
-            handleActivityChange,
-            handleDecisionChange,
-            handleMultiActivityChange,
-            activities,
-            setActivities
-        }),
-        [
-            flowDefinitions,
-            curPageNumber,
-            setCurPageNumber,
+			groups,
+			handleMultiChange,
+			handleActivityChange,
+			handleDecisionChange,
+			handleMultiActivityChange,
+			activities,
+			setActivities
+		}),
+		[
+			flowDefinitions,
+			curPageNumber,
+			setCurPageNumber,
 			info,
 			setInfo,
 			curIndex,
@@ -217,25 +230,25 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			handleCreate,
 			handleDelete,
 			handleUpdate,
-            groups,
-            handleMultiChange,
-            handleActivityChange,
-            handleDecisionChange,
-            handleMultiActivityChange,
-            activities,
-            setActivities
-        ]
-    )
+			groups,
+			handleMultiChange,
+			handleActivityChange,
+			handleDecisionChange,
+			handleMultiActivityChange,
+			activities,
+			setActivities
+		]
+	)
 
-    return <FlowDefinitionsContext.Provider value={value}>{children}</FlowDefinitionsContext.Provider>
+	return <FlowDefinitionsContext.Provider value={value}>{children}</FlowDefinitionsContext.Provider>
 }
 
 export const useFlowDefinitions = () => {
-    const context: any = useContext(FlowDefinitionsContext)
-    if (!context) {
-        throw new Error("useFlowDefinitions must be used within FlowDefinitionsProvider")
-    }
-    return context
+	const context: any = useContext(FlowDefinitionsContext)
+	if (!context) {
+		throw new Error("useFlowDefinitions must be used within FlowDefinitionsProvider")
+	}
+	return context
 }
 
 export default FlowDefinitionsProvider

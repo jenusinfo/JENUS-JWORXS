@@ -6,10 +6,14 @@ import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
 import { MdOutlineDelete } from "react-icons/md"
 import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
+import { MdEmail } from "react-icons/md";
+import ShowEmailModal from "./ShowEmailModal"
 
 const DataPanel = () => {
 	const { emailTemplates: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useEmailTemplates()
 	const [isOpen, setIsOpen] = useState(false)
+	const [isEmailOpen, setIsEmailOpen] = useState(false)
+	const [emailData, setEmailData] = useState<any>()
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -66,16 +70,16 @@ const DataPanel = () => {
 									EMAIL ATTACHMENT NAME
 								</div>
 							</th>
-							<th className="py-3">
+							{/* <th className="py-3">
 								<div className="px-2 border-l border-gray-200 text-left">
 									EMAIL BODY
 								</div>
-							</th>
-							<th className="py-3">
+							</th> */}
+							{/* <th className="py-3">
 								<div className="px-2 border-l border-gray-200 text-left">
 									STATUS
 								</div>
-							</th>
+							</th> */}
 						</tr>
 					</thead>
 					<tbody className="text-sm">
@@ -92,10 +96,14 @@ const DataPanel = () => {
 													top={-5}
 												>
 													<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
-														<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(event); setCurIndex(index); }}>
+														<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsEmailOpen(true); setEmailData(event.EmailBody); }}>
+															<MdEmail color="#2454DE" size={18} />
+															<Text text="Open" size={12} weight="500" />
+														</div>
+														{/* <div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(event); setCurIndex(index); }}>
 															<CiEdit color="#2454DE" size={18} />
 															<Text text="Update" size={12} weight="500" />
-														</div>
+														</div> */}
 														<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(event.Id, index)}>
 															<MdOutlineDelete color="red" size={18} />
 															<Text text="Delete" size={12} weight="500" />
@@ -117,13 +125,14 @@ const DataPanel = () => {
 										<td className="px-2">{event.EmailBCC}</td>
 										<td className="px-2">{event.EmailSubject}</td>
 										<td className="px-2">{event.EmailAttachmentName}</td>
-										<td className="px-2">{event.EmailBody}</td>
+										{/* <td className="px-2">{event.EmailBody}</td> */}
 									</tr>
 								))
 						}
 					</tbody>
 				</table>
 			</div>
+			<ShowEmailModal isOpen={isEmailOpen} handleClose={() => setIsEmailOpen(false)} data={emailData} />
 		</div>
 	)
 }
