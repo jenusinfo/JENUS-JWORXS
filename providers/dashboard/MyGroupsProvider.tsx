@@ -1,11 +1,14 @@
 import { useHookGroup } from "hooks/GroupHook";
+import { useHookHashTag } from "hooks/HasTagHook";
+import { useHookWorkitem } from "hooks/WorkitemHook";
 import { createContext, useContext, useMemo, useState } from "react";
 
 const MyGroupsContext: any = createContext(null)
 
 const MyGroupsProvider = ({ children }: any) => {
 
-	const { groups, loading } = useHookGroup()
+	const { hashTags: groups, loading } = useHookHashTag()
+	const { inboxList: workitems} = useHookWorkitem()
 	const groupStatuses = ["all", "in progress", "draft", "completed", "canceled"]
 	const optionList = ["TESTERS", "First Level"]
 	const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
@@ -19,7 +22,8 @@ const MyGroupsProvider = ({ children }: any) => {
 			assignedList,
 			curStatus,
 			setCurStatus,
-			loading
+			loading,
+			workitems
 		}),
 		[
 			groups,
@@ -28,7 +32,8 @@ const MyGroupsProvider = ({ children }: any) => {
 			assignedList,
 			curStatus,
 			setCurStatus,
-			loading
+			loading,
+			workitems
 		]
 	)
 

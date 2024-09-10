@@ -20,9 +20,9 @@ export const Middleware = () => {
         }
       </div>
       <div className="flex gap-2">
-        <select className="px-4 py-2 border border-gray-200 rounded-[5px]">
+        {/* <select className="px-4 py-2 border border-gray-200 rounded-[5px]">
           <option>Most Recent On Top</option>
-        </select>
+        </select> */}
         <select className="px-4 py-2 border border-gray-200 rounded-[5px]">
           {
             optionList.map((item: string, index: number) => (
