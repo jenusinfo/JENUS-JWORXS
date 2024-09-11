@@ -7,7 +7,7 @@ import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 
 const DataPanel = () => {
-	const { auditLogs: data, curPageNumber, setCurPageNumber } = useAuditLogs()
+	const { data, curPageNumber, setCurPageNumber } = useAuditLogs()
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">

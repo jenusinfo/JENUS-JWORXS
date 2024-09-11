@@ -14,7 +14,7 @@ import { IoIosSettings } from "react-icons/io";
 const DataPanel = () => {
 
 	const { push } = useRouter()
-	const { formDefinitions: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useFormDefinitions()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useFormDefinitions()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

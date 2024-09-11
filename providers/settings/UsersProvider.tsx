@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useHookRole } from "hooks/RoleHook";
 import { useHookUsers } from "hooks/Settings/UsersHook";
 import { useHookUnits } from "hooks/Settings/UnitsHook";
@@ -15,9 +15,9 @@ export interface ISettingUser {
 	Id: number
 	UserName: string
 	FirstName: string
-	LastName: null | string
+	LastName: string
 	IsSSO: boolean
-	Email: number
+	Email: string
 	PhoneNumber: null | string
 	Roles: Array<
 		{
@@ -42,6 +42,8 @@ const UsersProvider = ({ children }: any) => {
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState<string>("")
+	const [data, setData] = useState<any[]>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -116,9 +118,24 @@ const UsersProvider = ({ children }: any) => {
 		setUsers(temp)
 	}
 
+	useEffect(() => {
+		if (search) {
+			const filteredUsers = users.filter((user: ISettingUser) =>
+				user.BankUnitName?.toLowerCase().includes(search.toLowerCase()) ||
+				((user.FirstName ?? "") + " " + (user.LastName ?? ""))?.toLowerCase().includes(search.toLowerCase()) ||
+				user.Email.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredUsers);
+		} else {
+			setData(users)
+		}
+	}, [search])
+
+	useEffect(() => { setData(users) }, [users])
+
 	const value = useMemo(
 		() => ({
-			users,
+			users, data,
 			curPageNumber,
 			setCurPageNumber,
 			info,
@@ -134,10 +151,12 @@ const UsersProvider = ({ children }: any) => {
 			targets,
 			documentCategories,
 			units,
-			groups
+			groups,
+			search,
+			setSearch
 		}),
 		[
-			users,
+			users, data,
 			curPageNumber,
 			setCurPageNumber,
 			info,
@@ -153,7 +172,9 @@ const UsersProvider = ({ children }: any) => {
 			targets,
 			documentCategories,
 			units,
-			groups
+			groups,
+			search,
+			setSearch
 		]
 	)
 

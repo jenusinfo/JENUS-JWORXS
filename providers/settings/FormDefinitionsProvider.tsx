@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useHookHashTag } from "hooks/HasTagHook";
 import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
 import { useHookFormDefinitions } from "hooks/Settings/FormDefinitions";
@@ -42,6 +42,8 @@ const FormDefinitionsProvider = ({ children }: any) => {
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
     const [info, setInfo] = useState<any>({})
+    const [search, setSearch] = useState("")
+    const [data, setData] = useState<any>([])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInfo({
@@ -132,9 +134,23 @@ const FormDefinitionsProvider = ({ children }: any) => {
         setInfo(temp)
     }
 
+    useEffect(() => {
+		if (search) {
+			const filteredData = formDefinitions.filter((item: IFormDefinitions) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.HashTags?.join(",").toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(formDefinitions)
+		}
+	}, [search])
+
+	useEffect(() => { setData(formDefinitions) }, [formDefinitions])
+
     const value = useMemo(
         () => ({
-            flowDefinitions,
+            flowDefinitions, data,
             curPageNumber,
             setCurPageNumber,
             info,
@@ -148,10 +164,11 @@ const FormDefinitionsProvider = ({ children }: any) => {
             formDefinitions,
             groups,
             hashTags,
-            handleMultiChange
+            handleMultiChange,
+            search, setSearch
         }),
         [
-            flowDefinitions,
+            flowDefinitions, data,
             curPageNumber,
             setCurPageNumber,
             info,
@@ -165,7 +182,8 @@ const FormDefinitionsProvider = ({ children }: any) => {
             formDefinitions,
             groups,
             hashTags,
-            handleMultiChange
+            handleMultiChange,
+            search, setSearch
         ]
     )
 

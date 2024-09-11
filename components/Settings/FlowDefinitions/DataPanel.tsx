@@ -10,7 +10,7 @@ import { IFlowDefinitions, useFlowDefinitions } from "providers/settings/FlowDef
 import { GetFlowDefinitionById } from 'lib/settings/flow-definitions';
 
 const DataPanel = () => {
-	const { flowDefinitions: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex, groups, info } = useFlowDefinitions()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex, groups, info } = useFlowDefinitions()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

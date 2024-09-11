@@ -17,7 +17,7 @@ const FlowDefinitionsModal = ({ isOpen, handleClose }: {
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
 			<div className="rounded-[2px] py-5">
 				<div className="px-[29px] pb-4 border-b border-gray-100">
-					<Text text="Form Definition Details" size={16} weight="700" color="black" />
+					<Text text="Flow Definition Details" size={16} weight="700" color="black" />
 				</div>
 				<div className="mt-6 flex flex-col gap-5 px-[34px]">
 					<FormInput label="Name" name="name" info={info} handleChange={handleChange} />

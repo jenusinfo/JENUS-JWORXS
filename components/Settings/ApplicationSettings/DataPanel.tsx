@@ -7,7 +7,7 @@ import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 
 const DataPanel = () => {
-	const { applicationSettings: data, curPageNumber, setCurPageNumber } = useApplicationSettings()
+	const { data, curPageNumber, setCurPageNumber } = useApplicationSettings()
 
 	return (
 		<div className="border border-gray-200 rounded-[5px] mt-2 bg-white">

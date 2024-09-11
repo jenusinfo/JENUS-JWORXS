@@ -1,6 +1,6 @@
 import { useHookUnits } from "hooks/Settings/UnitsHook";
 import { CreateUnit, DeleteUnit, GetUnits, UpdateUnit } from "lib/settings/units";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const UnitsContext: any = createContext(null)
 
@@ -32,6 +32,8 @@ const UnitsProvider = ({ children }: any) => {
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any[]>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -59,9 +61,25 @@ const UnitsProvider = ({ children }: any) => {
 		setUnits(temp)
 	}
 
+	useEffect(() => {
+		if (search) {
+			const filteredUnits = units.filter((unit: IUnit) =>
+				unit.UnitName.toLowerCase().includes(search.toLowerCase()) ||
+				unit.UnitCode.toLowerCase().includes(search.toLowerCase()) ||
+				unit.Email?.toLowerCase().includes(search.toLowerCase()) ||
+				unit.ParentUnitCode?.toString().includes(search.toLowerCase())
+			);
+			setData(filteredUnits);
+		} else {
+			setData(units)
+		}
+	}, [search])
+
+	useEffect(() => { setData(units) }, [units])
+
 	const value = useMemo(
 		() => ({
-			units,
+			units, data,
 			parentBankList,
 			curPageNumber,
 			setCurPageNumber,
@@ -72,10 +90,12 @@ const UnitsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch
 		}),
 		[
-			units,
+			units, data,
 			parentBankList,
 			curPageNumber,
 			setCurPageNumber,
@@ -86,7 +106,9 @@ const UnitsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch
 		]
 	)
 

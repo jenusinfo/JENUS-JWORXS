@@ -1,6 +1,6 @@
 import { useHookTargets } from "hooks/Settings/TargetsHook";
 import { CreateTarget, DeleteTarget, UpdateTarget } from "lib/settings/targets";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const TargetsContext: any = createContext(null)
 
@@ -23,6 +23,8 @@ const TargetsProvider = ({ children }: any) => {
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -50,9 +52,23 @@ const TargetsProvider = ({ children }: any) => {
 		setTargets(temp)
 	}
 
+	useEffect(() => {
+		if (search) {
+			const filteredData = targets.filter((item: ITarget) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.Description?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(targets)
+		}
+	}, [search])
+
+	useEffect(() => { setData(targets) }, [targets])
+
     const value = useMemo(
         () => ({
-            targets,
+            targets, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -62,10 +78,11 @@ const TargetsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         }),
         [
-            targets,
+            targets, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -75,7 +92,8 @@ const TargetsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         ]
     )
 

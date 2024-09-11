@@ -37,7 +37,7 @@ const WorkitemProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
-    let temp = inboxList.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
+    let temp = inboxList?.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
       .filter((each: IInbox) => curStatus == "All" ? true : each.StatusCode == curStatus)
       .filter((each: IInbox) => {
         if (Array.isArray(searchHashTag)) {
@@ -64,8 +64,8 @@ const WorkitemProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (group) {
-      setCurHashTag(group)
-      setSearchHashTag(group)
+      setCurHashTag([group])
+      setSearchHashTag([group])
     } else {
       setCurHashTag("All")
       setSearchHashTag("All")

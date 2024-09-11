@@ -1,7 +1,7 @@
 import { useHookDocument } from "hooks/Documents/DocumentHook";
 import { useHookDocumentCategories } from "hooks/Settings/DocumentCategories";
 import { CreateDocumentCategory, DeleteDocumentCategory, UpdateDocumentCategory } from "lib/settings/document-categories";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const DocumentCategoriesContext: any = createContext(null)
 
@@ -30,6 +30,8 @@ const DocumentCategoriesProvider = ({ children }: any) => {
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+    const [search, setSearch] = useState('')
+    const [data, setData] = useState<any>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -57,9 +59,23 @@ const DocumentCategoriesProvider = ({ children }: any) => {
 		setDocumentCategories(temp)
 	}
 
+    useEffect(() => {
+		if (search) {
+			const filteredData = documentCategories.filter((item: IDocumentCategories) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.Description?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(documentCategories)
+		}
+	}, [search])
+
+	useEffect(() => { setData(documentCategories) }, [documentCategories])
+
     const value = useMemo(
         () => ({
-            documentCategories,
+            documentCategories, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -71,10 +87,11 @@ const DocumentCategoriesProvider = ({ children }: any) => {
 			handleDelete,
 			handleUpdate,
             searchApplications,
-            associatedImports
+            associatedImports,
+            search, setSearch
         }),
         [
-            documentCategories,
+            documentCategories, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -86,7 +103,8 @@ const DocumentCategoriesProvider = ({ children }: any) => {
 			handleDelete,
 			handleUpdate,
             searchApplications,
-            associatedImports
+            associatedImports,
+            search, setSearch
         ]
     )
 

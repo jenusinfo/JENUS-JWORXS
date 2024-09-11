@@ -1,6 +1,6 @@
 import { useHookGroups } from "hooks/Settings/GroupsHook";
 import { CreateGroup, DeleteGroup, UpdateGroup } from "lib/settings/groups";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const GroupsContext: any = createContext(null)
 
@@ -20,6 +20,8 @@ const GroupsProvider = ({ children }: any) => {
 	const [curPageNumber, setCurPageNumber] = useState(1)
 	const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any[]>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -47,6 +49,20 @@ const GroupsProvider = ({ children }: any) => {
 		setGroups(temp)
 	}
 
+	useEffect(() => {
+		if (search) {
+			const filteredData = groups.filter((item: any) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.Description.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(groups)
+		}
+	}, [search])
+
+	useEffect(() => { setData(groups) }, [groups])
+
 	const value = useMemo(
 		() => ({
 			groups,
@@ -59,7 +75,11 @@ const GroupsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch,
+			data,
+			setData
 		}),
 		[
 			groups,
@@ -72,7 +92,11 @@ const GroupsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch,
+			data,
+			setData
 		]
 	)
 

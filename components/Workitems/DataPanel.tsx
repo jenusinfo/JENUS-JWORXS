@@ -13,7 +13,7 @@ const DataPanel = () => {
       <div className="pl-6 pr-2 py-2 flex items-center justify-between border-b border-gray-200">
         <IoRefresh />
         <div className="flex items-center gap-2">
-          <Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data.length}`} />
+          <Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data?.length}`} />
           <IoIosArrowBack className="hover:cursor-pointer" onClick={curPageNumber > 1 ? () => setCurPageNumber(curPageNumber - 1) : () => { }} />
           <IoIosArrowForward className="hover:cursor-pointer" onClick={() => setCurPageNumber(curPageNumber + 1)} />
         </div>
@@ -71,6 +71,7 @@ const DataPanel = () => {
         </thead>
         <tbody className="text-sm">
           {
+            data &&
             data
               .sort((a: IInbox, b: IInbox) => a.Id - b.Id)
               .slice((curPageNumber - 1) * 10, curPageNumber * 10)

@@ -1,5 +1,5 @@
 import { useHookAppSettings } from "hooks/Settings/ApplicationSettings";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const ApplicationSettingsContext: any = createContext(null)
 
@@ -12,17 +12,35 @@ const ApplicationSettingsProvider = ({ children }: any) => {
 
     const { applicationSettings, setApplicationSettings } = useHookAppSettings()
     const [curPageNumber, setCurPageNumber] = useState(1)
+    const [search, setSearch] = useState("")
+    const [data, setData] = useState<any>([])
+
+    useEffect(() => {
+		if (search) {
+			const filteredData = applicationSettings.filter((item: IApplicationSettings) =>
+				item.Key.toLowerCase().includes(search.toLowerCase()) ||
+				item.Value?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(applicationSettings)
+		}
+	}, [search])
+
+	useEffect(() => { setData(applicationSettings) }, [applicationSettings])
 
     const value = useMemo(
         () => ({
-            applicationSettings,
+            applicationSettings, data,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+            search, setSearch
         }),
         [
-            applicationSettings,
+            applicationSettings, data,
             curPageNumber,
-            setCurPageNumber
+            setCurPageNumber,
+            search, setSearch
         ]
     )
 

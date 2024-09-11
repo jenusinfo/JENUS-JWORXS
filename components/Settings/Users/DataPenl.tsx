@@ -9,7 +9,7 @@ import Text from "shared/core/ui/Text"
 import UsersModal from "./Modal"
 
 const DataPanel = () => {
-	const { users: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useUsers()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useUsers()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (
@@ -96,10 +96,10 @@ const DataPanel = () => {
 									</td>
 									<td className="px-2">{inbox.Id}</td>
 									<td className="px-2">{inbox.BankUnitName}</td>
-									<td className="px-2 text-right">{inbox.FirstName + " " + inbox.LastName}</td>
+									<td className="px-2 text-right">{(inbox.FirstName ?? "") + " " + (inbox.LastName ?? "")}</td>
 									<td className="px-2">{inbox.Email}</td>
 									<td className="px-2">{inbox.BankUnitId}</td>
-									<td className="px-2">{inbox.Roles[0].Name}</td>
+									<td className="px-2">{inbox.Roles ? inbox.Roles[0].Name : ''}</td>
 									<td className="px-2">
 										<div className="flex items-center gap-1 font-semibold">
 											<div className={"border-2 w-2 h-2 rounded-full " + (inbox.IsSSO ? 'border-[#1ed6bb]' : 'border-[#fb5656]')} />

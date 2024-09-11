@@ -21,6 +21,6 @@ export const useHookHashTag = () => {
     }, [])
 
     return {
-        hashTags, setHashTags, loading
+        hashTags, setHashTags, loading, getHashTags
     }
 }

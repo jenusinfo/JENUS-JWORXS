@@ -6,3 +6,10 @@ export const GetHashTags = async () => {
     if (res?.status)
         return res.data
 }
+
+export const CreateHashTag = async (info: any) => {
+    const res = await http.post(`/HashTags`, info)
+
+    if (res?.status)
+        return res.data
+}

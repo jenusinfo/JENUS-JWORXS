@@ -11,7 +11,7 @@ export const useHookFormDefinitions = () => {
         const data = await GetFormDefinitions()
 
         if (data)
-            setFormDefinitions(data.Data)
+            setFormDefinitions(data.Data ? data.Data : [])
         setLoading(false)
     }
 

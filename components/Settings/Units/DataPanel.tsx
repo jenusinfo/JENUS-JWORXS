@@ -9,7 +9,7 @@ import UnitsModal from "./Modal";
 import { useState } from "react";
 
 const DataPanel = () => {
-	const { units: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useUnits()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useUnits()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

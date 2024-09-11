@@ -39,6 +39,11 @@ const EventServicesDataPanel = () => {
                                 </div>
                             </th>
                             <th className="py-3">
+                                <div className="px-2 border-l border-gray-200 text-left">
+                                    METHOD
+                                </div>
+                            </th>
+                            <th className="py-3">
                                 <div className="px-2 border-l border-gray-200 text-right">
                                     CREATED ON
                                 </div>
@@ -91,6 +96,7 @@ const EventServicesDataPanel = () => {
                                     </td>
                                     <td className="px-2">{inbox.Id}</td>
                                     <td className="px-2">{inbox.Name}</td>
+                                    <td className="px-2">{inbox.RequestType}</td>
                                     <td className="px-2 text-right">{getFormattedDate(inbox.CreatedOn)}</td>
                                     <td className="px-2 text-right">{inbox.CreatedBy}</td>
                                     <td className="px-2 text-right">{getFormattedDate(inbox.ModifiedOn)}</td>

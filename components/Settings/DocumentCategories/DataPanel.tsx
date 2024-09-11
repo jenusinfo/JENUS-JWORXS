@@ -9,7 +9,7 @@ import Text from "shared/core/ui/Text"
 import DocumentCategoriesModal from "./Modal"
 
 const DataPanel = () => {
-	const { documentCategories: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useDocumentCategories()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useDocumentCategories()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

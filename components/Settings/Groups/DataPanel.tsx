@@ -9,7 +9,7 @@ import GroupsModal from "./Modal"
 import { useState } from "react"
 
 const DataPanel = () => {
-	const { groups: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useGroups()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useGroups()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

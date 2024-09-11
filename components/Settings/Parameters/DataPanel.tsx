@@ -12,7 +12,7 @@ import { useRouter } from "next/router"
 const DataPanel = () => {
 
 	const { push } = useRouter()
-	const { parameters: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useParameters()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useParameters()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

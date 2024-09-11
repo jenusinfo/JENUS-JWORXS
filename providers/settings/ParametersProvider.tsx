@@ -1,6 +1,6 @@
 import { useHookParameters } from "hooks/Settings/ParametersHook";
 import { CreateParameter, DeleteParameter, UpdateParameter } from "lib/settings/parameters";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const ParametersContext: any = createContext(null)
 
@@ -23,6 +23,8 @@ const ParametersProvider = ({ children }: any) => {
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -49,10 +51,24 @@ const ParametersProvider = ({ children }: any) => {
 		temp[curIndex] = res.Data
 		setParameters(temp)
 	}
+	
+	useEffect(() => {
+		if (search) {
+			const filteredData = parameters.filter((item: IParameter) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.Description?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(parameters)
+		}
+	}, [search])
+
+	useEffect(() => { setData(parameters) }, [parameters])
 
     const value = useMemo(
         () => ({
-            parameters,
+            parameters, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -62,10 +78,12 @@ const ParametersProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch
         }),
         [
-            parameters,
+            parameters, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -75,7 +93,9 @@ const ParametersProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search,
+			setSearch
         ]
     )
 

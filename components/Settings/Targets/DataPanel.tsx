@@ -9,7 +9,7 @@ import TargetsModal from "./Modal"
 import { useState } from "react"
 
 const DataPanel = () => {
-	const { targets: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useTargets()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useTargets()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (

@@ -1,6 +1,6 @@
 import { useHookEmailTemplates } from "hooks/Settings/EmailTemplatesHook";
 import { CreateEmailTemplate, DeleteEmailTemplate, UpdateEmailTemplate } from "lib/settings/email-templates";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const EmailTemplatesContext: any = createContext(null)
 
@@ -21,6 +21,8 @@ const EmailTemplatesProvider = ({ children }: any) => {
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -50,9 +52,27 @@ const EmailTemplatesProvider = ({ children }: any) => {
 		setEmailTemplates(temp)
 	}
 
+	useEffect(() => {
+		if (search) {
+			const filteredData = emailTemplates.filter((item: IEmailTemplates) =>
+				item.DocumentDefinition.toLowerCase().includes(search.toLowerCase()) ||
+				item.EmailFrom?.toLowerCase().includes(search.toLowerCase()) ||
+				item.EmailCC?.toLowerCase().includes(search.toLowerCase()) ||
+				item.EmailBCC?.toLowerCase().includes(search.toLowerCase()) ||
+				item.EmailSubject?.toLowerCase().includes(search.toLowerCase()) ||
+				item.EmailAttachmentName?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(emailTemplates)
+		}
+	}, [search])
+
+	useEffect(() => { setData(emailTemplates) }, [emailTemplates])
+
     const value = useMemo(
         () => ({
-            emailTemplates,
+            emailTemplates, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -62,10 +82,11 @@ const EmailTemplatesProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         }),
         [
-            emailTemplates,
+            emailTemplates, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -75,7 +96,8 @@ const EmailTemplatesProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         ]
     )
 

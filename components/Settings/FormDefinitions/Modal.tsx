@@ -49,7 +49,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 						label="Task Type"
 						name="TaskDefinitionId"
 						info={info}
-						optionList={[{value: "", name: ""}, ...formDefinitions.map((each: any) => ({
+						optionList={[{value: "", name: ""}, ...formDefinitions?.map((each: any) => ({
 							value: each.Id,
 							name: each.Name
 						}))]}

@@ -33,6 +33,8 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 	const [info, setInfo] = useState<any>({
 		Activities: []
 	})
+	const [data, setData] = useState<any>([])
+	const [search, setSearch] = useState('')
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -197,9 +199,24 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 		setActivities(temp)
 	}, [info])
 
+	useEffect(() => {
+		if (search) {
+			const filteredData = flowDefinitions.filter((item: IFlowDefinitions) =>
+				item.Name.toLowerCase().includes(search.toLowerCase()) ||
+				item.Description?.toLowerCase().includes(search.toLowerCase()) ||
+				item.Comments?.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(flowDefinitions)
+		}
+	}, [search])
+
+	useEffect(() => { setData(flowDefinitions) }, [flowDefinitions])
+
 	const value = useMemo(
 		() => ({
-			flowDefinitions,
+			flowDefinitions, data,
 			curPageNumber,
 			setCurPageNumber,
 			info,
@@ -216,10 +233,11 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			handleDecisionChange,
 			handleMultiActivityChange,
 			activities,
-			setActivities
+			setActivities,
+			search, setSearch
 		}),
 		[
-			flowDefinitions,
+			flowDefinitions, data,
 			curPageNumber,
 			setCurPageNumber,
 			info,
@@ -236,7 +254,8 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			handleDecisionChange,
 			handleMultiActivityChange,
 			activities,
-			setActivities
+			setActivities,
+			search, setSearch
 		]
 	)
 

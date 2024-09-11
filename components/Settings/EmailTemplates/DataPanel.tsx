@@ -10,7 +10,7 @@ import { MdEmail } from "react-icons/md";
 import ShowEmailModal from "./ShowEmailModal"
 
 const DataPanel = () => {
-	const { emailTemplates: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useEmailTemplates()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useEmailTemplates()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isEmailOpen, setIsEmailOpen] = useState(false)
 	const [emailData, setEmailData] = useState<any>()
