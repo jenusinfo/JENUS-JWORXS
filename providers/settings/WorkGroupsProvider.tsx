@@ -1,15 +1,17 @@
 import { useHookHashTag } from "hooks/HasTagHook";
-// import { CreateHashTag, DeleteWorkGroup, UpdateWorkGroup } from "lib/hashtag";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { CreateHashTag, DeleteHashTag, UpdateHashTag } from "lib/hashtag";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const WorkGroupsContext: any = createContext(null)
 
 const WorkGroupsProvider = ({ children }: any) => {
 
-    const { hashTags, setHashTags, getHashTags } = useHookHashTag()
+    const { workGroups, setWorkGroups, getHashTagDetail } = useHookHashTag()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
+	const [search, setSearch] = useState("")
+	const [data, setData] = useState<any>([])
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInfo({
@@ -19,28 +21,36 @@ const WorkGroupsProvider = ({ children }: any) => {
 	}
 
 	const handleCreate = async () => {
-		// const res = await CreateHashTag(info)
-
-        // console.log(res)
-		// if (res.Data != null)
-		// 	setHashTags([...hashTags, res.Data])
+		const res = await CreateHashTag(info)
+		getHashTagDetail()
 	}
 
-	const handleDelete = async (id: any, index: number) => {
-		// await DeleteWorkGroup(id)
-		getHashTags()
+	const handleDelete = async (id: any) => {
+		await DeleteHashTag(id)
+		getHashTagDetail()
 	}
 
 	const handleUpdate = async () => {
-		// const res = await UpdateWorkGroup(info.Id, info)
-		let temp = [...hashTags]
-		// temp[curIndex] = res.Data
-		setHashTags(temp)
+		const res = await UpdateHashTag(info.Id, info)
+		getHashTagDetail()
 	}
+
+	useEffect(() => {
+		if (search) {
+			const filteredData = workGroups.filter((item: any) =>
+				item.Tag.toLowerCase().includes(search.toLowerCase())
+			);
+			setData(filteredData);
+		} else {
+			setData(workGroups)
+		}
+	}, [search])
+
+	useEffect(() => { setData(workGroups) }, [workGroups])
 
     const value = useMemo(
         () => ({
-            hashTags,
+            workGroups, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -50,10 +60,11 @@ const WorkGroupsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         }),
         [
-            hashTags,
+            workGroups, data,
             curPageNumber,
             setCurPageNumber,
 			info,
@@ -63,7 +74,8 @@ const WorkGroupsProvider = ({ children }: any) => {
 			handleChange,
 			handleCreate,
 			handleDelete,
-			handleUpdate
+			handleUpdate,
+			search, setSearch
         ]
     )
 

@@ -30,8 +30,8 @@ const HeaderPanel = () => {
 			setRight([
 				{ name: "Status", value: formFullInfo[0].IsActive ? 'Active' : 'Inactive' },
 				{ name: "Checker Required", value: formFullInfo[0].IsCheckerRequired ? 'Yes' : 'No' },
-				{ name: "Created On", value: formFullInfo[0].CreatedOn },
-				{ name: "Modified On", value: formFullInfo[0].ModifiedOn }
+				{ name: "Created On", value: new Date(formFullInfo[0].CreatedOn).toLocaleDateString('en-GB') },
+				{ name: "Modified On", value: new Date(formFullInfo[0].ModifiedOn).toLocaleDateString('en-GB') }
 			])
 		}
 	}, [formFullInfo])

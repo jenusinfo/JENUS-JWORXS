@@ -7,9 +7,10 @@ import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 import UsersModal from "./Modal"
 import { useWorkGroups } from "providers/settings/WorkGroupsProvider"
+import { getFormattedDate } from '../../../shared/helper/common';
 
 const WorkGroupsDataPanel = () => {
-	const { hashTags: data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useWorkGroups()
+	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useWorkGroups()
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (
@@ -17,7 +18,7 @@ const WorkGroupsDataPanel = () => {
 			<div className="pl-6 pr-2 py-2 flex items-center justify-between border-b border-gray-200">
 				<IoRefresh />
 				<div className="flex items-center gap-2">
-					<Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data.length}`} />
+					<Text text={`${(curPageNumber - 1) * 10 + 1}-${curPageNumber * 10} of ${data?.length}`} />
 					<IoIosArrowBack className="hover:cursor-pointer" onClick={curPageNumber > 1 ? () => setCurPageNumber(curPageNumber - 1) : () => { }} />
 					<IoIosArrowForward className="hover:cursor-pointer" onClick={() => setCurPageNumber(curPageNumber + 1)} />
 				</div>
@@ -46,13 +47,34 @@ const WorkGroupsDataPanel = () => {
 								STATUS
 							</div>
 						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								Created By
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								Created On
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								Modified By
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								Modified On
+							</div>
+						</th>
 					</tr>
 				</thead>
 				<tbody className="text-sm">
 					{
+						data &&
 						data
 							.slice((curPageNumber - 1) * 10, curPageNumber * 10)
-							.map((inbox: string, index: number) => (
+							.map((inbox: any, index: number) => (
 								<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500">
 									<td className="py-5">
 										<div className="flex justify-center">
@@ -66,15 +88,26 @@ const WorkGroupsDataPanel = () => {
 														<CiEdit color="#2454DE" size={18} />
 														<Text text="Update" size={12} weight="500" />
 													</div>
-													{/* <div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(inbox.Id, index)}>
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(inbox.Id, index)}>
 														<MdOutlineDelete color="red" size={18} />
 														<Text text="Delete" size={12} weight="500" />
-													</div> */}
+													</div>
 												</div>
 											</DropDown>
 										</div>
 									</td>
-									<td className="px-2">{inbox}</td>
+									<td className="px-2">{inbox.Id}</td>
+									<td className="px-2">{inbox.Tag}</td>
+									<td className="px-2">
+										<div className="flex items-center gap-1 font-semibold">
+											<div className={"border-2 w-2 h-2 rounded-full " + (inbox.IsActive ? 'border-[#1ed6bb]' : 'border-[#fb5656]')} />
+											<Text text={inbox.IsActive ? 'Active' : 'Inactive'} weight="500" />
+										</div>
+									</td>
+									<td className="px-2">{inbox.CreatedById}</td>
+									<td className="px-2">{getFormattedDate(inbox.CreatedOn)}</td>
+									<td className="px-2">{inbox.ModifiedById}</td>
+									<td className="px-2">{getFormattedDate(inbox.ModifiedOn)}</td>
 								</tr>
 							))
 					}
