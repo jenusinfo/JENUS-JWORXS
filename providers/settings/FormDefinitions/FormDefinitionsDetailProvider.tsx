@@ -1,13 +1,17 @@
 import { useHookFormDefinitionsDetail } from "hooks/Settings/FormDefinitionsDetailHook";
-import { CreateInterviewSection, DeleteInterviewSection, UpdateInterviewSection } from "lib/interview";
+import { CopyInterviewForm, CreateInterviewSection, DeleteInterviewSection, UpdateInterviewSection } from "lib/interview";
 import { useRouter } from "next/router";
+import { useApp } from "providers/AppProvider";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import http from "services/http-common";
 
 const FormDefinitionsDetailContext: any = createContext(null)
 
 const FormDefinitionsDetailProvider = ({ children }: any) => {
 
+	const { setStep, setCurForm } = useApp()
+	const { push } = useRouter()
 	const { id } = useRouter().query
 	const { 
 		formFullInfo, getFullInfoFormDefinitions, 
@@ -15,6 +19,7 @@ const FormDefinitionsDetailProvider = ({ children }: any) => {
 	} = useHookFormDefinitionsDetail()
 	const [info, setInfo] = useState<any>({})
 	const [curIndex, setCurIndex] = useState(-1)
+	const [isCopyLoading, setIsCopyLoading] = useState(false)
 
 	const handleChange = (e: any) => {
 		setInfo({
@@ -56,6 +61,41 @@ const FormDefinitionsDetailProvider = ({ children }: any) => {
 		return true
 	}
 
+	const handleCopy = async () => {
+		setIsCopyLoading(true)
+		const res = await CopyInterviewForm(id)
+
+		toast.success("Interview form copied successfully!")
+		setIsCopyLoading(false)
+	}
+
+	const xmlGenerator = (xmltext: any) => {
+        var filename = "file.xml";
+        var pom = document.createElement("a");
+        var bb = new Blob([xmltext], { type: "text/plain" });
+        pom.setAttribute("href", window.URL.createObjectURL(bb));
+        pom.setAttribute("download", filename);
+        pom.dataset.downloadurl = ["text/plain", pom.download, pom.href].join(":");
+        pom.draggable = true;
+        pom.classList.add("dragout");
+        pom.click();
+    };
+	
+	const handleXmlSample = async () => {
+		const res = await http.get("/Interviews/Forms/SampleXML/" + id)
+		if (res?.status)
+			xmlGenerator(res.data);
+	}
+
+	const handleStart = async () => {
+		setStep(2)
+		let res = await http.get(`/Interviews/Forms/${id}`)
+		if (res?.status) {
+			setCurForm(res.data.Data)
+			await push("/workitems/interview")
+		}
+	}
+
 	useEffect(() => {
 		if (id) {
 			getFullInfoFormDefinitions(id)
@@ -72,7 +112,9 @@ const FormDefinitionsDetailProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange, 
+			handleCopy, handleXmlSample, handleStart,
+			isCopyLoading, setIsCopyLoading
 		}),
 		[
 			formFullInfo,
@@ -82,7 +124,9 @@ const FormDefinitionsDetailProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange,
+			handleCopy, handleXmlSample, handleStart,
+			isCopyLoading, setIsCopyLoading
 		]
 	)
 

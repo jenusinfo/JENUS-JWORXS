@@ -37,6 +37,7 @@ const WorkitemProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
+    console.log(inboxList)
     let temp = inboxList?.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
       .filter((each: IInbox) => curStatus == "All" ? true : each.StatusCode == curStatus)
       .filter((each: IInbox) => {

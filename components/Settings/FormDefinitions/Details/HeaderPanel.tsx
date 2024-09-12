@@ -2,11 +2,18 @@ import { useRouter } from "next/router"
 import { useFormDefinitionsDetail } from "providers/settings/FormDefinitions/FormDefinitionsDetailProvider"
 import { useEffect, useState } from "react"
 import Text from "shared/core/ui/Text"
+import { FaRegCopy } from "react-icons/fa6";
+import { FaPlay } from "react-icons/fa";
+import { BiSolidFileExport } from "react-icons/bi";
+import Loading from 'react-loading'
 
 const HeaderPanel = () => {
 
+	const classes = {
+		button: "flex items-center gap-2 text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit hover:bg-blue-100 transition-all duration-400"
+	}
 	const { push } = useRouter()
-	const { formFullInfo } = useFormDefinitionsDetail()
+	const { formFullInfo, handleCopy, handleXmlSample, handleStart, isCopyLoading } = useFormDefinitionsDetail()
 
 	const [left, setLeft] = useState<any>([])
 	const [right, setRight] = useState<any>([])
@@ -31,12 +38,34 @@ const HeaderPanel = () => {
 
 	return (
 		<div className="flex flex-col gap-8">
-			<div className="flex items-center gap-1">
-				<div onClick={() => push("/settings/form-definitions")}>
-					<Text text="Interview Forms" size={14} weight="500" color="#2B8BE9" className="hover:cursor-pointer" />
+			<div className="flex justify-between">
+				<div className="flex items-center gap-1">
+					<div onClick={() => push("/settings/form-definitions")}>
+						<Text text="Interview Forms" size={14} weight="500" color="#2B8BE9" className="hover:cursor-pointer" />
+					</div>
+					<Text text=">>" size={14} weight="600" color="#2B8BE9" />
+					<Text text={formFullInfo && formFullInfo[0] && formFullInfo[0].Name} size={14} weight="500" color="#275E93" />
 				</div>
-				<Text text=">>" size={14} weight="600" color="#2B8BE9" />
-				<Text text={formFullInfo && formFullInfo[0] && formFullInfo[0].Name} size={14} weight="500" color="#275E93" />
+				<div className="flex gap-2">
+					<button 
+						className={classes.button}
+						onClick={handleCopy}
+					>
+						{isCopyLoading ? <Loading type="spin" color="#2454de" width={24} height={24} /> : <><FaRegCopy /> Copy</>} 
+					</button>
+					<button 
+						className={classes.button}
+						onClick={handleXmlSample}
+					>
+						<BiSolidFileExport /> Xml Sample
+					</button>
+					<button 
+						className={classes.button}
+						onClick={handleStart}
+					>
+						<FaPlay /> Start
+					</button>
+				</div>
 			</div>
 			<div className="bg-white shadow-md p-6 flex gap-5">
 				<div className="flex flex-col gap-1 w-full">

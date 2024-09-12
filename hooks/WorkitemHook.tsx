@@ -11,7 +11,7 @@ export const useHookWorkitem = () => {
         const data = await GetInbox()
 
         if (data)
-            setInboxList(data.Data == null ? [] : data)
+            setInboxList(data.Data == null ? [] : data.Data)
         setLoading(false)
     }
 

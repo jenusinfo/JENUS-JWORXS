@@ -4,6 +4,7 @@ import http from "services/http-common";
 import { getCookie } from "shared/helper/tokens";
 import { Icon } from "shared/icons";
 import { IUser } from "types/auth";
+import { IForm } from "types/dashboard";
 
 const AppContext: any = createContext(null)
 
@@ -53,6 +54,8 @@ const AppProvider = ({ children }: any) => {
   const [loading, setLoading] = useState(false)
   const [group, setGroup] = useState(null)
   const [isMinimize, setIsMinimize] = useState(true)
+  const [step, setStep] = useState(1)
+  const [curForm, setCurForm] = useState<IForm>()
 
   const getUserInfo = async () => {
     const res = await http.get("/Org/Account/GetUserInfo")
@@ -93,7 +96,11 @@ const AppProvider = ({ children }: any) => {
       loading,
       setLoading,
       isMinimize,
-      setIsMinimize
+      setIsMinimize,
+      step,
+      setStep,
+      curForm,
+      setCurForm
     }),
     [
       MENULIST,
@@ -105,7 +112,11 @@ const AppProvider = ({ children }: any) => {
       loading,
       setLoading,
       isMinimize,
-      setIsMinimize
+      setIsMinimize,
+      step,
+      setStep,
+      curForm,
+      setCurForm
     ]
   )
 

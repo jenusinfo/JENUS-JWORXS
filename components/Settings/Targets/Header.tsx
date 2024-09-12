@@ -24,8 +24,8 @@ const TargetsHeader = () => {
                     <input className={classes.input} placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} />
                     <CiSearch className="absolute left-2 top-2" size={20} />
                 </div>
-                <CSVLink filename="Jdocs-targets" data={data} className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit">Export As</CSVLink>
-                <button className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit" onClick={() => { setIsOpen(true); setInfo({}); setCurIndex(-1); }}>Create New+</button>
+                <CSVLink filename="Jdocs-targets" data={data} className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit hover:bg-blue-100 transition-all duration-400">Export As</CSVLink>
+                <button className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit hover:bg-blue-600 transition-all duration-400" onClick={() => { setIsOpen(true); setInfo({}); setCurIndex(-1); }}>Create New+</button>
             </div>
             <TargetsModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
         </div>

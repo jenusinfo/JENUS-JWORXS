@@ -21,7 +21,7 @@ const ApplicationSettingsHeader = () => {
                     <input className={classes.input} placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} />
                     <CiSearch className="absolute left-2 top-2" size={20} />
                 </div>
-                <CSVLink filename="Jdocs-application-settings" data={data} className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit">Export As</CSVLink>
+                <CSVLink filename="Jdocs-application-settings" data={data} className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit hover:bg-blue-100 transition-all duration-400">Export As</CSVLink>
             </div>
         </div>
     )
