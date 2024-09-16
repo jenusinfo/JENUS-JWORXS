@@ -11,9 +11,15 @@ const WorkitemProvider = ({ children }: any) => {
   const { group } = useApp()
   const WorkitemStatuses = ["All", "InProgress", "Draft", "Completed", null]
   const { hashTags: optionList } = useHookHashTag()
-  const assignedList = ["Assigned to All", "Assigned to Me", "Assigned On My Unit", "Assigned To Other"]
-  const { inboxList, setInboxList, getInbox: handleGetWorkitems, loading } = useHookWorkitem()
+  const assignedList = [
+    {name: "Assigned to All", value: "All"}, 
+    {name: "Assigned to Me", value: "AssignedOnMe"}, 
+    {name: "Assigned On My Unit", value: "AssignedOnMyUnit"}, 
+    {name: "Assigned To Others", value: "AssignedToOthers"}
+  ]
+  const { inboxList, setInboxList, getInbox: handleGetWorkitems } = useHookWorkitem()
   const [curStatus, setCurStatus] = useState("All")
+  const [curAssigned, setCurAssigned] = useState("All")
   const [curHashTag, setCurHashTag] = useState<string[] | string>()
   const [searchHashTag, setSearchHashTag] = useState<string[] | string>()
   const [curPageNumber, setCurPageNumber] = useState(1)
@@ -37,7 +43,6 @@ const WorkitemProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
-    console.log(inboxList)
     let temp = inboxList?.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
       .filter((each: IInbox) => curStatus == "All" ? true : each.StatusCode == curStatus)
       .filter((each: IInbox) => {
@@ -73,6 +78,11 @@ const WorkitemProvider = ({ children }: any) => {
     }
   }, [group])
 
+  useEffect(() => {
+    console.log(curAssigned)
+    handleGetWorkitems(curAssigned)
+  }, [curAssigned])
+
   const value = useMemo(
     () => ({
       inboxList, data,
@@ -86,14 +96,16 @@ const WorkitemProvider = ({ children }: any) => {
       search,
       setSearch,
       handleGetWorkitems,
-      loading,
+      // loading,
       curHashTag,
       setCurHashTag,
       handleSelect,
       optionSearch,
       setOptionSearch,
       searchHashTag,
-      setSearchHashTag
+      setSearchHashTag,
+      curAssigned,
+      setCurAssigned
     }),
     [
       inboxList, data,
@@ -107,14 +119,16 @@ const WorkitemProvider = ({ children }: any) => {
       search,
       setSearch,
       handleGetWorkitems,
-      loading,
+      // loading,
       curHashTag,
       setCurHashTag,
       handleSelect,
       optionSearch,
       setOptionSearch,
       searchHashTag,
-      setSearchHashTag
+      setSearchHashTag,
+      curAssigned,
+      setCurAssigned
     ]
   )
 

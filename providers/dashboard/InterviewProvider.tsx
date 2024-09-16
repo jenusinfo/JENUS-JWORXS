@@ -1,7 +1,7 @@
 import { useHookForm } from "hooks/FormHook";
 import { useHookInterview } from "hooks/InterviewHook";
 import { useApp } from "providers/AppProvider";
-import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
@@ -15,8 +15,10 @@ const InterviewProvider = ({ children }: any) => {
   const [info, setInfo] = useState<any>({})
   const [sessionResult, setSessionResult] = useState({})
   const { forms } = useHookForm()
+  const [filteredForms, setFilteredForms] = useState(forms)
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
+  const [search, setSearch] = useState("")
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any) => {
     let temp: any = { ...info }
@@ -99,6 +101,14 @@ const InterviewProvider = ({ children }: any) => {
     }
   };
 
+  useEffect(() => {
+    setFilteredForms(forms.filter((form: IForm) => form.Name.toLowerCase().includes(search.toLowerCase())))
+  }, [search])
+
+  useEffect(() => {
+    setFilteredForms(forms)
+  }, [forms])
+
   const value = useMemo(
     () => ({
       step, setStep,
@@ -108,7 +118,9 @@ const InterviewProvider = ({ children }: any) => {
       formStructure,
       formFullInfo,
       formSubmitHandler,
-      sessionResult
+      sessionResult,
+      search, setSearch,
+      filteredForms
     }),
     [
       step, setStep,
@@ -118,7 +130,9 @@ const InterviewProvider = ({ children }: any) => {
       formStructure,
       formFullInfo,
       formSubmitHandler,
-      sessionResult
+      sessionResult,
+      search, setSearch,
+      filteredForms
     ]
   )
 

@@ -9,7 +9,12 @@ export const Middleware = () => {
   const classes = {
     input: "border border-gray-300 rounded-[4px] pl-8 py-2 focus:outline-none text-sm"
   }
-  const { WorkitemStatuses, curStatus, setCurStatus, assignedList, optionList, curHashTag, setCurHashTag, handleSelect, optionSearch, setOptionSearch, setSearchHashTag } = useWorkitem()
+  const { WorkitemStatuses, curStatus, setCurStatus, 
+    assignedList, optionList, 
+    curHashTag, setCurHashTag, handleSelect, 
+    optionSearch, setOptionSearch, setSearchHashTag, 
+    curAssigned, setCurAssigned 
+  } = useWorkitem()
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -55,7 +60,7 @@ export const Middleware = () => {
         </select> */}
         <div className={"relative"} ref={dropdownRef}>
           <div onClick={toggleDropdown}>
-            <div className="px-4 py-2 border border-gray-200 rounded-[5px] foucs:outline-blue-100 w-[177px] flex items-center justify-between bg-white">
+            <div className={"px-4 py-2 border border-gray-200 rounded-[5px] foucs:outline-blue-100 w-[177px] flex items-center justify-between bg-white " + (Array.isArray(curHashTag) && curHashTag.length > 0 ? "!border-red-300" : "")}>
               <Text text={`Group: ${Array.isArray(curHashTag) ? `${curHashTag.length} Selected` : curHashTag}`} />
               <IoIosArrowDown />
             </div>
@@ -93,10 +98,10 @@ export const Middleware = () => {
             </div>
           )}
         </div>
-        <select className="px-4 py-2 border border-gray-200 rounded-[5px]">
+        <select className="px-4 py-2 border border-gray-200 rounded-[5px] focus:outline-none" value={curAssigned} onChange={e => setCurAssigned(e.target.value)}>
           {
-            assignedList.map((item: string, index: number) => (
-              <option key={index}>{item}</option>
+            assignedList.map((item: any, index: number) => (
+              <option key={index} value={item.value}>{item.name}</option>
             ))
           }
         </select>

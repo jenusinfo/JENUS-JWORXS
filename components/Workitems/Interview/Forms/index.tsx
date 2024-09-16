@@ -8,7 +8,7 @@ import { IForm } from "types/dashboard";
 
 const InterviewForms = () => {
 
-	const { setStep, setCurForm, forms } = useInterview()
+	const { setStep, setCurForm, filteredForms: forms, search, setSearch } = useInterview()
 	const classes = {
 		input: "border border-blue-100 rounded-[2px] pl-8 py-2 focus:outline-none text-sm w-[440px]"
 	}
@@ -19,7 +19,7 @@ const InterviewForms = () => {
 				<Text text="Search and Initiatiate an Interview Form" weight="500" />
 				<Text text="Accessible Interviews Forms" size={28} weight="700" />
 				<div className="relative">
-					<input className={classes.input} placeholder="Search" />
+					<input className={classes.input} placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} />
 					<CiSearch className="absolute top-2 left-2" size={24} />
 				</div>
 				<div className="flex flex-col overflow-y-auto h-[calc(100vh-400px)]">

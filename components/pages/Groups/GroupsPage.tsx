@@ -9,7 +9,7 @@ const GroupsPage = () => {
             <MyGroupsProvider>
                 <GroupsHeader />
                 <div className="mt-8">
-                    <Middleware />
+                    {/* <Middleware /> */}
                     <DataPanel />
                 </div>
             </MyGroupsProvider>
