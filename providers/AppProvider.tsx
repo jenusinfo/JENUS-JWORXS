@@ -14,6 +14,12 @@ export interface IMenu {
   link: string
 }
 
+export const INTERVIEWSTATUS = {
+  NONE: -1,
+  CREATED: 0,
+  UPDATED: 1
+}
+
 const AppProvider = ({ children }: any) => {
 
   const { push, pathname } = useRouter()
@@ -52,10 +58,15 @@ const AppProvider = ({ children }: any) => {
   const [account, setAccount] = useState<IUser>()
   const [userInfo, setUserInfo] = useState()
   const [loading, setLoading] = useState(false)
+
   const [group, setGroup] = useState(null)
   const [isMinimize, setIsMinimize] = useState(true)
+
   const [step, setStep] = useState(1)
   const [curForm, setCurForm] = useState<IForm>()
+  const [interviewInfo, setInterviewInfo] = useState()
+  const [interviewId, setInterviewId] = useState(0)
+  const [interviewFormStatus, setInterviewFormStatus] = useState(INTERVIEWSTATUS.NONE)
 
   const getUserInfo = async () => {
     const res = await http.get("/Org/Account/GetUserInfo")
@@ -100,7 +111,13 @@ const AppProvider = ({ children }: any) => {
       step,
       setStep,
       curForm,
-      setCurForm
+      setCurForm,
+      interviewInfo,
+      setInterviewInfo,
+      interviewFormStatus,
+      setInterviewFormStatus,
+      interviewId,
+      setInterviewId
     }),
     [
       MENULIST,
@@ -116,7 +133,13 @@ const AppProvider = ({ children }: any) => {
       step,
       setStep,
       curForm,
-      setCurForm
+      setCurForm,
+      interviewInfo,
+      setInterviewInfo,
+      interviewFormStatus,
+      setInterviewFormStatus,
+      interviewId,
+      setInterviewId
     ]
   )
 

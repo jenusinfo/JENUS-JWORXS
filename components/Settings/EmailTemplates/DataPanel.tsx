@@ -8,6 +8,7 @@ import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
 import { MdEmail } from "react-icons/md";
 import ShowEmailModal from "./ShowEmailModal"
+import EmailTemplatesModal from "./Modal"
 
 const DataPanel = () => {
 	const { data, curPageNumber, setCurPageNumber, handleDelete, setInfo, setCurIndex } = useEmailTemplates()
@@ -26,113 +27,112 @@ const DataPanel = () => {
 				</div>
 			</div>
 
-			<div className="overflow-auto">
-				<table className="w-full">
-					<thead>
-						<tr className="text-xs text-[#A4A7B0] border-b border-gray-200">
-							<th className="py-3">
-								<div className="flex justify-center">
-									<IoEllipsisVerticalSharp />
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									#
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									DOCUMENT DEFINITION
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-center">
-									EMAIL FROM
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									EMAILCC
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									EMAILBCC
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									EMAIL SUBJECT
-								</div>
-							</th>
-							<th className="py-3">
-								<div className="px-2 border-l border-gray-200 text-left">
-									EMAIL ATTACHMENT NAME
-								</div>
-							</th>
-							{/* <th className="py-3">
+			<table className="w-full">
+				<thead>
+					<tr className="text-xs text-[#A4A7B0] border-b border-gray-200">
+						<th className="py-3">
+							<div className="flex justify-center">
+								<IoEllipsisVerticalSharp />
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								#
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								DOCUMENT DEFINITION
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-center">
+								EMAIL FROM
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								EMAILCC
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								EMAILBCC
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								EMAIL SUBJECT
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								EMAIL ATTACHMENT NAME
+							</div>
+						</th>
+						{/* <th className="py-3">
 								<div className="px-2 border-l border-gray-200 text-left">
 									EMAIL BODY
 								</div>
 							</th> */}
-							{/* <th className="py-3">
+						{/* <th className="py-3">
 								<div className="px-2 border-l border-gray-200 text-left">
 									STATUS
 								</div>
 							</th> */}
-						</tr>
-					</thead>
-					<tbody className="text-sm">
-						{
-							data
-								?.slice((curPageNumber - 1) * 10, curPageNumber * 10)
-								.map((event: IEmailTemplates, index: number) => (
-									<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500 hover:scale-[1.01]">
-										<td className="py-5">
-											<div className="flex justify-center">
-												<DropDown
-													target={<IoEllipsisVerticalSharp className="hover:cursor-pointer" />}
-													left={15}
-													top={-5}
-												>
-													<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
-														<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsEmailOpen(true); setEmailData(event.EmailBody); }}>
-															<MdEmail color="#2454DE" size={18} />
-															<Text text="Open" size={12} weight="500" />
-														</div>
-														{/* <div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(event); setCurIndex(index); }}>
-															<CiEdit color="#2454DE" size={18} />
-															<Text text="Update" size={12} weight="500" />
-														</div> */}
-														<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(event.Id, index)}>
-															<MdOutlineDelete color="red" size={18} />
-															<Text text="Delete" size={12} weight="500" />
-														</div>
+					</tr>
+				</thead>
+				<tbody className="text-sm">
+					{
+						data
+							?.slice((curPageNumber - 1) * 10, curPageNumber * 10)
+							.map((event: IEmailTemplates, index: number) => (
+								<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500 hover:scale-[1.01]">
+									<td className="py-5">
+										<div className="flex justify-center">
+											<DropDown
+												target={<IoEllipsisVerticalSharp className="hover:cursor-pointer" />}
+												left={15}
+												top={-5}
+											>
+												<div className="shadow-md border border-gray-100 rounded-[4px] bg-white">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsEmailOpen(true); setEmailData(event.EmailBody); }}>
+														<MdEmail color="#2454DE" size={18} />
+														<Text text="Open" size={12} weight="500" />
 													</div>
-												</DropDown>
-											</div>
-										</td>
-										<td className="px-2">{event.Id}</td>
-										<td className="px-2">{event.DocumentDefinition}</td>
-										<td className="px-2">{event.EmailFrom}</td>
-										{/* <td className="px-2">
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsOpen(true); setInfo(event); setCurIndex(index); }}>
+														<CiEdit color="#2454DE" size={18} />
+														<Text text="Update" size={12} weight="500" />
+													</div>
+													<div className="px-3 py-1.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDelete(event.Id, index)}>
+														<MdOutlineDelete color="red" size={18} />
+														<Text text="Delete" size={12} weight="500" />
+													</div>
+												</div>
+											</DropDown>
+										</div>
+									</td>
+									<td className="px-2">{event.Id}</td>
+									<td className="px-2">{event.DocumentDefinition}</td>
+									<td className="px-2">{event.EmailFrom}</td>
+									{/* <td className="px-2">
 										<div className="flex items-center gap-1 font-semibold">
 											<div className={"border-2 w-2 h-2 rounded-full " + (event.IsActive ? 'border-[#1ed6bb]' : 'border-[#fb5656]')} />
 											<Text text={event.IsActive ? 'Active' : 'Inactive'} weight="500" />
 										</div>
 									</td> */}
-										<td className="px-2 text-right">{event.EmailCC}</td>
-										<td className="px-2">{event.EmailBCC}</td>
-										<td className="px-2">{event.EmailSubject}</td>
-										<td className="px-2">{event.EmailAttachmentName}</td>
-										{/* <td className="px-2">{event.EmailBody}</td> */}
-									</tr>
-								))
-						}
-					</tbody>
-				</table>
-			</div>
+									<td className="px-2 text-right">{event.EmailCC}</td>
+									<td className="px-2">{event.EmailBCC}</td>
+									<td className="px-2">{event.EmailSubject}</td>
+									<td className="px-2">{event.EmailAttachmentName}</td>
+									{/* <td className="px-2">{event.EmailBody}</td> */}
+								</tr>
+							))
+					}
+				</tbody>
+			</table>
 			<ShowEmailModal isOpen={isEmailOpen} handleClose={() => setIsEmailOpen(false)} data={emailData} />
+			<EmailTemplatesModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
 		</div>
 	)
 }

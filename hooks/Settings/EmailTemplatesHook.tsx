@@ -20,6 +20,6 @@ export const useHookEmailTemplates = () => {
     }, [])
 
     return {
-        emailTemplates, setEmailTemplates
+        emailTemplates, setEmailTemplates, getEmailTemplates
     }
 }

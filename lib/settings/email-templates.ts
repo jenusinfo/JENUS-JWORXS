@@ -1,3 +1,4 @@
+import axios from "axios"
 import http from "services/http-common"
 
 export const CreateEmailTemplate = async (params: any) => {
@@ -15,7 +16,7 @@ export const GetEmailTemplates = async () => {
 }
 
 export const UpdateEmailTemplate = async (id: any, params: any) => {
-    const res = await http.put(`/Setting/EmailTemplate/${id}`, params)
+    const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/Setting/EmailTemplate/${id}`, params)
 
     if (res?.status)
         return res.data

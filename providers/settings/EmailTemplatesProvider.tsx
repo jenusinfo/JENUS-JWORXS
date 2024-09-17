@@ -17,7 +17,7 @@ export interface IEmailTemplates {
 
 const EmailTemplatesProvider = ({ children }: any) => {
 
-    const { emailTemplates, setEmailTemplates } = useHookEmailTemplates()
+    const { emailTemplates, setEmailTemplates, getEmailTemplates } = useHookEmailTemplates()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [curIndex, setCurIndex] = useState(-1)
 	const [info, setInfo] = useState<any>({})
@@ -34,8 +34,7 @@ const EmailTemplatesProvider = ({ children }: any) => {
 	const handleCreate = async () => {
 		const res = await CreateEmailTemplate(info)
 
-		if (res.Data != null)
-			setEmailTemplates([...emailTemplates, res.Data])
+		getEmailTemplates()
 	}
 
 	const handleDelete = async (id: any, index: number) => {
@@ -47,9 +46,8 @@ const EmailTemplatesProvider = ({ children }: any) => {
 
 	const handleUpdate = async () => {
 		const res = await UpdateEmailTemplate(info.Id, info)
-		let temp = [...emailTemplates]
-		temp[curIndex] = res.Data
-		setEmailTemplates(temp)
+		
+		await getEmailTemplates()
 	}
 
 	useEffect(() => {

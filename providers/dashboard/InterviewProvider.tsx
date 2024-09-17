@@ -1,18 +1,17 @@
 import { useHookForm } from "hooks/FormHook";
 import { useHookInterview } from "hooks/InterviewHook";
-import { useApp } from "providers/AppProvider";
+import { INTERVIEWSTATUS, useApp } from "providers/AppProvider";
 import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
-import { submitInterview } from "lib/interview";
+import { submitInterview, UpdateInterview } from "lib/interview";
 
 const InterviewContext: any = createContext(null)
 
 const InterviewProvider = ({ children }: any) => {
 
-  const { setLoading, step, setStep, curForm, setCurForm } = useApp()
-  const [info, setInfo] = useState<any>({})
+  const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId } = useApp()
   const [sessionResult, setSessionResult] = useState({})
   const { forms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
@@ -67,7 +66,7 @@ const InterviewProvider = ({ children }: any) => {
         let compiledTemplate = handlebars.compile(formSubject);
         interviewSubject = compiledTemplate(allSectionValuesArr);
       }
-      
+
       let interviewQuestions: any = []
       formFullInfo[0].Sections?.forEach((each: any) => {
         each.Questions?.forEach((item: any) => {
@@ -81,22 +80,36 @@ const InterviewProvider = ({ children }: any) => {
         interviewSection,
         interviewQuestions
       );
-      let payload = {
-        InterviewFormId: curForm?.Id,
-        JsonData: JSON.stringify(info),
-        XMLData: xmlString,
-        Id: sessionId ? sessionId : 0,
-        Subject: interviewSubject
-      };
 
-      const res = await submitInterview(payload)
-      setSessionResult(res.Data)
+      if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
+        let payload = {
+          InterviewFormId: curForm?.Id,
+          JsonData: JSON.stringify(info),
+          XMLData: xmlString,
+          Id: sessionId ? sessionId : 0,
+          Subject: interviewSubject
+        };
+        const res = await submitInterview(payload)
+        setSessionResult(res.Data)
+      }
+      if (interviewFormStatus == INTERVIEWSTATUS.UPDATED) {
+        let payload = {
+          InterviewFormId: curForm?.Id,
+          JsonData: JSON.stringify(info),
+          NewJsonData: JSON.stringify(info),
+          XMLData: xmlString,
+          Id: interviewId,
+          Subject: interviewSubject
+        };
+        const res = await UpdateInterview(interviewId, payload)
+        setSessionResult(res.Data)
+      }
       // if (paramsSessionId) {
       //   payload.Id = paramsSessionId;
       // }
 
       // if (sessionId || paramsSessionId) {
-        
+
       // }
     }
   };

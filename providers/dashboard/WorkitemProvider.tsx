@@ -1,14 +1,19 @@
+import { useHookForm } from "hooks/FormHook";
 import { useHookHashTag } from "hooks/HasTagHook";
 import { useHookWorkitem } from "hooks/WorkitemHook";
-import { useApp } from "providers/AppProvider";
+import { AssignInterview, CancelInterview, DeleteInterview, DuplicateInterview, GetInterviewSession } from "lib/interview";
+import { useRouter } from "next/router";
+import { INTERVIEWSTATUS, useApp } from "providers/AppProvider";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { IInbox } from "types/dashboard";
+import { toast } from "react-toastify";
+import { IForm, IInbox } from "types/dashboard";
 
 const WorkitemContext: any = createContext(null)
 
 const WorkitemProvider = ({ children }: any) => {
 
-  const { group } = useApp()
+  const { push } = useRouter()
+  const { group, setCurForm, setStep, setInterviewInfo } = useApp()
   const WorkitemStatuses = ["All", "InProgress", "Draft", "Completed", null]
   const { hashTags: optionList } = useHookHashTag()
   const assignedList = [
@@ -18,14 +23,18 @@ const WorkitemProvider = ({ children }: any) => {
     {name: "Assigned To Others", value: "AssignedToOthers"}
   ]
   const { inboxList, setInboxList, getInbox: handleGetWorkitems } = useHookWorkitem()
+  const { forms } = useHookForm()
   const [curStatus, setCurStatus] = useState("All")
   const [curAssigned, setCurAssigned] = useState("All")
   const [curHashTag, setCurHashTag] = useState<string[] | string>()
+  const [curInterviewForm, setCurInterviewForm] = useState<any>()
   const [searchHashTag, setSearchHashTag] = useState<string[] | string>()
   const [curPageNumber, setCurPageNumber] = useState(1)
   const [search, setSearch] = useState("")
   const [data, setData] = useState<IInbox[]>([])
   const [optionSearch, setOptionSearch] = useState("")
+  const { setInterviewFormStatus, setInterviewId } = useApp()
+  const [curAssignee, setCurAssignee] = useState<any>()
 
   const handleSelect = (item: any) => {
     let temp: string[] | string
@@ -40,6 +49,61 @@ const WorkitemProvider = ({ children }: any) => {
       temp.push(item)
     }
     setCurHashTag(temp)
+  }
+
+  const handleResumeInterview = async (id: any) => {
+    const res = await GetInterviewSession(id)
+
+    if (res.Data) {
+      const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
+      if (form) {
+        setInterviewInfo(JSON.parse(res.Data.JsonData))
+        setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
+        setInterviewId(id)
+        push("/workitems/interview")
+        setCurForm(form)
+        setStep(2)
+      }
+    }
+  }
+
+  const handleDeleteInterview = async (id: any) => {
+    const res = await DeleteInterview(id)
+
+    if (res.Data) {
+      handleGetWorkitems(curAssigned)
+      toast.success(res.Message)
+    }
+  }
+
+  const handleAssign = async () => {
+    const res = await AssignInterview({
+      InterviewSessionIds: [curInterviewForm.Id],
+      AssignedToUserId: curAssignee.Id
+    })
+
+    if (res.Data) {
+      handleGetWorkitems(curAssigned)
+      toast.success(res.Message)
+    }
+  }
+
+  const handleCancelInterview = async (id: any) => {
+    const res = await CancelInterview(id)
+
+    if (res.Data) {
+      handleGetWorkitems(curAssigned)
+      toast.success(res.Message)
+    }
+  }
+
+  const handleDuplicateInterview = async (id: any) => {
+    const res = await DuplicateInterview(id)
+
+    if (res.Data) {
+      handleGetWorkitems(curAssigned)
+      toast.success(res.Message)
+    }
   }
 
   useEffect(() => {
@@ -60,6 +124,7 @@ const WorkitemProvider = ({ children }: any) => {
           return true
         }
       })
+      .sort((a: IInbox, b: IInbox) => new Date(b.CreatedOn).getTime() - new Date(a.CreatedOn).getTime())
 
     setData(temp)
   }, [inboxList, search, curStatus, searchHashTag])
@@ -79,9 +144,12 @@ const WorkitemProvider = ({ children }: any) => {
   }, [group])
 
   useEffect(() => {
-    console.log(curAssigned)
     handleGetWorkitems(curAssigned)
   }, [curAssigned])
+
+  useEffect(() => {
+    setInterviewFormStatus(INTERVIEWSTATUS.NONE)
+  }, [])
 
   const value = useMemo(
     () => ({
@@ -105,7 +173,16 @@ const WorkitemProvider = ({ children }: any) => {
       searchHashTag,
       setSearchHashTag,
       curAssigned,
-      setCurAssigned
+      setCurAssigned,
+      handleResumeInterview,
+      handleDeleteInterview,
+      curInterviewForm,
+      setCurInterviewForm,
+      curAssignee,
+      setCurAssignee,
+      handleAssign,
+      handleCancelInterview,
+      handleDuplicateInterview
     }),
     [
       inboxList, data,
@@ -128,7 +205,16 @@ const WorkitemProvider = ({ children }: any) => {
       searchHashTag,
       setSearchHashTag,
       curAssigned,
-      setCurAssigned
+      setCurAssigned,
+      handleResumeInterview,
+      handleDeleteInterview,
+      curInterviewForm,
+      setCurInterviewForm,
+      curAssignee,
+      setCurAssignee,
+      handleAssign,
+      handleCancelInterview,
+      handleDuplicateInterview
     ]
   )
 

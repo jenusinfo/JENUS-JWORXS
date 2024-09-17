@@ -50,6 +50,13 @@ export const GetParameterItems = async (id: any) => {
         return res.data
 }
 
+export const GetByGolbalParamId = async (id: any) => {
+    const res = await http.get(`/Org/GlobalParams/Options/GetByGlobalParamId/${id}`)
+
+    if (res?.status)
+        return res.data
+}
+
 export const UpdateOptionParam = async (id: any, params: any) => {
     const res = await http.put(`/Org/GlobalParams/Option/${id}`, params)
 

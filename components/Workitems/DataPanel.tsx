@@ -4,9 +4,17 @@ import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
 import Text from "shared/core/ui/Text"
 import { IInbox } from "types/dashboard"
 import { getFormattedDate } from 'shared/helper/common';
+import DropDown from "shared/core/ui/Dropdown"
+import { useState } from "react"
+import DeleteModal from "./Modals/Delete_Modal"
+import AssignModal from "./Modals/Assign_Modal"
 
 const DataPanel = () => {
-  const { data, curPageNumber, setCurPageNumber } = useWorkitem()
+
+  const { data, curPageNumber, setCurPageNumber, handleResumeInterview, setCurInterviewForm, handleCancelInterview, handleDuplicateInterview } = useWorkitem()
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [interviewId, setInterviewId] = useState<string>()
+  const [isAssignOpen, setIsAssignOpen] = useState(false)
 
   return (
     <div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -73,14 +81,40 @@ const DataPanel = () => {
           {
             data &&
             data
-              .sort((a: IInbox, b: IInbox) => a.Id - b.Id)
               .slice((curPageNumber - 1) * 10, curPageNumber * 10)
               .map((inbox: any, index: number) => (
-                <tr key={index} className="border-b border-gray-200">
+                <tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500">
                   <td className="py-5">
-                    <div className="flex justify-center">
-                      <IoEllipsisVerticalSharp />
-                    </div>
+                    <DropDown
+                      target={<div className="flex justify-center z-10">
+                        <IoEllipsisVerticalSharp />
+                      </div>}
+                      left={0}
+                      top={20}
+                      zIndex={100-index}
+                    >
+                      <div className="shadow-lg border-t border-[#2454DE] bg-white w-[200px]">
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+                          <Text text="View" size={14} weight="500" />
+                        </div>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id)}>
+                          <Text text="Edit" size={14} weight="500" />
+                        </div>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
+                          <Text text="Assign" size={14} weight="500" />
+                        </div>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDuplicateInterview(inbox.Id)}>
+                          <Text text="Duplicate" size={14} weight="500" />
+                        </div>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
+                          <Text text="Cancel" size={14} weight="500" />
+                        </div>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
+                          <Text text="Delete" size={14} color="#FB5656" weight="500" />
+                        </div>
+                      </div>
+                    </DropDown>
+
                   </td>
                   <td className="px-2">{inbox.Id}</td>
                   <td className="px-2">
@@ -94,8 +128,8 @@ const DataPanel = () => {
                       {inbox.StatusCode == "Draft" && <div className="border-2 border-[#E28313] w-2 h-2 rounded-full" />}
                       {inbox.StatusCode == "InProgress" && <div className="border-2 border-blue-600 w-2 h-2 rounded-full" />}
                       {inbox.StatusCode == "Completed" && <div className="border-2 border-green-600 w-2 h-2 rounded-full" />}
-                      {inbox.StatusCode == null && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
-                      {inbox.Status == null ? "Cancelled" : inbox.Status}
+                      {inbox.StatusCode == null || inbox.StatusCode == "Cancelled" && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
+                      {inbox.StatusCode == null || inbox.StatusCode == "Cancelled" ? "Cancelled" : inbox.Status}
                     </div>
                   </td>
                   <td className="px-2">
@@ -113,6 +147,8 @@ const DataPanel = () => {
           }
         </tbody>
       </table>
+      {interviewId && <DeleteModal isOpen={isDeleteOpen} handleClose={() => setIsDeleteOpen(false)} id={interviewId} />}
+      <AssignModal isOpen={isAssignOpen} handleClose={() => setIsAssignOpen(false)} />
     </div>
   )
 }

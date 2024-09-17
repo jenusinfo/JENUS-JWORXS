@@ -32,9 +32,9 @@ const Modal = ({ children, isOpen, handleClose, width, anchorY, anchorX, isOuter
 
     return (
         <>
-            {isOpen && <div className={'flex ' + (anchorX == 0 ? 'justify-center items-center' : '')} style={{ backgroundColor: 'rgba(0,0,0,0.5)', position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 101 }} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+            {isOpen && <div className={'flex ' + (anchorX == 0 ? 'justify-center items-center' : '')} style={{ backgroundColor: '#071B5533', position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 101 }} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
                 <div
-                    className='relative bg-white dark:bg-[#121418] rounded-[10px] overflow-y-auto h-fit'
+                    className='relative bg-white dark:bg-[#121418] h-fit'
                     style={{ width: width, marginLeft: anchorX, height: 'fit-content' }}
                     ref={dropdownRef}
                 >
