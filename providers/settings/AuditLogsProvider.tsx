@@ -17,10 +17,17 @@ export interface IAuditLogs {
 
 const AuditLogsProvider = ({ children }: any) => {
 
-    const { auditLogs } = useHookAuditLogs()
     const [curPageNumber, setCurPageNumber] = useState(1)
     const [search, setSearch] = useState("")
     const [data, setData] = useState<any>([])
+    const [searchParam, setSearchParam] = useState<number>(1)
+    const [fromDate, setFromDate] = useState<string>("")
+    const [toDate, setToDate] = useState<string>("")
+    const { auditLogs, getAuditLogs } = useHookAuditLogs({searchParam, fromDate, toDate})
+
+    const handleSearch = () => {
+        getAuditLogs()
+    }
 
     useEffect(() => {
 		if (search) {
@@ -46,7 +53,14 @@ const AuditLogsProvider = ({ children }: any) => {
             search,
             setSearch,
             data,
-            setData
+            setData,
+            searchParam,
+            setSearchParam,
+            handleSearch,
+            fromDate,
+            setFromDate,
+            toDate,
+            setToDate
         }),
         [
             auditLogs,
@@ -55,7 +69,14 @@ const AuditLogsProvider = ({ children }: any) => {
             search,
             setSearch,
             data,
-            setData
+            setData,
+            searchParam,
+            setSearchParam,
+            handleSearch,
+            fromDate,
+            setFromDate,
+            toDate,
+            setToDate
         ]
     )
 

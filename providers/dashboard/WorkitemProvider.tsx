@@ -25,7 +25,7 @@ const WorkitemProvider = ({ children }: any) => {
   const { inboxList, setInboxList, getInbox: handleGetWorkitems } = useHookWorkitem()
   const { forms } = useHookForm()
   const [curStatus, setCurStatus] = useState("All")
-  const [curAssigned, setCurAssigned] = useState("All")
+  const [curAssigned, setCurAssigned] = useState("AssignedOnMe")
   const [curHashTag, setCurHashTag] = useState<string[] | string>()
   const [curInterviewForm, setCurInterviewForm] = useState<any>()
   const [searchHashTag, setSearchHashTag] = useState<string[] | string>()

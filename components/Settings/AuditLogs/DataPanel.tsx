@@ -5,6 +5,7 @@ import { IoEllipsisVerticalSharp, IoRefresh } from "react-icons/io5"
 import { MdOutlineDelete } from "react-icons/md"
 import DropDown from "shared/core/ui/Dropdown"
 import Text from "shared/core/ui/Text"
+import { getFormattedDate } from '../../../shared/helper/common';
 
 const DataPanel = () => {
 	const { data, curPageNumber, setCurPageNumber } = useAuditLogs()
@@ -26,6 +27,11 @@ const DataPanel = () => {
 						<th className="py-3">
 							<div className="flex justify-center">
 								<IoEllipsisVerticalSharp />
+							</div>
+						</th>
+						<th className="py-3">
+							<div className="px-2 border-l border-gray-200 text-left">
+								Resource Id
 							</div>
 						</th>
 						<th className="py-3">
@@ -91,12 +97,13 @@ const DataPanel = () => {
 											</DropDown>
 										</div>
 									</td>
+									<td className="px-2">{event.ResourceId}</td>
 									<td className="px-2">{event.ResourceName}</td>
 									<td className="px-2">{event.ChangeFrom}</td>
 									<td className="px-2">{event.ChangeTo}</td>
 									<td className="px-2 text-right">{event.Action}</td>
 									<td className="px-2">{event.ActionBy}</td>
-									<td className="px-2">{event.ActionOn}</td>
+									<td className="px-2">{getFormattedDate(event.ActionOn)}</td>
 									<td className="px-2">{event.Comments}</td>
 								</tr>
 							))

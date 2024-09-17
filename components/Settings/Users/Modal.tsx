@@ -1,5 +1,6 @@
 import { useUnits } from "providers/settings/UnitsProvider"
 import { useUsers } from "providers/settings/UsersProvider"
+import { toast } from "react-toastify"
 import FormInput from "shared/core/components/FormInput"
 import FormMultiSelect from "shared/core/components/FormMultiSelect"
 import FormSelect from "shared/core/components/FormSelect"
@@ -76,7 +77,21 @@ const UsersModal = ({ isOpen, handleClose }: {
 					<FormInput label="Phone Number" name="PhoneNumber" info={info} handleChange={handleChange} />
 				</div>
 				<div className="flex mt-4 px-[34px]">
-					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={curIndex != -1 ? () => handleUpdate() : () => handleCreate()}>Save</button>
+					<button
+						className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs"
+						onClick={async () => {
+							let res: any
+							if (curIndex != -1) {
+								res = await handleUpdate()
+							} else {
+								res = await handleCreate()
+							}
+							if (res) {
+								toast.success("Record has been updated successfully")
+								handleClose()
+							}
+						}}
+					>Save</button>
 				</div>
 			</div>
 		</RightSide>

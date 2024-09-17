@@ -114,7 +114,6 @@ const DataPanel = () => {
                         </div>
                       </div>
                     </DropDown>
-
                   </td>
                   <td className="px-2">{inbox.Id}</td>
                   <td className="px-2">
@@ -128,7 +127,7 @@ const DataPanel = () => {
                       {inbox.StatusCode == "Draft" && <div className="border-2 border-[#E28313] w-2 h-2 rounded-full" />}
                       {inbox.StatusCode == "InProgress" && <div className="border-2 border-blue-600 w-2 h-2 rounded-full" />}
                       {inbox.StatusCode == "Completed" && <div className="border-2 border-green-600 w-2 h-2 rounded-full" />}
-                      {inbox.StatusCode == null || inbox.StatusCode == "Cancelled" && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
+                      {(inbox.StatusCode == null || inbox.StatusCode == "Cancelled") && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
                       {inbox.StatusCode == null || inbox.StatusCode == "Cancelled" ? "Cancelled" : inbox.Status}
                     </div>
                   </td>

@@ -11,7 +11,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 	handleClose: () => void
 }) => {
 
-	const { info, handleChange, handleCreate, curIndex, handleUpdate, formDefinitions, groups, hashTags, handleMultiChange} = useFormDefinitions()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, formDefinitions, groups, hashTags, handleMultiChange } = useFormDefinitions()
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -49,7 +49,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 						label="Task Type"
 						name="TaskDefinitionId"
 						info={info}
-						optionList={[{value: "", name: ""}, ...formDefinitions?.map((each: any) => ({
+						optionList={[{ value: "", name: "" }, ...formDefinitions?.map((each: any) => ({
 							value: each.Id,
 							name: each.Name
 						}))]}
@@ -88,13 +88,16 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 				</div>
 				<div className="flex mt-4 px-[34px]">
 					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs" onClick={async () => {
-						toast.success("Record has been updated successfully")
+						let res: any
 						if (curIndex != -1) {
-							await handleUpdate()
+							res = await handleUpdate()
 						} else {
-							await handleCreate()
+							res = await handleCreate()
 						}
-						handleClose()
+						if (res) {
+							toast.success("Record has been updated successfully")
+							handleClose()
+						}
 					}}>Save</button>
 				</div>
 			</div>

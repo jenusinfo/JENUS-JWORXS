@@ -1,7 +1,7 @@
 import http from "services/http-common"
 
-export const GetAuditLogs = async () => {
-    const res = await http.get(`/Setting/AuditLog/1`)
+export const GetAuditLogs = async (searchParam?: number, fromDate?: string, toDate?: string) => {
+    const res = await http.get(`/Setting/AuditLog/${searchParam || 1}?from=${fromDate}&to=${toDate}`)
 
     if (res?.status)
         return res.data

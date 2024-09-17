@@ -20,7 +20,7 @@ export const useHookForm = () => {
     }, [])
 
     return {
-        forms, setForms,
+        forms, setForms, getForms,
         loading
     }
 }

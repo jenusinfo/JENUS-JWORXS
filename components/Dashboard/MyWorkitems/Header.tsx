@@ -1,9 +1,16 @@
 import { useRouter } from "next/router"
+import { useApp } from "providers/AppProvider"
+import { useEffect } from "react"
 import Text from "shared/core/ui/Text"
 
 export const Header = () => {
 
+    const { setGroup } = useApp()
     const { push } = useRouter()
+
+    useEffect(() => {
+        setGroup(null)
+    }, [])
 
     return (
         <div className="flex justify-between items-center pb-[10px]">

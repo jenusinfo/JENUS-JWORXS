@@ -159,6 +159,16 @@ export const UpdateInterview = async (id: any, params: any) => {
         return res.data
 }
 
+export const UpdateFavourite = async (id: any, params: any) => {
+    let res: any
+    if (params == false)
+        res = await http.post(`/Interviews/Forms/AddToFavourites/${id}`, {})
+    else res = await http.delete(`/Interviews/Forms/RemoveFromFavourites/${id}`, {})
+
+    if (res?.status)
+        return res.data
+}
+
 export const DeleteInterview = async (id: any) => {
     const res = await http.delete(`/Interviews/Sessions/${id}`)
 

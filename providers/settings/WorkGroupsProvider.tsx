@@ -1,6 +1,7 @@
 import { useHookHashTag } from "hooks/HasTagHook";
 import { CreateHashTag, DeleteHashTag, UpdateHashTag } from "lib/hashtag";
 import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 const WorkGroupsContext: any = createContext(null)
 
@@ -21,8 +22,13 @@ const WorkGroupsProvider = ({ children }: any) => {
 	}
 
 	const handleCreate = async () => {
+		if (info.Tag == undefined || info.Tag == "") {
+			toast.error("Tag is required")
+			return false
+		}
 		const res = await CreateHashTag(info)
 		getHashTagDetail()
+		return true
 	}
 
 	const handleDelete = async (id: any) => {
@@ -31,8 +37,13 @@ const WorkGroupsProvider = ({ children }: any) => {
 	}
 
 	const handleUpdate = async () => {
+		if (info.Tag == undefined || info.Tag == "") {
+			toast.error("Tag is required")
+			return false
+		}
 		const res = await UpdateHashTag(info.Id, info)
 		getHashTagDetail()
+		return true
 	}
 
 	useEffect(() => {

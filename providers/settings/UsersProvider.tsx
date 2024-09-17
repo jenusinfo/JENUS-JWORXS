@@ -7,6 +7,7 @@ import { useHookDocumentCategories } from "hooks/Settings/DocumentCategories";
 import { useHookGroup } from "hooks/GroupHook";
 import { useHookGroups } from "hooks/Settings/GroupsHook";
 import { CreateUser, DeleteUser, UpdateUser } from "lib/settings/users";
+import { toast } from "react-toastify";
 
 const UsersContext: any = createContext(null)
 
@@ -102,8 +103,17 @@ const UsersProvider = ({ children }: any) => {
 	const handleCreate = async () => {
 		const res = await CreateUser(info)
 
-		if (res.Data != null)
+		if (res.Data != null) {
 			setUsers([...users, res.Data])
+			return true
+		}
+
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
 	}
 
 	const handleDelete = async (id: any, index: number) => {
@@ -113,9 +123,16 @@ const UsersProvider = ({ children }: any) => {
 
 	const handleUpdate = async () => {
 		const res = await UpdateUser(info.Id, info)
-		let temp = [...users]
-		temp[curIndex] = res.Data
-		setUsers(temp)
+
+		if (res.Data != null) {
+			getUsers()
+		}
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
 	}
 
 	useEffect(() => {

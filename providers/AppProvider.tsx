@@ -36,8 +36,8 @@ const AppProvider = ({ children }: any) => {
     },
     {
       Icon: (props: any) => <Icon type="sider03" fill={props.fill} />,
-      name: "Groups",
-      link: "/groups"
+      name: "Work Groups",
+      link: "/workgroups"
     },
     {
       Icon: (props: any) => <Icon type="sider04" fill={props.fill} />,

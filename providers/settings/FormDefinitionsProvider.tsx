@@ -4,6 +4,7 @@ import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
 import { useHookFormDefinitions } from "hooks/Settings/FormDefinitions";
 import { useHookGroups } from "hooks/Settings/GroupsHook";
 import { CreateFormDefinition, DeleteFormDefinition, UpdateFormDefinition } from "lib/settings/form-definitions";
+import { toast } from "react-toastify";
 
 const FormDefinitionsContext: any = createContext(null)
 
@@ -54,8 +55,17 @@ const FormDefinitionsProvider = ({ children }: any) => {
     const handleCreate = async () => {
         const res = await CreateFormDefinition(info)
 
-        if (res.Data != null)
-            setFormDefinitions([...formDefinitions, res.Data])
+        if (res.Data != null) {
+			setFormDefinitions([...formDefinitions, res.Data])
+			return true
+		}
+
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
     }
 
     const handleDelete = async (id: any, index: number) => {
@@ -65,9 +75,16 @@ const FormDefinitionsProvider = ({ children }: any) => {
 
     const handleUpdate = async () => {
         const res = await UpdateFormDefinition(info.Id, info)
-        let temp = [...formDefinitions]
-        temp[curIndex] = res.Data
-        setFormDefinitions(temp)
+        
+        if (res.Data != null) {
+			getFormDefinitions()
+		}
+		if (res.ModelErrors) {
+			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
+				toast.error(value[0])
+			})
+			return false
+		}
     }
 
     const isOptionSelected = (list: any, id: any, name: string) => {

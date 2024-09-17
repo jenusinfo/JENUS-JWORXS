@@ -5,7 +5,8 @@ import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } 
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
-import { submitInterview, UpdateInterview } from "lib/interview";
+import { submitInterview, UpdateFavourite, UpdateInterview } from "lib/interview";
+import { toast } from "react-toastify";
 
 const InterviewContext: any = createContext(null)
 
@@ -13,7 +14,7 @@ const InterviewProvider = ({ children }: any) => {
 
   const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId } = useApp()
   const [sessionResult, setSessionResult] = useState({})
-  const { forms } = useHookForm()
+  const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
@@ -114,6 +115,15 @@ const InterviewProvider = ({ children }: any) => {
     }
   };
 
+  const handleFavourite = async (formId: number, isFavourite: boolean) => {
+    const res = await UpdateFavourite(formId, isFavourite)
+
+    if (res.Data) {
+      getForms()
+      toast.success(res.Message)
+    }
+  }
+
   useEffect(() => {
     setFilteredForms(forms.filter((form: IForm) => form.Name.toLowerCase().includes(search.toLowerCase())))
   }, [search])
@@ -133,7 +143,8 @@ const InterviewProvider = ({ children }: any) => {
       formSubmitHandler,
       sessionResult,
       search, setSearch,
-      filteredForms
+      filteredForms,
+      handleFavourite
     }),
     [
       step, setStep,
@@ -145,7 +156,8 @@ const InterviewProvider = ({ children }: any) => {
       formSubmitHandler,
       sessionResult,
       search, setSearch,
-      filteredForms
+      filteredForms,
+      handleFavourite
     ]
   )
 

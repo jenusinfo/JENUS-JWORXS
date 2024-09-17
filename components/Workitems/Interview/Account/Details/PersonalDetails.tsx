@@ -34,19 +34,19 @@ const PersonalDetails = () => {
 										{que.VarType == "TEXT" && <FormInput
 											label={que.Description}
 											name={que.TagName}
-											info={info[que.InterviewSectionId] || {}}
+											info={(info && info[que.InterviewSectionId]) || {}}
 											handleChange={(e: any) => handleChange(e, que.InterviewSectionId)}
 										/>}
 										{que.VarType == "INTEGER" && <FormNumber
 											label={que.Description}
 											name={que.TagName}
-											info={info[que.InterviewSectionId] || {}}
+											info={(info && info[que.InterviewSectionId]) || {}}
 											handleChange={(e: any) => handleChange(e, que.InterviewSectionId)}
 										/>}
 										{que.VarType == "DATE" && <FormDate
 											label={que.Description}
 											name={que.TagName}
-											info={info[que.InterviewSectionId] || {}}
+											info={(info && info[que.InterviewSectionId]) || {}}
 											handleChange={(e: any) => handleChange(e, que.InterviewSectionId)}
 										/>}
 										{que.VarType == "SELECT" && <SelectInput que={que} globalParamId={que.GlobalParamId} info={info} handleChange={handleChange} />}
@@ -90,7 +90,7 @@ const SelectInput = ({ que, globalParamId, info, handleChange }: {
 				{ name: que.Question },
 				...optionList.map((option: any) => ({ name: option.Text, value: option.Id }))
 			]}
-			info={info[que.InterviewSectionId] || {}}
+			info={(info && info[que.InterviewSectionId]) || {}}
 			handleChange={(e: any) => handleChange(e, que.InterviewSectionId)}
 		/>
 	)
