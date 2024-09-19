@@ -42,7 +42,7 @@ const DataPanel = () => {
 							</div>
 						</th>
 						<th className="py-3">
-							<div className="px-2 border-l border-gray-200 text-right">
+							<div className="px-2 border-l border-gray-200 text-left">
 								USERNAME
 							</div>
 						</th>
@@ -95,8 +95,8 @@ const DataPanel = () => {
 										</div>
 									</td>
 									<td className="px-2">{inbox.Id}</td>
-									<td className="px-2">{inbox.BankUnitName}</td>
-									<td className="px-2 text-right">{(inbox.FirstName ?? "") + " " + (inbox.LastName ?? "")}</td>
+									<td className="px-2 text-left">{(inbox.FirstName ?? "") + " " + (inbox.LastName ?? "")}</td>
+									<td className="px-2 text-left">{inbox.UserName}</td>
 									<td className="px-2">{inbox.Email}</td>
 									<td className="px-2">{inbox.BankUnitId}</td>
 									<td className="px-2">{inbox.Roles ? inbox.Roles[0].Name : ''}</td>

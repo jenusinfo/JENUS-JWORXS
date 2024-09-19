@@ -10,7 +10,7 @@ const GroupsHeader = () => {
     return (
         <div className="flex justify-between border-b border-[#DEDFEA] pb-2">
             <div className="flex flex-col gap-3">
-                <Text text="Groups" size={28} weight="700" />
+                <Text text="Work Groups" size={28} weight="700" />
                 <p className="text-sm">223 Groups Availables | Updated 43 mins ago</p>
             </div>
             <div className="flex gap-2">

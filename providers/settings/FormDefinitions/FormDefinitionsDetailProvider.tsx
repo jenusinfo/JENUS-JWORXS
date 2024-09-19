@@ -10,8 +10,8 @@ const FormDefinitionsDetailContext: any = createContext(null)
 
 const FormDefinitionsDetailProvider = ({ children }: any) => {
 
-	const { setStep, setCurForm } = useApp()
-	const { push } = useRouter()
+	const { setStep, setCurForm, setFromInterview } = useApp()
+	const { push, pathname } = useRouter()
 	const { id } = useRouter().query
 	const { 
 		formFullInfo, getFullInfoFormDefinitions, 
@@ -92,6 +92,7 @@ const FormDefinitionsDetailProvider = ({ children }: any) => {
 		let res = await http.get(`/Interviews/Forms/${id}`)
 		if (res?.status) {
 			setCurForm(res.data.Data)
+			setFromInterview(`/settings/form-definitions/${id}`)
 			await push("/workitems/interview")
 		}
 	}

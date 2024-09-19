@@ -97,7 +97,7 @@ const DataPanel = () => {
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
                           <Text text="View" size={14} weight="500" />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id)}>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems")}>
                           <Text text="Edit" size={14} weight="500" />
                         </div>
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
@@ -109,9 +109,9 @@ const DataPanel = () => {
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
                           <Text text="Cancel" size={14} weight="500" />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
+                        {inbox.StatusCode == "Draft" && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
                           <Text text="Delete" size={14} color="#FB5656" weight="500" />
-                        </div>
+                        </div>}
                       </div>
                     </DropDown>
                   </td>

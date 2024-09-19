@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Fragment>
       <style jsx global>{`
         ::-webkit-scrollbar {
-          width: 6px;
+          width: 2px;
           height: 6px;
         }
 
@@ -26,11 +26,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
         ::-webkit-scrollbar-thumb {
           border-radius: 10px;
-          background: #dc2626;
+          background: #D1D2D4;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-          background: #dc2626;
+          background: #D1D2D4;
         }
       `}</style>
       <div style={{ color: COLOR.PRIMARY }}>

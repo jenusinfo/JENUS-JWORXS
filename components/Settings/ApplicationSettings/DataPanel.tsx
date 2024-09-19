@@ -23,13 +23,13 @@ const DataPanel = () => {
 			<table className="w-full">
 				<thead>
 					<tr className="text-xs text-[#A4A7B0] border-b border-gray-200">
-						<th className="py-3">
+						{/* <th className="py-3">
 							<div className="flex justify-center">
 								<IoEllipsisVerticalSharp />
 							</div>
-						</th>
+						</th> */}
 						<th className="py-3">
-							<div className="px-2 border-l border-gray-200 text-left">
+							<div className="px-2 border-l border-gray-200 text-right">
 								KEY
 							</div>
 						</th>
@@ -46,7 +46,7 @@ const DataPanel = () => {
 							?.slice((curPageNumber - 1) * 10, curPageNumber * 10)
 							.map((inbox: IApplicationSettings, index: number) => (
 								<tr key={index} className="border-b border-gray-200 hover:cursor-pointer hover:bg-gray-100 transition-all duration-500 hover:scale-[1.01]">
-									<td className="py-5">
+									{/* <td className="py-5">
 										<div className="flex justify-center">
 											<DropDown
 												target={<IoEllipsisVerticalSharp className="hover:cursor-pointer" />}
@@ -65,9 +65,9 @@ const DataPanel = () => {
 												</div>
 											</DropDown>
 										</div>
-									</td>
-									<td className="px-2 text-right">{inbox.Key}</td>
-									<td className="px-2 text-[#FB5656]">{inbox.Value}</td>
+									</td> */}
+									<td className="px-2 py-3 text-right">{inbox.Key}</td>
+									<td className="px-2 py-3 text-[#FB5656]">{inbox.Value}</td>
 								</tr>
 							))
 					}

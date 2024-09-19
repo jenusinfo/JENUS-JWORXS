@@ -6,16 +6,32 @@ import { FaEllipsisVertical } from "react-icons/fa6";
 import { useState } from "react";
 import SubmitModal from "components/Workitems/Interview/SubmissionRequirement/SubmitModal";
 import { useRouter } from "next/router";
+import { useApp } from "providers/AppProvider";
 
 const BaseHeader = () => {
 
 	const { push } = useRouter()
+	const { fromInterview } = useApp()
 	const { step, setStep, formSubmitHandler } = useInterview()
 	const [isOpen, setIsOpen] = useState(false)
 
+	console.log(fromInterview)
+
 	return (
 		<div className="flex items-center justify-between px-10 py-4 w-full border-b border-gray-200">
-			<div className="flex items-center gap-2 hover:cursor-pointer" onClick={step == 1 ? () => push("/workitems") : () => setStep(step - 1)}>
+			<div className="flex items-center gap-2 hover:cursor-pointer" onClick={
+				step == 1 
+					? () => push("/workitems") 
+					: step == 2 
+						? () => {
+							if (fromInterview == "/from-step1") {
+								setStep(1)
+							} else {
+								push(fromInterview)
+							}
+						} 
+						: () => setStep(step - 1)
+			}>
 				<IoMdClose />
 				<Text text="Close" size={16} weight="500" />
 			</div>

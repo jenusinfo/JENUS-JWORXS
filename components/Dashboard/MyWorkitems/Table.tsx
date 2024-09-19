@@ -92,7 +92,7 @@ export const Table = () => {
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
                                     <Text text="View" size={14} weight="500" />
                                   </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id)}>
+                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard")}>
                                     <Text text="Edit" size={14} weight="500" />
                                   </div>
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
