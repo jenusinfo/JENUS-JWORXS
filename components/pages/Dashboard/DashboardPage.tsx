@@ -15,25 +15,26 @@ const DashboardPage = () => {
 
   return (
     <div className="py-8">
-      <DashboardHeader />
-      <div className={"grid gap-6 mt-8 " + (width > 1160 ? 'grid-cols-3' : 'grid-cols-1')}>
-        <div className={"space-y-6 " + (width > 1160 ? 'col-span-2' : '')}>
-          <WorkitemProvider>
+      <WorkitemProvider>
+        <DashboardHeader />
+        <div className={"grid gap-6 mt-8 " + (width > 1160 ? 'grid-cols-3' : 'grid-cols-1')}>
+          <div className={"space-y-6 " + (width > 1160 ? 'col-span-2' : '')}>
+
             <MyWorkitems />
-          </WorkitemProvider>
-          <MyGroupsProvider>
-            <MyGroups />
-          </MyGroupsProvider>
+            <MyGroupsProvider>
+              <MyGroups />
+            </MyGroupsProvider>
+          </div>
+          <div className={"space-y-6 " + (width > 1160 ? 'col-span-1' : '')}>
+            <QuickActionsProvider>
+              <QuickActions />
+            </QuickActionsProvider>
+            <FormsProvider>
+              <MyFavoriteForms />
+            </FormsProvider>
+          </div>
         </div>
-        <div className={"space-y-6 " + (width > 1160 ? 'col-span-1' : '')}>
-          <QuickActionsProvider>
-            <QuickActions />
-          </QuickActionsProvider>
-          <FormsProvider>
-            <MyFavoriteForms />
-          </FormsProvider>
-        </div>
-      </div>
+      </WorkitemProvider>
     </div>
   )
 }

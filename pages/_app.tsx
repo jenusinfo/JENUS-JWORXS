@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Fragment>
       <style jsx global>{`
         ::-webkit-scrollbar {
-          width: 2px;
+          width: 6px;
           height: 6px;
         }
 

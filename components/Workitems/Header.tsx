@@ -26,7 +26,7 @@ const WorkitemsHeader = () => {
                     <CiSearch className="absolute left-2 top-2" size={20} />
                 </div>
                 <CSVLink filename="Jdocs-workitems" data={data} className="text-[#0146C5] bg-white rounded-[5px] px-4 py-2 h-fit">Export As</CSVLink>
-                <button className="text-white bg-[#0146C5] rounded-[5px] px-4 py-2 h-fit" onClick={() => {push("/workitems/interview"); setInterviewFormStatus(INTERVIEWSTATUS.CREATED); setFromInterview("/from-step1"); setStep(1);}}>Start Interview Form</button>
+                <button className="text-white bg-[#0146C5] rounded-[5px] px-4 py-2 h-fit" onClick={() => {push("/workitems/interview"); setInterviewFormStatus(INTERVIEWSTATUS.CREATED); setStep(1);}}>Start Interview Form</button>
             </div>
         </div>
     )

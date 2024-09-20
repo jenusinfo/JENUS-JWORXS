@@ -1,11 +1,10 @@
+import { useApp } from "providers/AppProvider"
 import { useInterview } from "providers/dashboard/InterviewProvider"
 import Text from "shared/core/ui/Text"
 
 const ExtraDataPanel = () => {
 
-    const { sessionResult } = useInterview()
-
-    console.log(sessionResult)
+    const { sessionResult } = useApp()
 
     return (
         <div className="w-[200px] space-y-3">

@@ -68,6 +68,7 @@ const AppProvider = ({ children }: any) => {
   const [interviewId, setInterviewId] = useState(0)
   const [interviewFormStatus, setInterviewFormStatus] = useState(INTERVIEWSTATUS.NONE)
   const [fromInterview, setFromInterview] = useState("/dashboard")
+  const [sessionResult, setSessionResult] = useState({})
 
   const getUserInfo = async () => {
     const res = await http.get("/Org/Account/GetUserInfo")
@@ -120,7 +121,9 @@ const AppProvider = ({ children }: any) => {
       interviewId,
       setInterviewId,
       fromInterview,
-      setFromInterview
+      setFromInterview,
+      sessionResult,
+      setSessionResult
     }),
     [
       MENULIST,
@@ -144,7 +147,9 @@ const AppProvider = ({ children }: any) => {
       interviewId,
       setInterviewId,
       fromInterview,
-      setFromInterview
+      setFromInterview,
+      sessionResult,
+      setSessionResult
     ]
   )
 

@@ -5,9 +5,11 @@ import { CiBookmark } from "react-icons/ci";
 import { CiBookmarkCheck } from "react-icons/ci";
 import { useInterview } from "providers/dashboard/InterviewProvider";
 import { IForm } from "types/dashboard";
+import { useApp } from "providers/AppProvider";
 
 const InterviewForms = () => {
 
+	const { setFromInterview } = useApp()
 	const { setStep, setCurForm, filteredForms: forms, search, setSearch, handleFavourite } = useInterview()
 	const classes = {
 		input: "border border-blue-100 rounded-[2px] pl-8 py-2 focus:outline-none text-sm w-[440px]"
@@ -33,7 +35,7 @@ const InterviewForms = () => {
 											: <CiBookmark color="#84858C" size={24} onClick={() => handleFavourite(form.Id, form.IsFavourite)} />
 									}
 								</div>
-								<div className="pl-1 pr-2 py-3 flex items-center w-full" onClick={() => { setCurForm(form); setStep(2) }}>
+								<div className="pl-1 pr-2 py-3 flex items-center w-full" onClick={() => { setFromInterview("/from-step1"); setCurForm(form); setStep(2) }}>
 									<Text text={form.Name} size={16} weight="500" className="truncate w-[300px]" />
 									<FaChevronRight className="ml-auto" size={12} />
 								</div>

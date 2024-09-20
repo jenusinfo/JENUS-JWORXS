@@ -12,8 +12,7 @@ const InterviewContext: any = createContext(null)
 
 const InterviewProvider = ({ children }: any) => {
 
-  const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId } = useApp()
-  const [sessionResult, setSessionResult] = useState({})
+  const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId, sessionResult, setSessionResult } = useApp()
   const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
   const [sessionId, setSessionId] = useState()

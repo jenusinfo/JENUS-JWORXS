@@ -13,7 +13,7 @@ import AssignModal from "components/Workitems/Modals/Assign_Modal";
 
 export const Table = () => {
 
-  const { data, curPageNumber, setCurPageNumber, handleGetWorkitems, loading, handleResumeInterview, setCurInterviewForm, handleCancelInterview, handleDuplicateInterview } = useWorkitem()
+  const { data, curPageNumber, setCurPageNumber, handleGetWorkitems, loading, handleResumeInterview, setCurInterviewForm, handleCancelInterview, handleDuplicateInterview, handleViewInterview } = useWorkitem()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [interviewId, setInterviewId] = useState<string>()
   const [isAssignOpen, setIsAssignOpen] = useState(false)
@@ -89,7 +89,7 @@ export const Table = () => {
                                 zIndex={100 - index}
                               >
                                 <div className="shadow-lg border-t border-[#2454DE] bg-white w-[200px]">
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100">
+                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleViewInterview(inbox.Id, "/dashboard")}>
                                     <Text text="View" size={14} weight="500" />
                                   </div>
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard")}>

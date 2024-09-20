@@ -18,6 +18,10 @@ const SubmissionRequirement = () => {
 	const [curTab, setCurTab] = useState("Form")
 	const { formFullInfo } = useInterview()
 
+	if (!formFullInfo) {
+		return <div>Loading...</div>
+	}
+
 	return (
 		<div>
 			<div className="bg-[#EEF0FE]">

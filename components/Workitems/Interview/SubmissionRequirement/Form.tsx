@@ -19,18 +19,18 @@ const Form = () => {
     ]
     const { formFullInfo, info } = useInterview()
 
-    console.log(info, formFullInfo)
-
     useEffect(() => {
-        let temp: any = []
-        formFullInfo[0].Sections.forEach((form: any) => {
-            temp.push({
-                id: form.Id,
-                title: form.Label,
-                isOpen: false
+        if (formFullInfo) {
+            let temp: any = []
+            formFullInfo[0].Sections.forEach((form: any) => {
+                temp.push({
+                    id: form.Id,
+                    title: form.Label,
+                    isOpen: false
+                })
             })
-        })
-        setFormList(temp)
+            setFormList(temp)
+        }
     }, [formFullInfo])
 
     return (
@@ -57,13 +57,13 @@ const Form = () => {
                                     // Object.entries(
                                     Object.entries(info).map(([key, value]: any, index) => (
                                         key == form.id &&
-                                            Object.entries(value).map(([k, val]: any, j: number) => (
-                                                <div key={j} className="flex justify-between">
-                                                    <Text text={k} size={14} color="black" />
-                                                    <Text text={val} size={14} weight="600" color="black" />
-                                                </div>
-                                            ))
-                                        )
+                                        Object.entries(value).map(([k, val]: any, j: number) => (
+                                            <div key={j} className="flex justify-between">
+                                                <Text text={k} size={14} color="black" />
+                                                <Text text={val} size={14} weight="600" color="black" />
+                                            </div>
+                                        ))
+                                    )
                                     )
                                     // )?.map(([key, value]: any, j: number) => (
                                     //     <div key={j} className="flex justify-between">
