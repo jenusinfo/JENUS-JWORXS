@@ -1,9 +1,9 @@
 export const XmlGenerator = (data: any, rootTagName: any, sections: any, questions: any) => {
+  console.log(data, sections)
     var xmlString = "<" + rootTagName + "></" + rootTagName + ">";
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xmlString, "text/xml");
     Object.keys(data).map((sectionId) => {
-      console.log(sections)
       let currentSection = sections.filter((each: any) => each.Id == sectionId);
       if (currentSection.length) {
         let section = currentSection[0];

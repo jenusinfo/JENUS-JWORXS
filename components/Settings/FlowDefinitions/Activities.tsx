@@ -41,10 +41,10 @@ const Activities = () => {
                                 </div>
                                 <FormInput label="Activity Name" name="Name" info={activity} handleChange={(e: any) => handleActivityChange(e, index)} />
                                 <FormSelect label="Status" name="Status" info={activity} handleChange={(e: any) => handleActivityChange(e, index)} optionList={[
-                                    { value: "Draft", name: "Draft" },
-                                    { value: "In-Progress", name: "In-Progress" },
-                                    { value: "Completed", name: "Completed" },
-                                    { value: "Cancelled", name: "Cancelled" }
+                                    { value: 1, name: "Draft" },
+                                    { value: 2, name: "In-Progress" },
+                                    { value: 3, name: "Completed" },
+                                    { value: 4, name: "Cancelled" }
                                 ]} />
                                 <FormInput label="Recipient Email Ids" name="RecipientEmailIds" info={activity} handleChange={(e: any) => handleActivityChange(e, index)} />
                                 <FormMultiSelect

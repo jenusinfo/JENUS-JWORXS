@@ -18,27 +18,27 @@ const InterviewProvider = ({ children }: any) => {
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
+  const [isEditMode, setIsEditMode] = useState(true)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, isRepeatable: any, i: any) => {
     let temp: any = { ...info }
-    if (temp[InterviewSectionId] == undefined) {
-      temp[InterviewSectionId] = {}
+    if (!isRepeatable) {
+      if (temp[InterviewSectionId] == undefined) {
+        temp[InterviewSectionId] = {}
+      }
+      temp[InterviewSectionId][e.target.name] = e.target.value
+    } else {
+      if (temp[InterviewSectionId] == undefined) {
+        temp[InterviewSectionId] = []
+      }
+      if (temp[InterviewSectionId][i] == undefined) {
+        temp[InterviewSectionId][i] = {}
+      }
+      console.log(temp[InterviewSectionId], i, temp[InterviewSectionId][i])
+      temp[InterviewSectionId][i][e.target.name] = e.target.value
     }
-    temp[InterviewSectionId][e.target.name] = e.target.value
     setInfo(temp)
   }
-
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, i: number) => {
-  //   let temp: any = { ...info }
-  //   if (temp[InterviewSectionId] == undefined) {
-  //     temp[InterviewSectionId] = []
-  //   }
-  //   if (temp[InterviewSectionId][i] == undefined) {
-  //     temp[InterviewSectionId][i] = {}
-  //   }
-  //   temp[InterviewSectionId][i][e.target.name] = e.target.value
-  //   setInfo(temp)
-  // }
 
   const formSubmitHandler = async () => {
     // e?.preventDefault();
@@ -143,7 +143,8 @@ const InterviewProvider = ({ children }: any) => {
       sessionResult,
       search, setSearch,
       filteredForms,
-      handleFavourite
+      handleFavourite,
+      isEditMode, setIsEditMode
     }),
     [
       step, setStep,
@@ -156,7 +157,8 @@ const InterviewProvider = ({ children }: any) => {
       sessionResult,
       search, setSearch,
       filteredForms,
-      handleFavourite
+      handleFavourite,
+      isEditMode, setIsEditMode
     ]
   )
 

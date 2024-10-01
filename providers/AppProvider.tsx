@@ -67,6 +67,7 @@ const AppProvider = ({ children }: any) => {
   const [interviewInfo, setInterviewInfo] = useState()
   const [interviewId, setInterviewId] = useState(0)
   const [interviewFormStatus, setInterviewFormStatus] = useState(INTERVIEWSTATUS.NONE)
+  const [statusCode, setStatusCode] = useState("")
   const [fromInterview, setFromInterview] = useState("/dashboard")
   const [sessionResult, setSessionResult] = useState({})
 
@@ -123,7 +124,9 @@ const AppProvider = ({ children }: any) => {
       fromInterview,
       setFromInterview,
       sessionResult,
-      setSessionResult
+      setSessionResult,
+      statusCode,
+      setStatusCode
     }),
     [
       MENULIST,
@@ -149,7 +152,9 @@ const AppProvider = ({ children }: any) => {
       fromInterview,
       setFromInterview,
       sessionResult,
-      setSessionResult
+      setSessionResult,
+      statusCode,
+      setStatusCode
     ]
   )
 

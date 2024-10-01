@@ -33,7 +33,7 @@ const WorkitemProvider = ({ children }: any) => {
   const [search, setSearch] = useState("")
   const [data, setData] = useState<IInbox[]>([])
   const [optionSearch, setOptionSearch] = useState("")
-  const { setInterviewFormStatus, setInterviewId, setFromInterview, setSessionResult } = useApp()
+  const { setInterviewFormStatus, setInterviewId, setFromInterview, setSessionResult, setStatusCode } = useApp()
   const [curAssignee, setCurAssignee] = useState<any>()
 
   const handleSelect = (item: any) => {
@@ -51,12 +51,14 @@ const WorkitemProvider = ({ children }: any) => {
     setCurHashTag(temp)
   }
 
-  const handleResumeInterview = async (id: any, previousPath: string) => {
+  const handleResumeInterview = async (id: any, previousPath: string, statusCode: string) => {
     const res = await GetInterviewSession(id)
 
     if (res.Data) {
+      setSessionResult(res.Data)
       const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
       if (form) {
+        setStatusCode(statusCode)
         setInterviewInfo(JSON.parse(res.Data.JsonData))
         setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
         setInterviewId(id)

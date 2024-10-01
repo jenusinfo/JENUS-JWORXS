@@ -94,14 +94,14 @@ const DataPanel = () => {
                       zIndex={100-index}
                     >
                       <div className="shadow-lg border-t border-[#2454DE] bg-white w-[200px]">
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { handleViewInterview(inbox.Id, "/workitems") }}>
-                          <Text text="View" size={14} weight="500" />
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={inbox.StatusCode == "Draft" ? () => {} : () => { handleViewInterview(inbox.Id, "/workitems") }}>
+                          <Text text="View" size={14} weight="500" color={inbox.StatusCode == "Draft" ? "#AAAAAF" : "#202124"} />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems")}>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems", inbox.StatusCode)}>
                           <Text text="Edit" size={14} weight="500" />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
-                          <Text text="Assign" size={14} weight="500" />
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={inbox.StatusCode == "Draft" ? () => {} : () => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
+                          <Text text="Assign" size={14} weight="500" color={inbox.StatusCode == "Draft" ? "#AAAAAF" : "#202124"} />
                         </div>
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDuplicateInterview(inbox.Id)}>
                           <Text text="Duplicate" size={14} weight="500" />

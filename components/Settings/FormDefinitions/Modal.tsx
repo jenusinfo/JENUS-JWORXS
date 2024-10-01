@@ -11,7 +11,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 	handleClose: () => void
 }) => {
 
-	const { info, handleChange, handleCreate, curIndex, handleUpdate, formDefinitions, groups, hashTags, handleMultiChange } = useFormDefinitions()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, flowDefinitions, groups, hashTags, handleMultiChange } = useFormDefinitions()
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -49,7 +49,7 @@ const FormDefinitionsModal = ({ isOpen, handleClose }: {
 						label="Task Type"
 						name="TaskDefinitionId"
 						info={info}
-						optionList={[{ value: "", name: "" }, ...formDefinitions?.map((each: any) => ({
+						optionList={[{ value: "", name: "" }, ...flowDefinitions?.map((each: any) => ({
 							value: each.Id,
 							name: each.Name
 						}))]}

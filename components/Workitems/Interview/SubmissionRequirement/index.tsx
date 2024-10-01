@@ -6,17 +6,19 @@ import ExtraDataPanel from "./Extra";
 import Form from "./Form";
 import Flow from "./Flow";
 import { useInterview } from "providers/dashboard/InterviewProvider";
+import { useHookFormDefinitionsDetail } from "hooks/Settings/FormDefinitionsDetailHook";
 
 const SubmissionRequirement = () => {
 
-	const tabs = [
-		{ Icon: (props: any) => <Icon type="form" fill={props.fill} />, name: "Form" },
-		{ Icon: (props: any) => <Icon type="document" fill={props.fill} />, name: "Documents" },
-		{ Icon: (props: any) => <Icon type="flow" fill={props.fill} />, name: "Flow" },
-		{ Icon: (props: any) => <Icon type="activity" fill={props.fill} />, name: "Activity" }
-	]
 	const [curTab, setCurTab] = useState("Form")
-	const { formFullInfo } = useInterview()
+	const { formFullInfo, curForm } = useInterview()
+	const { documentConfigurations } = useHookFormDefinitionsDetail()
+	const tabs = [
+		{ Icon: (props: any) => <Icon type="form" fill={props.fill} />, name: "Form", isActive: true },
+		{ Icon: (props: any) => <Icon type="document" fill={props.fill} />, name: "Documents", isActive: documentConfigurations && documentConfigurations.length > 0 },
+		{ Icon: (props: any) => <Icon type="flow" fill={props.fill} />, name: "Flow", isActive: curForm && curForm.TaskDefinitionId },
+		{ Icon: (props: any) => <Icon type="activity" fill={props.fill} />, name: "Activity", isActive: true }
+	]
 
 	if (!formFullInfo) {
 		return <div>Loading...</div>
@@ -25,11 +27,21 @@ const SubmissionRequirement = () => {
 	return (
 		<div>
 			<div className="bg-[#EEF0FE]">
-				<div className="w-[1000px] flex items-center gap-4 mx-auto py-[10px]">
+				{documentConfigurations && documentConfigurations.length > 0 && <div className="w-[1000px] flex items-center gap-4 mx-auto py-[10px]">
+					<CiSquareAlert size={24} color="#2454DE" />
+					<Text text="Document Generation Reminder" size={14} weight="600" />
+					<Text text="To complete the process, please click 'Generate Document.'" size={12} color="#606168" />
+				</div>}
+				{curForm && curForm.TaskDefinitionId && <div className="w-[1000px] flex items-center gap-4 mx-auto py-[10px]">
 					<CiSquareAlert size={24} color="#2454DE" />
 					<Text text="Flow Activity Submission Requirement" size={14} weight="600" />
 					<Text text="Please select a rouing decision from the Flow Tab." size={12} color="#606168" />
-				</div>
+				</div>}
+				{!(curForm && curForm.TaskDefinitionId) && !(documentConfigurations && documentConfigurations.length > 0) && <div className="w-[1000px] flex items-center gap-4 mx-auto py-[10px]">
+					<CiSquareAlert size={24} color="#2454DE" />
+					<Text text="Form Completion Reminder" size={14} weight="600" />
+					<Text text="Please review all the details, and once confirmed, click 'Complete' to finalize the process." size={12} color="#606168" />
+				</div>}
 			</div>
 			<div className="mt-3 mx-auto w-[1000px]">
 				<div className="flex flex-col gap-4">
@@ -51,9 +63,10 @@ const SubmissionRequirement = () => {
 						<div className="flex gap-4">
 							{
 								tabs.map((tab, index) => (
-									<div 
-										key={index} 
-										className={"px-1 pb-2 hover:cursor-pointer flex items-center gap-2 " + (curTab == tab.name ? 'border-b-2 border-blue-600' : '')} 
+									tab.isActive &&
+									<div
+										key={index}
+										className={"px-1 pb-2 hover:cursor-pointer flex items-center gap-2 " + (curTab == tab.name ? 'border-b-2 border-blue-600' : '')}
 										onClick={() => setCurTab(tab.name)}
 									>
 										<tab.Icon fill={curTab == tab.name ? "#2454DE" : "#3F4044"} />
@@ -62,8 +75,8 @@ const SubmissionRequirement = () => {
 								))
 							}
 						</div>
-						{curTab == "Form" && <Form />}
-						{curTab == "Flow" && <Flow />}
+						{curTab == "Form" && documentConfigurations && documentConfigurations.length > 0 && <Form />}
+						{curTab == "Flow" && curForm && curForm.TaskDefinitionId && <Flow />}
 					</div>
 					<ExtraDataPanel />
 				</div>

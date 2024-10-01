@@ -6,14 +6,16 @@ import { FaEllipsisVertical } from "react-icons/fa6";
 import { useState } from "react";
 import SubmitModal from "components/Workitems/Interview/SubmissionRequirement/SubmitModal";
 import { useRouter } from "next/router";
-import { useApp } from "providers/AppProvider";
+import { INTERVIEWSTATUS, useApp } from "providers/AppProvider";
+import DraftModal from "components/Workitems/Interview/Account/DraftModal";
 
 const BaseHeader = () => {
 
 	const { push } = useRouter()
-	const { fromInterview } = useApp()
-	const { step, setStep, formSubmitHandler } = useInterview()
+	const { fromInterview, statusCode, interviewFormStatus } = useApp()
+	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode } = useInterview()
 	const [isOpen, setIsOpen] = useState(false)
+	const [isDraftOpen, setIsDraftOpen] = useState(false)
 
 	return (
 		<div className="flex items-center justify-between px-10 py-4 w-full border-b border-gray-200">
@@ -49,12 +51,25 @@ const BaseHeader = () => {
 				{
 					step == 2 &&
 					<>
-						<button className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit text-sm">Back To Edit</button>
+						<button 
+							className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit text-sm"
+							onClick={async () => {
+								if (!isEditMode) {
+									setIsEditMode(!isEditMode)
+								} else {
+									await formSubmitHandler()
+									await setIsDraftOpen(true)
+								}
+							}}
+						>
+							{(interviewFormStatus == INTERVIEWSTATUS.UPDATED && statusCode == "Draft") ? "Save Changes" : !isEditMode ? "Back To Edit" : "Save As Draft"}
+						</button>
 						<button 
 							className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm" 
 							onClick={async () => {
-								await formSubmitHandler()
-								await setStep(step + 1)
+								if (!isEditMode)
+									await setStep(step + 2)
+								else setIsEditMode(false)
 							}}
 						>Next</button>
 					</>
@@ -70,6 +85,7 @@ const BaseHeader = () => {
 				}
 			</div>
 			<SubmitModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
+			<DraftModal isOpen={isDraftOpen} handleClose={() => setIsDraftOpen(false)} />
 		</div>
 	)
 }

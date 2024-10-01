@@ -15,11 +15,11 @@ const FormDefinitionsRulesModal = ({ isOpen, handleClose }: {
 	const OperatorList = [
 		{ name: "Choose Operator" },
 		{ name: "EQUAL", value: "EQUAL" },
-		{ name: "NOT EQUAL", value: "NOTEQUAL" },
-		{ name: "GREATER THAN", value: "GREATERTHAN" },
-		{ name: "LESSER THAN", value: "LESSERTHAN" },
-		{ name: "GREATER THAN OR EQUAL", value: "GREATERTHANOREQUAL" },
-		{ name: "LESSER THAN OR EQUAL", value: "LESSERTHANOREQUAL" },
+		{ name: "NOT EQUAL", value: "NOT_EQUAL" },
+		{ name: "GREATER THAN", value: "GREATER" },
+		{ name: "LESSER THAN", value: "LESSER" },
+		{ name: "GREATER THAN OR EQUAL", value: "GREATER_OR_EQUAL" },
+		{ name: "LESSER THAN OR EQUAL", value: "LESSER_OR_EQUAL" },
 	]
 	const { info, handleChange, handleCreate, curIndex, handleUpdate, formFullInfo, ruleSets } = useRule()
 	const [sourceSections, setSourceSections] = useState<any>([])
