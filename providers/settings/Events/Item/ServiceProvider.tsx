@@ -71,8 +71,6 @@ const ServiceProvider = ({ children }: any) => {
 			return true
 	}
 
-    console.log(info)
-
     const handleMultiChange = (name: string, value: any) => {
 		let temp = {...info}
 

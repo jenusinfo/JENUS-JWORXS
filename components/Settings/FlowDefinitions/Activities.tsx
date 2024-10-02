@@ -145,7 +145,7 @@ const Activities = () => {
                                             <div className="flex justify-end">
                                                 <MdDelete color="red" size={20} className="hover:cursor-pointer" onClick={() => {
                                                     let temp = { ...info }
-                                                    temp.Activities[index].Decisions.splice(index, 1)
+                                                    temp.Activities[index].Decisions.splice(i, 1)
                                                     setInfo(temp)
                                                 }} />
                                             </div>

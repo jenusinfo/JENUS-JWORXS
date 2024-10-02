@@ -1,5 +1,4 @@
 export const XmlGenerator = (data: any, rootTagName: any, sections: any, questions: any) => {
-  console.log(data, sections)
     var xmlString = "<" + rootTagName + "></" + rootTagName + ">";
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -39,12 +38,10 @@ export const XmlGenerator = (data: any, rootTagName: any, sections: any, questio
         } else {
           let sectionTag = xmlDoc.createElement(section?.TagName);
  
-          console.log("--->", data[sectionId])
           Object.keys(data[sectionId]).map((varName) => {
             let CurrentQuestionInfo = questions?.filter(
               (each: any) => each.TagName == varName
             );
-            console.log(CurrentQuestionInfo)
             let questionTagElement = xmlDoc.createElement(
               CurrentQuestionInfo[0]?.TagName
             );
@@ -65,7 +62,6 @@ export const XmlGenerator = (data: any, rootTagName: any, sections: any, questio
       }
     });
   
-    console.log(xmlDoc, "xml doc");
     var serializer = new XMLSerializer();
     var finalXmlString = serializer.serializeToString(xmlDoc);
     return finalXmlString;

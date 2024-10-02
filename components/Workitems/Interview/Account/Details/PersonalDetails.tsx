@@ -67,7 +67,7 @@ const PersonalDetails = () => {
 																text={
 																	info && info[que.InterviewSectionId] && 
 																	(section.IsRepeatable 
-																		? info[que.InterviewSectionId][i][que.TagName] 
+																		? info[que.InterviewSectionId][i] ? info[que.InterviewSectionId][i][que.TagName] : "" 
 																		: info[que.InterviewSectionId][que.TagName]
 																	)
 																} 

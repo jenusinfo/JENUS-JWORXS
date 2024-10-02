@@ -16,7 +16,7 @@ const SubmissionRequirement = () => {
 	const tabs = [
 		{ Icon: (props: any) => <Icon type="form" fill={props.fill} />, name: "Form", isActive: true },
 		{ Icon: (props: any) => <Icon type="document" fill={props.fill} />, name: "Documents", isActive: documentConfigurations && documentConfigurations.length > 0 },
-		{ Icon: (props: any) => <Icon type="flow" fill={props.fill} />, name: "Flow", isActive: curForm && curForm.TaskDefinitionId },
+		{ Icon: (props: any) => <Icon type="flow" fill={props.fill} />, name: "Flow", isActive: true },
 		{ Icon: (props: any) => <Icon type="activity" fill={props.fill} />, name: "Activity", isActive: true }
 	]
 
@@ -75,8 +75,8 @@ const SubmissionRequirement = () => {
 								))
 							}
 						</div>
-						{curTab == "Form" && documentConfigurations && documentConfigurations.length > 0 && <Form />}
-						{curTab == "Flow" && curForm && curForm.TaskDefinitionId && <Flow />}
+						{curTab == "Form" && <Form />}
+						{curTab == "Flow" && <Flow />}
 					</div>
 					<ExtraDataPanel />
 				</div>

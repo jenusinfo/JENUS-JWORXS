@@ -7,8 +7,6 @@ import { IGroupItem, IInbox } from "types/dashboard"
 const DataPanel = () => {
   const { groupItems, curPageNumber, setCurPageNumber } = useGroupItem()
 
-  console.log("--->", groupItems)
-
   return (
     <div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
       <div className="pl-6 pr-2 py-2 flex items-center justify-between border-b border-gray-200">

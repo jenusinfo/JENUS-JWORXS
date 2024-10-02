@@ -7,6 +7,7 @@ import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
 import { submitInterview, UpdateFavourite, UpdateInterview } from "lib/interview";
 import { toast } from "react-toastify";
+import http from "services/http-common";
 
 const InterviewContext: any = createContext(null)
 
@@ -19,6 +20,9 @@ const InterviewProvider = ({ children }: any) => {
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
   const [isEditMode, setIsEditMode] = useState(true)
+  const [flowInfo, setFlowInfo] = useState({})
+  const [comment, setComment] = useState("")
+  const [decisions, setDecisions] = useState([])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, isRepeatable: any, i: any) => {
     let temp: any = { ...info }
@@ -34,10 +38,23 @@ const InterviewProvider = ({ children }: any) => {
       if (temp[InterviewSectionId][i] == undefined) {
         temp[InterviewSectionId][i] = {}
       }
-      console.log(temp[InterviewSectionId], i, temp[InterviewSectionId][i])
       temp[InterviewSectionId][i][e.target.name] = e.target.value
     }
     setInfo(temp)
+  }
+
+  const handleFlowChange = async (e: any) => {
+    setFlowInfo({
+      ...flowInfo,
+      [e.target.name]: e.target.value
+    })
+    if (e.target.name == "TaskType") {
+      const res = await http.get(`/TaskDefinitions/${e.target.value}/DefaultActivity`)
+
+      if (res?.data) {
+        setDecisions(res.data.Data.Decisions)
+      }
+    }
   }
 
   const formSubmitHandler = async () => {
@@ -144,7 +161,10 @@ const InterviewProvider = ({ children }: any) => {
       search, setSearch,
       filteredForms,
       handleFavourite,
-      isEditMode, setIsEditMode
+      isEditMode, setIsEditMode,
+      flowInfo, setFlowInfo, handleFlowChange,
+      comment, setComment,
+      decisions, setDecisions
     }),
     [
       step, setStep,
@@ -158,7 +178,10 @@ const InterviewProvider = ({ children }: any) => {
       search, setSearch,
       filteredForms,
       handleFavourite,
-      isEditMode, setIsEditMode
+      isEditMode, setIsEditMode,
+      flowInfo, setFlowInfo, handleFlowChange,
+      comment, setComment,
+      decisions, setDecisions
     ]
   )
 
