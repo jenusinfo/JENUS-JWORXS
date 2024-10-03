@@ -14,7 +14,7 @@ const WorkitemProvider = ({ children }: any) => {
 
   const { push } = useRouter()
   const { group, setCurForm, setStep, setInterviewInfo } = useApp()
-  const WorkitemStatuses = ["All", "InProgress", "Draft", "Completed", null]
+  const WorkitemStatuses = ["All", "In-Progress", "Draft", "Completed", null]
   const { hashTags: optionList } = useHookHashTag()
   const assignedList = [
     {name: "Assigned to All", value: "All"}, 
@@ -51,11 +51,11 @@ const WorkitemProvider = ({ children }: any) => {
     setCurHashTag(temp)
   }
 
-  const handleResumeInterview = async (id: any, previousPath: string, statusCode: string) => {
+  const handleResumeInterview = async (id: any, previousPath: string, statusCode: string, inbox: any) => {
     const res = await GetInterviewSession(id)
 
     if (res.Data) {
-      setSessionResult(res.Data)
+      setSessionResult(inbox)
       const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
       if (form) {
         setStatusCode(statusCode)
@@ -129,7 +129,7 @@ const WorkitemProvider = ({ children }: any) => {
 
   useEffect(() => {
     let temp = inboxList?.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
-      .filter((each: IInbox) => curStatus == "All" ? true : each.StatusCode == curStatus)
+      .filter((each: any) => curStatus == "All" ? true : (each.UserTask == null ? each.Status : each.UserTask.CurrentActivityStatus) == curStatus)
       .filter((each: IInbox) => {
         if (Array.isArray(searchHashTag)) {
           let flag = 0

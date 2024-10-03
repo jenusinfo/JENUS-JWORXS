@@ -5,24 +5,29 @@ import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } 
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
-import { submitInterview, UpdateFavourite, UpdateInterview } from "lib/interview";
+import { GetInterviewSession, submitInterview, UpdateFavourite, UpdateInterview } from "lib/interview";
 import { toast } from "react-toastify";
 import http from "services/http-common";
+import { CreateUserTask, GetCurrentUserTask, UpdateUserTask } from "lib/usertask";
+import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
 
 const InterviewContext: any = createContext(null)
 
 const InterviewProvider = ({ children }: any) => {
 
   const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId, sessionResult, setSessionResult } = useApp()
+  const { flowDefinitions } = useHookFlowDefinitions()
   const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
   const [isEditMode, setIsEditMode] = useState(true)
-  const [flowInfo, setFlowInfo] = useState({})
+  const [flowInfo, setFlowInfo] = useState<any>({})
   const [comment, setComment] = useState("")
+  const [defaultActivity, setDefaultActivity] = useState<any>()
   const [decisions, setDecisions] = useState([])
+  const [isEdit, setIsEdit] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, isRepeatable: any, i: any) => {
     let temp: any = { ...info }
@@ -44,14 +49,17 @@ const InterviewProvider = ({ children }: any) => {
   }
 
   const handleFlowChange = async (e: any) => {
+    if (isEdit && e.target.name == "TaskDefinitionId")
+      return;
     setFlowInfo({
       ...flowInfo,
       [e.target.name]: e.target.value
     })
-    if (e.target.name == "TaskType") {
+    if (e.target.name == "TaskDefinitionId") {
       const res = await http.get(`/TaskDefinitions/${e.target.value}/DefaultActivity`)
 
       if (res?.data) {
+        setDefaultActivity(res.data.Data)
         setDecisions(res.data.Data.Decisions)
       }
     }
@@ -140,6 +148,67 @@ const InterviewProvider = ({ children }: any) => {
     }
   }
 
+  console.log(sessionResult)
+
+  const handleSaveFlow = async () => {
+    let params: any = {}
+    params.SourceId = null
+    params.Name = curForm.Subject
+    params.Description = ""
+    params.Comments = comment
+    params.TaskDefinitionId = flowInfo.TaskDefinitionId
+    params.CurrentActivityId = defaultActivity.Id
+    params.currentActivityName = defaultActivity.Name
+    params.currentActivityStatus = defaultActivity.StatusString
+    params.DecisionId = flowInfo.DecisionId
+    params.AssignedToId = flowInfo.AssignedToId
+    params.Id = isEdit ? sessionResult.UserTask.Id : 0
+    params.ReferenceId = isEdit ? null : sessionResult.Id || null
+    params.AttachmentType = isEdit ? null : "Interview"
+    params.Source = null
+    params.UpdateInterviewStatusToInprogress = false
+    params.IsFormSubmitted = true
+
+    if (isEdit) {
+      let res = await UpdateUserTask(sessionResult.UserTask.Id, params)
+
+      if (res) {
+        res = await GetInterviewSession(sessionResult.Id)
+        if (res?.data)
+          setSessionResult(res?.data.Data)
+      }
+    } else {
+      let res = await CreateUserTask(params)
+
+      if (res) {
+        res = await GetInterviewSession(sessionResult.Id)
+        if (res?.data)
+          setSessionResult(res?.data.Data)
+      }
+    }
+  }
+
+  const getCurrentUserTask = async (id: any) => {
+    const res = await GetCurrentUserTask(id)
+
+    if (res?.data) {
+      setDefaultActivity(res.data.Data)
+      setDecisions(res.data.Data.Decisions)
+    }
+  }
+
+  useEffect(() => {
+    if (sessionResult.UserTask && flowDefinitions && flowDefinitions.length) {
+      setIsEdit(true)
+      let taskDefinitionName = sessionResult.UserTask.TaskDefinitionName
+      let currentFlowDefinition = flowDefinitions.filter((each: any) => each.Name == taskDefinitionName)[0]
+      setFlowInfo({
+        TaskDefinitionId: currentFlowDefinition.Id
+      })
+      getCurrentUserTask(sessionResult.UserTask.Id)
+    }
+  }, [sessionResult, flowDefinitions])
+
   useEffect(() => {
     setFilteredForms(forms.filter((form: IForm) => form.Name.toLowerCase().includes(search.toLowerCase())))
   }, [search])
@@ -164,7 +233,8 @@ const InterviewProvider = ({ children }: any) => {
       isEditMode, setIsEditMode,
       flowInfo, setFlowInfo, handleFlowChange,
       comment, setComment,
-      decisions, setDecisions
+      decisions, setDecisions,
+      handleSaveFlow, flowDefinitions
     }),
     [
       step, setStep,
@@ -181,7 +251,8 @@ const InterviewProvider = ({ children }: any) => {
       isEditMode, setIsEditMode,
       flowInfo, setFlowInfo, handleFlowChange,
       comment, setComment,
-      decisions, setDecisions
+      decisions, setDecisions,
+      handleSaveFlow, flowDefinitions
     ]
   )
 

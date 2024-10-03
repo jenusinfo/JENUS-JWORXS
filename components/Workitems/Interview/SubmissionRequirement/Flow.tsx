@@ -8,17 +8,14 @@ const ReactQuill: any = dynamic(() => import('react-quill'), { ssr: false })
 
 const Flow = () => {
 
-    const { flowInfo, setFlowInfo, handleFlowChange, comment, setComment, decisions } = useInterview()
-    const { flowDefinitions } = useHookFlowDefinitions()
+    const { flowInfo, setFlowInfo, handleFlowChange, comment, setComment, decisions, flowDefinitions } = useInterview()
     const { users } = useHookUser()
-
-    console.log(flowInfo)
 
     return (
         <div className="space-y-6 w-[528px]">
             <FormSelect
                 label="Task Type"
-                name="TaskType"
+                name="TaskDefinitionId"
                 info={flowInfo}
                 handleChange={handleFlowChange}
                 optionList={[
@@ -30,7 +27,7 @@ const Flow = () => {
             />
             <FormSelect
                 label="Decision"
-                name="Decision"
+                name="DecisionId"
                 info={flowInfo}
                 handleChange={handleFlowChange}
                 optionList={[
@@ -41,8 +38,8 @@ const Flow = () => {
                 ]}
             />
             <FormSelect
-                label="Asignee"
-                name="Asignee"
+                label="Assignee"
+                name="AssignedToId"
                 info={flowInfo}
                 handleChange={handleFlowChange}
                 optionList={[
@@ -52,7 +49,13 @@ const Flow = () => {
                     }))
                 ]}
             />
-            <ReactQuill theme="snow" value={comment} onChange={setComment} placeholder="Enter your comments" />
+            {/* <ReactQuill theme="snow" value={comment} onChange={setComment} placeholder="Enter your comments" /> */}
+            <textarea 
+                className=" border border-gray-100 rounded-[4px] px-2 py-2 focus:outline-none text-sm w-full" 
+                value={comment} 
+                onChange={e => setComment(e.target.value)} 
+                placeholder="Enter your comments" 
+            />
         </div>
     )
 }

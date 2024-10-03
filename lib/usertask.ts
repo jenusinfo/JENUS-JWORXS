@@ -1,24 +1,39 @@
 import http from "services/http-common"
 
-export const CreateUserTask = async (id: any, params: any) => {
+export const CreateUserTask = async (params: any) => {
     let fn = new FormData()
-    fn.append("SourceId", params.SourceId)
-    fn.append("Name", params.Name)
-    fn.append("Description", params.Description)
-    fn.append("Comments", params.Comments)
-    fn.append("TaskDefinitionId", params.TaskDefinitionId)
-    fn.append("CurrentActivityId", params.CurrentActivityId)
-    fn.append("DecisionId", params.DecisionId)
-    fn.append("CurrentActivityName", params.CurrentActivityName)
-    fn.append("CurrentActivityStatus", params.CurrentActivityStatus)
-    fn.append("AssignedToId", params.AssignedToId)
-    fn.append("Id", params.Id)
-    fn.append("ReferenceId", params.ReferenceId)
-    fn.append("Id", params.Id)
-    fn.append("AttachmentType", params.AttachmentType)
-    fn.append("Source", params.Source)
-    fn.append("UpdateInterviewStatusToInProgres", params.UpdateInterviewStatusToInProgres)
-    fn.append("IsFormSubmitted", params.IsFormSubmitted)
+    fn.append("payload", JSON.stringify(params));
 
-    const res = await http.post(`/UserTasks/${id}`, fn)
+    let config = {
+        headers: {
+            //"DM-API-KEY": DM_API_KEY,
+            "Content-Type": "multipart/form-data"
+        },
+    };
+
+    const res = await http.post(`/UserTasks`, fn, config)
+
+    return res
+}
+
+export const UpdateUserTask = async (id: any, params: any) => {
+    let fn = new FormData()
+    fn.append("payload", JSON.stringify(params));
+
+    let config = {
+        headers: {
+            //"DM-API-KEY": DM_API_KEY,
+            "Content-Type": "multipart/form-data"
+        },
+    };
+
+    const res = await http.put(`/UserTasks/${id}`, fn, config)
+
+    return res
+}
+
+export const GetCurrentUserTask = async (id: any) => {
+    const res = await http.get(`/UserTasks/${id}/CurrentActivity`)
+
+    return res
 }
