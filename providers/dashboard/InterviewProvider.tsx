@@ -10,6 +10,10 @@ import { toast } from "react-toastify";
 import http from "services/http-common";
 import { CreateUserTask, GetCurrentUserTask, UpdateUserTask } from "lib/usertask";
 import { useHookFlowDefinitions } from "hooks/Settings/FlowDefinitionsHook";
+import { useHookFormDefinitionsDetail } from "hooks/Settings/FormDefinitionsDetailHook";
+import axios from "axios";
+import mime from 'mime-types'
+import { IInterviewDocument } from "types/document";
 
 const InterviewContext: any = createContext(null)
 
@@ -28,6 +32,8 @@ const InterviewProvider = ({ children }: any) => {
   const [defaultActivity, setDefaultActivity] = useState<any>()
   const [decisions, setDecisions] = useState([])
   const [isEdit, setIsEdit] = useState(false)
+  const { documentConfigurations, getDocumentConfigurations } = useHookFormDefinitionsDetail()
+  const [interviewDocuments, setInterviewDocuments] = useState<IInterviewDocument[]>([])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, isRepeatable: any, i: any) => {
     let temp: any = { ...info }
@@ -148,8 +154,6 @@ const InterviewProvider = ({ children }: any) => {
     }
   }
 
-  console.log(sessionResult)
-
   const handleSaveFlow = async () => {
     let params: any = {}
     params.SourceId = null
@@ -197,6 +201,68 @@ const InterviewProvider = ({ children }: any) => {
     }
   }
 
+  const handleGenerateDocument = async (id: any) => {
+    setLoading(true)
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/Interviews/Sessions/ExecuteEFS/${sessionResult.Id}/${id}`, {
+        responseType: "blob",
+      })
+      .then(async (res) => {
+        setLoading(false);
+        let fileExtension = "." + (mime.extension(res.headers["content-type"]) || "pdf");
+        let disposition = res.headers["content-disposition"];
+        let filename = "";
+
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+        }
+
+        if (filename == "") {
+          //filename = `${interviewName + "_" + session?.CreatedOn}`;
+          filename = `${sessionId + "_" + sessionResult?.CreatedOn}`;
+        }
+
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        if (filename.toLowerCase().endsWith(fileExtension.toLowerCase())) {
+          link.setAttribute("download", filename);
+        }
+        else {
+          link.setAttribute("download", filename + fileExtension);
+        }
+
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(function () {
+          document.body.removeChild(link);
+          //link.remove();
+        }, 500);
+
+      })
+      .catch(async (error) => {
+        setLoading(false);
+        let errorObj = JSON.parse(await error.response.data.text());
+        toast.error(errorObj?.Message || "Please try after sometime")
+      });
+  }
+
+  const getInterviewDocuments = async () => {
+    const res = await http.get(`/DocumentOutputs/Interviews/${sessionResult.Id}`)
+
+    setInterviewDocuments(res?.data.Data)
+  }
+
+  useEffect(() => {
+    if (curForm) {
+      getDocumentConfigurations(curForm.Id)
+    }
+  }, [curForm])
+
   useEffect(() => {
     if (sessionResult.UserTask && flowDefinitions && flowDefinitions.length) {
       setIsEdit(true)
@@ -234,7 +300,9 @@ const InterviewProvider = ({ children }: any) => {
       flowInfo, setFlowInfo, handleFlowChange,
       comment, setComment,
       decisions, setDecisions,
-      handleSaveFlow, flowDefinitions
+      handleSaveFlow, flowDefinitions, documentConfigurations,
+      handleGenerateDocument, getInterviewDocuments,
+      interviewDocuments
     }),
     [
       step, setStep,
@@ -252,7 +320,9 @@ const InterviewProvider = ({ children }: any) => {
       flowInfo, setFlowInfo, handleFlowChange,
       comment, setComment,
       decisions, setDecisions,
-      handleSaveFlow, flowDefinitions
+      handleSaveFlow, flowDefinitions, documentConfigurations,
+      handleGenerateDocument, getInterviewDocuments,
+      interviewDocuments
     ]
   )
 

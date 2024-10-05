@@ -7,12 +7,12 @@ import Form from "./Form";
 import Flow from "./Flow";
 import { useInterview } from "providers/dashboard/InterviewProvider";
 import { useHookFormDefinitionsDetail } from "hooks/Settings/FormDefinitionsDetailHook";
+import Documents from "./Documents";
 
 const SubmissionRequirement = () => {
 
 	const [curTab, setCurTab] = useState("Form")
-	const { formFullInfo, curForm } = useInterview()
-	const { documentConfigurations } = useHookFormDefinitionsDetail()
+	const { formFullInfo, curForm, documentConfigurations } = useInterview()
 	const tabs = [
 		{ Icon: (props: any) => <Icon type="form" fill={props.fill} />, name: "Form", isActive: true },
 		{ Icon: (props: any) => <Icon type="document" fill={props.fill} />, name: "Documents", isActive: documentConfigurations && documentConfigurations.length > 0 },
@@ -77,6 +77,7 @@ const SubmissionRequirement = () => {
 						</div>
 						{curTab == "Form" && <Form />}
 						{curTab == "Flow" && <Flow />}
+						{curTab == "Documents" && <Documents />}
 					</div>
 					<ExtraDataPanel />
 				</div>

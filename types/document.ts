@@ -34,3 +34,36 @@
 //     last-released-on: string
 //     document-type: string
 // }
+
+export interface IFormDocument {
+    CreatedById: number
+    CreatedBy: string
+    CreatedOn: string
+    ModifiedBy: string
+    ModifiedById: number
+    ModifiedOn: string
+    Id: number
+    InterviewFormId: number
+    Caption: string
+    Description: string
+    OutputFileName: string
+    EfsUrl: string
+    IsActive: boolean
+}
+
+export interface IInterviewDocument {
+    Id: number
+    JDocId: null | number
+    InterviewId: number
+    CreatedById: number
+    CreatedBy: string
+    CreatedOn: string
+    GeneratedDocumentName: string
+    JDocName: null | string
+    InterviewFormName: string
+    IsArchive: boolean
+    ModifiedById: null | number
+    ModifiedOn: null | string
+    ModifiedBy: null | string
+    EfsSettingId: number
+}
