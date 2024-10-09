@@ -13,7 +13,7 @@ import DocumentGenerationRightSide from "components/Workitems/Interview/Submissi
 const BaseHeader = () => {
 
 	const { push } = useRouter()
-	const { fromInterview, statusCode, interviewFormStatus } = useApp()
+	const { fromInterview, statusCode, interviewFormStatus, setInterviewFormStatus } = useApp()
 	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode, documentConfigurations } = useInterview()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isDraftOpen, setIsDraftOpen] = useState(false)
@@ -59,6 +59,7 @@ const BaseHeader = () => {
 								if (!isEditMode) {
 									setIsEditMode(!isEditMode)
 								} else {
+									setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
 									await formSubmitHandler()
 									await setIsDraftOpen(true)
 								}
@@ -69,9 +70,15 @@ const BaseHeader = () => {
 						<button 
 							className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm" 
 							onClick={async () => {
-								if (!isEditMode)
+								if (!isEditMode) {
+									if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
+										setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
+										await formSubmitHandler()
+									}
 									await setStep(step + 2)
-								else setIsEditMode(false)
+								} else {
+									setIsEditMode(false)
+								}
 							}}
 						>Next</button>
 					</>

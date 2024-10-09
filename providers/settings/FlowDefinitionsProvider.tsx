@@ -101,6 +101,7 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			})
 			return false
 		}
+		return true
 	}
 
 	const isOptionSelected = (list: any, id: any) => {

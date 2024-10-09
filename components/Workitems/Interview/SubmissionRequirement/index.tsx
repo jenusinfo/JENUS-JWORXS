@@ -12,7 +12,7 @@ import Documents from "./Documents";
 const SubmissionRequirement = () => {
 
 	const [curTab, setCurTab] = useState("Form")
-	const { formFullInfo, curForm, documentConfigurations } = useInterview()
+	const { formFullInfo, curForm, documentConfigurations, sessionResult } = useInterview()
 	const tabs = [
 		{ Icon: (props: any) => <Icon type="form" fill={props.fill} />, name: "Form", isActive: true },
 		{ Icon: (props: any) => <Icon type="document" fill={props.fill} />, name: "Documents", isActive: documentConfigurations && documentConfigurations.length > 0 },
@@ -23,6 +23,8 @@ const SubmissionRequirement = () => {
 	if (!formFullInfo) {
 		return <div>Loading...</div>
 	}
+
+	console.log(sessionResult)
 
 	return (
 		<div>
@@ -50,9 +52,9 @@ const SubmissionRequirement = () => {
 						<div className="flex items-center gap-3">
 							<Text text="In Progress" size={14} weight="500" />
 							<Text text="|" size={8} weight="500" />
-							<Text text="Pending on Initiator" size={14} weight="500" />
-							<Text text="|" size={8} weight="500" />
-							<Text text={`ID ${formFullInfo[0].Id}`} size={14} weight="500" />
+							{/* <Text text="Pending on Initiator" size={14} weight="500" />
+							<Text text="|" size={8} weight="500" /> */}
+							<Text text={`ID ${sessionResult.Id}`} size={14} weight="500" />
 						</div>
 					</div>
 					<Text text={formFullInfo[0].Name} size={28} weight="700" />
