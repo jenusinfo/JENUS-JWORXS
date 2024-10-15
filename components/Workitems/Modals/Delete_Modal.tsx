@@ -1,13 +1,16 @@
+import { useRouter } from "next/router"
 import { useWorkitem } from "providers/dashboard/WorkitemProvider"
 import Modal from "shared/core/ui/Modal"
 import Text from "shared/core/ui/Text"
 
-const DeleteModal = ({ isOpen, handleClose, id }: {
+const DeleteModal = ({ isOpen, handleClose, id, mode }: {
     isOpen: boolean,
     handleClose: () => void,
-    id: string
+    id: string,
+    mode?: string
 }) => {
 
+    const { push } = useRouter()
     const { handleDeleteInterview } = useWorkitem()
 
     return (
@@ -21,6 +24,9 @@ const DeleteModal = ({ isOpen, handleClose, id }: {
                         onClick={async () => {
                             await handleDeleteInterview(id); 
                             await handleClose()
+                            if (mode == "InterviewForm") {
+                                push("/workitems")
+                            }
                         }}
                     >Proceed to Delete</button>
                 </div>

@@ -69,7 +69,7 @@ const UsersProvider = ({ children }: any) => {
 	}
 
 	const handleMultiChange = (name: string, value: any) => {
-		let temp = {...info}
+		let temp = { ...info }
 
 		let tmp: any = []
 		if (temp[`${name}`] == undefined) {
@@ -126,6 +126,7 @@ const UsersProvider = ({ children }: any) => {
 
 		if (res.Data != null) {
 			getUsers()
+			return true
 		}
 		if (res.ModelErrors) {
 			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {

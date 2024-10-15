@@ -4,10 +4,12 @@ import { IQuickAction } from "types/dashboard"
 import { MdElectricBolt } from "react-icons/md";
 import { IoIosArrowForward } from "react-icons/io";
 import { useRouter } from "next/router";
+import { INTERVIEWSTATUS, useApp } from "providers/AppProvider";
 
 const DataPanel = () => {
 
 	const { push } = useRouter()
+	const { setInterviewFormStatus, setStep, setInterviewInfo } = useApp()
 	const { quickActions } = useQuickActions()
 
 	return (
@@ -18,7 +20,14 @@ const DataPanel = () => {
 					<div
 						key={index}
 						className="border border-[#DEDFEA] px-6 py-4 rounded-[4px] bg-white flex items-center gap-2 hover:cursor-pointer hover:border-blue-200 hover:bg-blue-100 transition-all duration-500"
-						onClick={() => push(group.link)}
+						onClick={() => {
+							if (index == 0) {
+								setInterviewFormStatus(INTERVIEWSTATUS.CREATED);
+								setInterviewInfo(null)
+								setStep(1);
+							}
+							push(group.link)
+						}}
 					>
 						<MdElectricBolt color="#2454DE" />
 						<Text text={group.name} />

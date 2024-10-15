@@ -94,6 +94,7 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 		const res = await UpdateTaskDefinition(info.Id, temp)
 		if (res.Data != null) {
 			getFlowDefinitions()
+			return true
 		}
 		if (res.ModelErrors) {
 			Object.entries(res.ModelErrors).map(([key, value]: any, index: number) => {
@@ -101,7 +102,6 @@ const FlowDefinitionsProvider = ({ children }: any) => {
 			})
 			return false
 		}
-		return true
 	}
 
 	const isOptionSelected = (list: any, id: any) => {
