@@ -10,7 +10,7 @@ import Text from "shared/core/ui/Text"
 
 const PersonalDetails = () => {
 
-	const { info, handleChange, formFullInfo, curForm, isEditMode } = useInterview()
+	const { info, handleChange, formFullInfo, curForm, isEditMode, formStructure } = useInterview()
 
 	if (!formFullInfo) {
 		return <></>
@@ -18,12 +18,14 @@ const PersonalDetails = () => {
 
 	return (
 		<div className="space-y-10">
+			<Text text={formStructure?.InterviewFormName || ""} size={14} weight="600" className="uppercase" />
 			{
 				formFullInfo[0].Sections.map((section: any, index: number) => (
+					!section.IsHidden &&
 					<div key={index} className="flex flex-col gap-5 w-[448px]">
-						<Text text={section.Label} size={14} weight="500" />
 						<div className="flex justify-between items-end">
-							<Text text={section.Description} size={20} weight="700" />
+							<Text text={section.Label} size={28} weight="700" className="capitalize" />
+							{/* <Text text={section.Description} size={20} weight="700" /> */}
 							{isEditMode && <Text text="Clear section" size={14} weight="500" color="#2454DE" />}
 						</div>
 						{
@@ -32,7 +34,7 @@ const PersonalDetails = () => {
 									{
 										section.Questions.map((que: any, j: number) => (
 											<div key={j} className={isEditMode ? "flex flex-col gap-1" : "flex justify-between"}>
-												<Text text={que.TagName} size={isEditMode ? 11 : 14} weight="500" />
+												<Text text={que.TagName} size={isEditMode ? 14 : 14} weight="500" />
 												{
 													isEditMode
 														? <>
@@ -54,27 +56,27 @@ const PersonalDetails = () => {
 																info={(info && (section.IsRepeatable ? info[que.InterviewSectionId][i] : info[que.InterviewSectionId])) || {}}
 																handleChange={(e: any) => handleChange(e, que.InterviewSectionId, section.IsRepeatable, i)}
 															/>}
-															{que.VarType == "SELECT" && <SelectInput 
-																que={que} 
-																globalParamId={que.GlobalParamId} 
-																info={info} 
-																isRepeatable={section.IsRepeatable} 
-																i={i} 
-																handleChange={handleChange} 
+															{que.VarType == "SELECT" && <SelectInput
+																que={que}
+																globalParamId={que.GlobalParamId}
+																info={info}
+																isRepeatable={section.IsRepeatable}
+																i={i}
+																handleChange={handleChange}
 															/>}
 														</>
-														: <Text 
-																text={
-																	info && info[que.InterviewSectionId] && 
-																	(section.IsRepeatable 
-																		? info[que.InterviewSectionId][i] ? info[que.InterviewSectionId][i][que.TagName] : "" 
-																		: info[que.InterviewSectionId][que.TagName]
-																	)
-																} 
-																size={14} 
-																weight="600" 
-																color="#000" 
-															/>
+														: <Text
+															text={
+																info && info[que.InterviewSectionId] &&
+																(section.IsRepeatable
+																	? info[que.InterviewSectionId][i] ? info[que.InterviewSectionId][i][que.TagName] : ""
+																	: info[que.InterviewSectionId][que.TagName]
+																)
+															}
+															size={14}
+															weight="600"
+															color="#000"
+														/>
 												}
 											</div>
 										))

@@ -23,6 +23,7 @@ const FormDefinitionsSectionModal = ({ isOpen, handleClose }: {
 					<FormInput label="Section Label" name="Label" info={info} handleChange={handleChange} />
 					<FormInput label="Description" name="Description" info={info} handleChange={handleChange} />
 					<FormInput label="Tag Name" name="TagName" info={info} handleChange={handleChange} />
+					<FormInput label="Group Heading" name="GroupHeading" info={info} handleChange={handleChange} />
 					<FormSelect
 						label="Enable section repeatable"
 						name="IsRepeatable"

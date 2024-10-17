@@ -12,7 +12,7 @@ const MenuPanel = () => {
 	return (
 		<div className="flex flex-col gap-12">
 			<div className="flex flex-col gap-4">
-				<Text text={formStructure.InterviewFormName} size={11} weight="600" className="uppercase" />
+				<Text text={"general"} size={11} weight="600" className="uppercase" />
 				{
 					formStructure.QuestionCount.map((menu: any, j: number) => (
 						<div key={j} className="flex flex-col pl-2">

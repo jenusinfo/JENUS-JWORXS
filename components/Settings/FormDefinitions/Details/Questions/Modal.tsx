@@ -1,5 +1,6 @@
 import { useQuestion } from "providers/settings/FormDefinitions/Details/QuestionProvider"
 import { useFormDefinitionsDetail } from "providers/settings/FormDefinitions/FormDefinitionsDetailProvider"
+import { useEffect } from "react"
 import { toast } from "react-toastify"
 import FormInput from "shared/core/components/FormInput"
 import FormNumber from "shared/core/components/FormNumber"
@@ -13,7 +14,7 @@ const FormDefinitionsQuestionModal = ({ isOpen, handleClose }: {
 }) => {
 
 	const VarTypes = [
-		{ name: "Choose Var Type"},
+		{ name: "Choose Var Type", value: "CHOOSE"},
 		{ name: "CURRENCY", value: "CURRENCY"},
 		{ name: "DATE", value: "DATE"},
 		{ name: "INTEGER", value: "INTEGER"},
@@ -22,7 +23,9 @@ const FormDefinitionsQuestionModal = ({ isOpen, handleClose }: {
 		{ name: "TEXT", value: "TEXT"},
 		{ name: "FILE", value: "FILE"},
 	]
-	const { info, handleChange, handleCreate, curIndex, handleUpdate, interviewSections: sections, globalParams, ruleSets } = useQuestion()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, interviewSections: sections, globalParams, ruleSets, setIsModalOpen } = useQuestion()
+
+	useEffect(() => {setIsModalOpen(isOpen)}, [isOpen])
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -38,7 +41,7 @@ const FormDefinitionsQuestionModal = ({ isOpen, handleClose }: {
 						name="InterviewSectionId"
 						info={info}
 						handleChange={handleChange}
-						optionList={[{name: "Select Interview Section"}, ...sections.map((section: any) => ({
+						optionList={[{name: "Select Interview Section", value: "CHOOSE"}, ...sections.map((section: any) => ({
 							name: section.Label, value: section.Id
 						}))]}
 					/>

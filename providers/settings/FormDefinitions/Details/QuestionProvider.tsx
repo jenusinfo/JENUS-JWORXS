@@ -17,6 +17,7 @@ const QuestionProvider = ({ children }: any) => {
 	} = useHookFormDefinitionsDetail()
 	const [info, setInfo] = useState<any>({})
 	const [curIndex, setCurIndex] = useState(-1)
+	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const handleChange = (e: any) => {
 		setInfo({
@@ -57,13 +58,13 @@ const QuestionProvider = ({ children }: any) => {
 	}
 
 	useEffect(() => {
-		if (id) {
+		if (id && isModalOpen) {
 			getInterviewSections(id)
 			getFullInfoFormDefinitions(id)
             getGlobalParams()
             getInterviewRuleSet(id)
 		}
-	}, [id])
+	}, [id, isModalOpen])
 
 	const value = useMemo(
 		() => ({
@@ -76,7 +77,8 @@ const QuestionProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange,
+			setIsModalOpen
 		}),
 		[
             interviewSections,
@@ -88,7 +90,8 @@ const QuestionProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange,
+			setIsModalOpen
 		]
 	)
 

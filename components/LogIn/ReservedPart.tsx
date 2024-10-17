@@ -4,7 +4,7 @@ const ReservedPart = () => {
   const width = useWindowSize().width
 
   return (
-    <div className={"w-[460px] " + (width > 870 ? 'absolute bottom-10' : ' mt-8')}>
+    <div className={"w-[400px] " + (width > 870 ? 'absolute bottom-10' : ' mt-8')}>
       <p className="text-primary text-sm font-medium text-[#2454DE]">
         Terms of Service | Privacy Policy | Cookies
       </p>
