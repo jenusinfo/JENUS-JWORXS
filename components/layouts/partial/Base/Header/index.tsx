@@ -19,7 +19,7 @@ const BaseHeader = () => {
 	const { push } = useRouter()
 	const {} = useWorkitem()
 	const { fromInterview, statusCode, interviewFormStatus, setInterviewFormStatus } = useApp()
-	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode, documentConfigurations, sessionResult } = useInterview()
+	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode, documentConfigurations, sessionResult, handleStatusToInProgress } = useInterview()
 	const { setCurInterviewForm, handleDuplicateInterview } = useWorkitem()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isDraftOpen, setIsDraftOpen] = useState(false)
@@ -74,7 +74,7 @@ const BaseHeader = () => {
 								}
 							}}
 						>
-							{(interviewFormStatus == INTERVIEWSTATUS.UPDATED && statusCode == "Draft") ? "Save Changes" : !isEditMode ? "Back To Edit" : "Save As Draft"}
+							{(interviewFormStatus == INTERVIEWSTATUS.UPDATED) ? "Save Changes" : !isEditMode ? "Back To Edit" : "Save As Draft"}
 						</button>
 						<button
 							className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm"
@@ -84,6 +84,7 @@ const BaseHeader = () => {
 										setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
 										await formSubmitHandler()
 									}
+									await handleStatusToInProgress();
 									await setStep(step + 2)
 								} else {
 									setIsEditMode(false)
@@ -115,7 +116,14 @@ const BaseHeader = () => {
 								</div>
 							</div>
 						</DropDown>
-
+						<button
+							className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit text-sm"
+							onClick={async () => {
+								setIsEditMode(!isEditMode)
+							}}
+						>
+							{isEditMode ? "View" : "Edit"}
+						</button>
 						{documentConfigurations && documentConfigurations.length > 0 && <button className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-4 py-2.5 h-fit text-sm" onClick={() => setIsGenerateDocumentOpen(true)}>
 							Generate Document
 						</button>}

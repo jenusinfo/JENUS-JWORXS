@@ -33,8 +33,8 @@ const PersonalDetails = () => {
 								<div key={i} className="flex flex-col gap-4">
 									{
 										section.Questions.map((que: any, j: number) => (
-											<div key={j} className={isEditMode ? "flex flex-col gap-1" : "flex justify-between"}>
-												<Text text={que.TagName} size={isEditMode ? 14 : 14} weight="500" />
+											<div key={j} className={"flex flex-col gap-1"}>
+												<Text text={que.TagName} size={isEditMode ? 14 : 14} weight="500" color="#84858C" />
 												{
 													isEditMode
 														? <>

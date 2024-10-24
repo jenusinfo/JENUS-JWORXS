@@ -5,6 +5,8 @@ import Text from "shared/core/ui/Text"
 import Activities from "./Activities"
 import { useFlowDefinitions } from "providers/settings/FlowDefinitionsProvider"
 import { toast } from "react-toastify"
+import { useState } from "react"
+import DiagramModal from "./DiagramModal"
 
 const FlowDefinitionsModal = ({ isOpen, handleClose }: {
 	isOpen: boolean
@@ -12,12 +14,16 @@ const FlowDefinitionsModal = ({ isOpen, handleClose }: {
 }) => {
 
 	const { info, handleChange, handleCreate, curIndex, handleUpdate, activities } = useFlowDefinitions()
+	const [isDiagramOpen, setIsDiagramOpen] = useState(false)
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
 			<div className="rounded-[2px] py-5">
 				<div className="px-[29px] pb-4 border-b border-gray-100">
 					<Text text="Flow Definition Details" size={16} weight="700" color="black" />
+					<button className="text-white bg-[#2454de] rounded-[4px] px-4 py-2 h-fit text-xs mt-2" onClick={() => setIsDiagramOpen(true)}>
+						As Diagram
+					</button>
 				</div>
 				<div className="mt-6 flex flex-col gap-5 px-[34px]">
 					<FormInput label="Name" name="name" info={info} handleChange={handleChange} />
@@ -79,6 +85,7 @@ const FlowDefinitionsModal = ({ isOpen, handleClose }: {
 					}}>Save</button>
 				</div>
 			</div>
+			<DiagramModal isOpen={isDiagramOpen} handleClose={() => setIsDiagramOpen(false)} />
 		</RightSide>
 	)
 }

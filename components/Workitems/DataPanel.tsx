@@ -5,16 +5,22 @@ import Text from "shared/core/ui/Text"
 import { IInbox } from "types/dashboard"
 import { getFormattedDate } from 'shared/helper/common';
 import DropDown from "shared/core/ui/Dropdown"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DeleteModal from "./Modals/Delete_Modal"
 import AssignModal from "./Modals/Assign_Modal"
+import { INTERVIEWSTATUS, useApp } from "providers/AppProvider"
 
 const DataPanel = () => {
 
+  const { setInterviewFormStatus } = useApp()
   const { data, curPageNumber, setCurPageNumber, handleResumeInterview, setCurInterviewForm, handleCancelInterview, handleDuplicateInterview, handleViewInterview } = useWorkitem()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [interviewId, setInterviewId] = useState<string>()
   const [isAssignOpen, setIsAssignOpen] = useState(false)
+
+  useEffect(() => {
+    setInterviewFormStatus(INTERVIEWSTATUS.NONE)
+  }, [])
 
   return (
     <div className="border border-gray-200 rounded-[5px] mt-2 bg-white">
@@ -94,14 +100,14 @@ const DataPanel = () => {
                       zIndex={100-index}
                     >
                       <div className="shadow-lg border-t border-[#2454DE] bg-white w-[200px]">
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" ? () => {} : () => { handleViewInterview(inbox.Id, "/workitems") }}>
-                          <Text text="View" size={14} weight="500" color={(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" ? "#AAAAAF" : "#202124"} />
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.StatusCode) == "Draft" ? () => {} : () => { handleViewInterview(inbox.Id, "/workitems") }}>
+                          <Text text="View" size={14} weight="500" color={(inbox.StatusCode) == "Draft" ? "#AAAAAF" : "#202124"} />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems", (inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus), inbox)}>
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems", (inbox.StatusCode), inbox)}>
                           <Text text="Edit" size={14} weight="500" />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" ? () => {} : () => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
-                          <Text text="Assign" size={14} weight="500" color={(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" ? "#AAAAAF" : "#202124"} />
+                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.StatusCode) == "Draft" ? () => {} : () => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
+                          <Text text="Assign" size={14} weight="500" color={(inbox.StatusCode) == "Draft" ? "#AAAAAF" : "#202124"} />
                         </div>
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDuplicateInterview(inbox.Id)}>
                           <Text text="Duplicate" size={14} weight="500" />
@@ -109,7 +115,7 @@ const DataPanel = () => {
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
                           <Text text="Cancel" size={14} weight="500" />
                         </div>
-                        {(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
+                        {(inbox.StatusCode) == "Draft" && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
                           <Text text="Delete" size={14} color="#FB5656" weight="500" />
                         </div>}
                       </div>
@@ -124,11 +130,11 @@ const DataPanel = () => {
                   </td>
                   <td className="px-2">
                     <div className="flex items-center gap-1 font-semibold">
-                      {(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Draft" && <div className="border-2 border-[#E28313] w-2 h-2 rounded-full" />}
-                      {(inbox.UserTask == null ? inbox.StatusCode == 'InProgress' : inbox.UserTask.CurrentActivityStatus == 'In-Progress') && <div className="border-2 border-blue-600 w-2 h-2 rounded-full" />}
-                      {(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Completed" && <div className="border-2 border-green-600 w-2 h-2 rounded-full" />}
-                      {((inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == null || (inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Cancelled") && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
-                      {(inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == null || (inbox.UserTask == null ? inbox.StatusCode : inbox.UserTask.CurrentActivityStatus) == "Cancelled" ? "Cancelled" : (inbox.UserTask == null ? inbox.Status : inbox.UserTask.CurrentActivityStatus)}
+                      {inbox.StatusCode == "Draft" && <div className="border-2 border-[#E28313] w-2 h-2 rounded-full" />}
+                      {inbox.StatusCode == 'InProgress' && <div className="border-2 border-blue-600 w-2 h-2 rounded-full" />}
+                      {inbox.StatusCode == "Completed" && <div className="border-2 border-green-600 w-2 h-2 rounded-full" />}
+                      {inbox.StatusCode == null && <div className="border-2 border-red-600 w-2 h-2 rounded-full" />}
+                      {inbox.StatusCode == null ? "Cancelled" : inbox.Status}
                     </div>
                   </td>
                   <td className="px-2">

@@ -17,7 +17,7 @@ const LogInPanel = () => {
 
   return (
     <div className="">
-      <p className="text-[44px] font-bold text-black">Log in to jWorxs</p>
+      <p className="text-[42px] font-bold text-black">Log in to jWorxs</p>
       <p className="text-sm font-medium text-[#87878f] mt-4">Please enter your credentials to log in</p>
       <div className="flex flex-col gap-8 mt-16">
         <input name="email" value={info.email} onChange={handleChange} className={classes.input} placeholder="Email address" />

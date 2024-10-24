@@ -257,6 +257,10 @@ const InterviewProvider = ({ children }: any) => {
     setInterviewDocuments(res?.data.Data)
   }
 
+  const handleStatusToInProgress = async () => {
+    const res = await http.post(`/Interviews/Sessions/InProgress`, { interviewSessionId: sessionResult.Id })
+  }
+
   useEffect(() => {
     if (curForm) {
       getDocumentConfigurations(curForm.Id)
@@ -302,7 +306,7 @@ const InterviewProvider = ({ children }: any) => {
       decisions, setDecisions,
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
-      interviewDocuments
+      interviewDocuments, handleStatusToInProgress
     }),
     [
       step, setStep,
@@ -322,7 +326,7 @@ const InterviewProvider = ({ children }: any) => {
       decisions, setDecisions,
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
-      interviewDocuments
+      interviewDocuments, handleStatusToInProgress
     ]
   )
 

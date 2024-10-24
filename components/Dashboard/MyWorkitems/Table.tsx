@@ -77,7 +77,7 @@ export const Table = () => {
                       data &&
                       data
                         .slice((curPageNumber - 1) * 5, curPageNumber * 5)
-                        .map((inbox: IInbox, index: number) => (
+                        .map((inbox: any, index: number) => (
                           <tr key={index} className="border-b border-gray-200 odd:bg-gray-100 even:bg-white hover:cursor-pointer">
                             <td className="py-3">
                               <DropDown
@@ -92,7 +92,7 @@ export const Table = () => {
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleViewInterview(inbox.Id, "/dashboard")}>
                                     <Text text="View" size={14} weight="500" />
                                   </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard")}>
+                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard", inbox.StatusCode, inbox)}>
                                     <Text text="Edit" size={14} weight="500" />
                                   </div>
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>

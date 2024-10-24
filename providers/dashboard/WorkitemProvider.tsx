@@ -65,7 +65,9 @@ const WorkitemProvider = ({ children }: any) => {
         push("/workitems/interview")
         setFromInterview(previousPath)
         setCurForm(form)
-        setStep(2)
+        if (statusCode == "Draft")
+          setStep(2)
+        else setStep(4)
       }
     }
   }
@@ -129,7 +131,7 @@ const WorkitemProvider = ({ children }: any) => {
 
   useEffect(() => {
     let temp = inboxList?.filter((each: IInbox) => each.InterviewFormName.toLowerCase().includes(search.toLowerCase()))
-      .filter((each: any) => curStatus == "All" ? true : (each.UserTask == null ? each.Status : each.UserTask.CurrentActivityStatus) == curStatus)
+      .filter((each: any) => curStatus == "All" ? true : (each.Status == curStatus))
       .filter((each: IInbox) => {
         if (Array.isArray(searchHashTag)) {
           let flag = 0
@@ -167,10 +169,6 @@ const WorkitemProvider = ({ children }: any) => {
   useEffect(() => {
     handleGetWorkitems(curAssigned)
   }, [curAssigned])
-
-  useEffect(() => {
-    setInterviewFormStatus(INTERVIEWSTATUS.NONE)
-  }, [])
 
   const value = useMemo(
     () => ({
