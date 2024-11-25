@@ -1,12 +1,14 @@
 import Modal from "shared/core/ui/Modal"
 import { DataManager, Query } from '@syncfusion/ej2-data';
 import { StackPanel, TextElement, DataBinding, HierarchicalTree, DiagramComponent, Inject } from "@syncfusion/ej2-react-diagrams";
+import { useFlowDefinitions } from "providers/settings/FlowDefinitionsProvider";
 
 const DiagramModal = ({ isOpen, handleClose }: {
     isOpen: boolean
     handleClose: () => void
 }) => {
 
+    const { info } = useFlowDefinitions()
     let data: object[] = [{
         'Id': 'parent',
         'Name': 'Maria Anders',
@@ -55,6 +57,8 @@ const DiagramModal = ({ isOpen, handleClose }: {
         'ReportingPerson': 2
     }];
     let items: DataManager = new DataManager(data as JSON[], new Query().take(7));
+
+    console.log(info)
 
     return (
         <Modal isOpen={isOpen} handleClose={handleClose} isOuterClick={false} width={"90%"}>

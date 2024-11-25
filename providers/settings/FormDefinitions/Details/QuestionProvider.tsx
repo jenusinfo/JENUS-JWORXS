@@ -58,9 +58,11 @@ const QuestionProvider = ({ children }: any) => {
 	}
 
 	useEffect(() => {
+		if (id) {
+			getFullInfoFormDefinitions(id)
+		}
 		if (id && isModalOpen) {
 			getInterviewSections(id)
-			getFullInfoFormDefinitions(id)
             getGlobalParams()
             getInterviewRuleSet(id)
 		}
@@ -78,7 +80,8 @@ const QuestionProvider = ({ children }: any) => {
 			handleUpdate,
 			handleDelete,
 			handleChange,
-			setIsModalOpen
+			setIsModalOpen,
+			getFullInfoFormDefinitions
 		}),
 		[
             interviewSections,
@@ -91,7 +94,8 @@ const QuestionProvider = ({ children }: any) => {
 			handleUpdate,
 			handleDelete,
 			handleChange,
-			setIsModalOpen
+			setIsModalOpen,
+			getFullInfoFormDefinitions
 		]
 	)
 

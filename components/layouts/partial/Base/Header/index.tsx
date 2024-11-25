@@ -13,20 +13,24 @@ import DropDown from "shared/core/ui/Dropdown";
 import { useWorkitem } from "providers/dashboard/WorkitemProvider";
 import AssignModal from "components/Workitems/Modals/Assign_Modal";
 import DeleteModal from "components/Workitems/Modals/Delete_Modal";
+import { toast } from "react-toastify";
+import Loading from "react-loading";
 
 const BaseHeader = () => {
 
 	const { push } = useRouter()
-	const {} = useWorkitem()
+	const { } = useWorkitem()
 	const { fromInterview, statusCode, interviewFormStatus, setInterviewFormStatus } = useApp()
-	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode, documentConfigurations, sessionResult, handleStatusToInProgress } = useInterview()
+	const { step, setStep, formSubmitHandler, isEditMode, setIsEditMode, documentConfigurations, sessionResult, handleStatusToInProgress, validateInterviewForm } = useInterview()
 	const { setCurInterviewForm, handleDuplicateInterview } = useWorkitem()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isDraftOpen, setIsDraftOpen] = useState(false)
 	const [isDocumentGenerateOpen, setIsGenerateDocumentOpen] = useState(false)
 	const [isAssignOpen, setIsAssignOpen] = useState(false)
-  const [interviewId, setInterviewId] = useState<string>()
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+	const [interviewId, setInterviewId] = useState<string>()
+	const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+	const [nextLoading, setNextLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	return (
 		<div className="flex items-center justify-between px-10 py-4 w-full border-b border-gray-200">
@@ -44,7 +48,7 @@ const BaseHeader = () => {
 						: step == 4
 							? () => {
 								if (fromInterview == "/from-step3") {
-									setStep(3)
+									setStep(2)
 								} else {
 									push(fromInterview)
 								}
@@ -64,33 +68,51 @@ const BaseHeader = () => {
 					<>
 						<button
 							className="text-[#2454de] bg-[#eef0fe] rounded-[4px] px-6 py-2.5 h-fit text-sm"
-							onClick={async () => {
-								if (!isEditMode) {
-									setIsEditMode(!isEditMode)
-								} else {
-									setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
-									await formSubmitHandler()
-									await setIsDraftOpen(true)
-								}
-							}}
+							onClick={isLoading
+								? () => { }
+								: async () => {
+									setIsLoading(true)
+									if (!isEditMode) {
+										setIsEditMode(!isEditMode)
+									} else {
+										setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
+										await formSubmitHandler()
+										if (interviewFormStatus == INTERVIEWSTATUS.CREATED)
+											await setIsDraftOpen(true)
+									}
+									setIsLoading(false)
+								}}
 						>
-							{(interviewFormStatus == INTERVIEWSTATUS.UPDATED) ? "Save Changes" : !isEditMode ? "Back To Edit" : "Save As Draft"}
+							{
+								isLoading
+									? <Loading type="spin" width={20} height={20} color="#2454de" />
+									: (interviewFormStatus == INTERVIEWSTATUS.UPDATED) ? "Save Changes" : !isEditMode ? "Back To Edit" : "Save As Draft"
+							}
 						</button>
 						<button
 							className="text-white bg-[#2454de] rounded-[4px] px-5 py-2.5 h-fit text-sm"
-							onClick={async () => {
-								if (!isEditMode) {
+							onClick={nextLoading
+								? () => { }
+								: async () => {
+									setNextLoading(true)
+									let checked = false
 									if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
-										setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
-										await formSubmitHandler()
+										checked = validateInterviewForm()
+										if (checked)
+											await formSubmitHandler()
+										else toast.error("Interview Form validation(s) failed!")
+									} else {
+										checked = validateInterviewForm()
+										if (checked) {
+											await formSubmitHandler()
+											setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
+											await handleStatusToInProgress();
+											await setStep(step + 2)
+										}
 									}
-									await handleStatusToInProgress();
-									await setStep(step + 2)
-								} else {
-									setIsEditMode(false)
-								}
-							}}
-						>Next</button>
+									setNextLoading(false)
+								}}
+						>{nextLoading ? <Loading type="spin" width={20} height={20} color="white" /> : "Next"}</button>
 					</>
 				}
 				{

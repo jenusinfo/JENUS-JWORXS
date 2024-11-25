@@ -6,13 +6,15 @@ interface IFormInput {
     name: string
     info: any
     handleChange: any
+    isError?: boolean
 }
 
 export default function FormInput({
     label,
     name,
     info,
-    handleChange
+    handleChange,
+    isError = false
 }: IFormInput) {
 
     const classes = {
@@ -22,7 +24,7 @@ export default function FormInput({
     return (
         <div className={classes.form}>
             <Text text={label} color="#84858c" />
-            <Input name={name} info={info} handleChange={handleChange} />
+            <Input name={name} info={info} handleChange={handleChange} isError={isError} />
         </div>
     )
 }

@@ -18,7 +18,11 @@ const DataPanel = () => {
 				groups.map((group: string, index: number) => (
 					<div
 						key={index}
-						className="border border-[#DEDFEA] px-6 py-5 rounded-[4px] bg-white transition-all duration-400 hover:shadow-lg hover:scale-[1.05] hover:bg-blue-100"
+						className="border border-[#DEDFEA] px-6 py-5 rounded-[4px] bg-white transition-all duration-400 hover:shadow-lg hover:scale-[1.05] hover:bg-blue-100 hover:cursor-pointer"
+						onClick={() => {
+							push(`/workitems`)
+							setGroup(group)
+						}}
 					>
 						<Text text={group} size={18} weight="700" />
 						<div className="flex items-center gap-3">
@@ -27,11 +31,7 @@ const DataPanel = () => {
 							<Text text={`${workitems.filter((each: IInbox) => each.HashTags.includes(group) && each.StatusCode == "InProgress").length} in progress`} size={14} />
 						</div>
 						<div className="flex justify-end mt-6">
-							<div className="hover:cursor-pointer" 
-								onClick={() => {
-								push(`/workitems`)
-								setGroup(group)
-							}}>
+							<div className="hover:cursor-pointer">
 								<Text text="VIEW" size={16} color="#0146C5" weight="600" className="hover:underline" />
 							</div>
 						</div>

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useApp } from "providers/AppProvider"
-import { GetDocumentConfigurations, GetInterviewFormFullInfo, GetInterviewRuleSet, GetInterviewSection, GetRules } from "lib/interview"
+import { GetDocumentConfigurations, GetInterviewFormFullInfo, GetInterviewRuleSet, GetInterviewSection, GetParentSectionOptions, GetRules } from "lib/interview"
 import { GetGlobalParams } from "lib/settings/parameters"
 import { GetEventAttributes, GetEvents, GetEventServiceMapping, GetEventServices } from "lib/settings/events"
 
@@ -16,6 +16,7 @@ export const useHookFormDefinitionsDetail = () => {
     const [interviewServices, setInterviewServices] = useState<any>([])
     const [rules, setRules] = useState<any>([])
     const [documentConfigurations, setDocumentConfigurations] = useState<any>([])
+    const [parentSectionOptions, setParentSectionOptions] = useState<any>([])
 
     const getFullInfoFormDefinitions = async (id: any) => {
         setLoading(true)
@@ -91,6 +92,11 @@ export const useHookFormDefinitionsDetail = () => {
         setLoading(false)
     }
 
+    const getParentSectionOptions = async (formId: any, sectionId: any) => {
+        const res = await GetParentSectionOptions(formId, sectionId)
+        setParentSectionOptions(res.Data)
+    }
+
     return {
         formFullInfo, setFormFullInfo, getFullInfoFormDefinitions, 
         interviewSections, setInterviewSections, getInterviewSections,
@@ -101,6 +107,7 @@ export const useHookFormDefinitionsDetail = () => {
         eventAttributes, setEventAttributes, getEventAttributes,
         interviewServices, setInterviewServices, getInterviewServices,
         rules, setRules, getRules,
-        documentConfigurations, setDocumentConfigurations, getDocumentConfigurations
+        documentConfigurations, setDocumentConfigurations, getDocumentConfigurations,
+        parentSectionOptions, setParentSectionOptions, getParentSectionOptions
     }
 }

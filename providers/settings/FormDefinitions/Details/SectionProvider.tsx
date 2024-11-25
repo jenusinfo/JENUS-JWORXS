@@ -10,7 +10,8 @@ const SectionProvider = ({ children }: any) => {
 
 	const { id } = useRouter().query
 	const {
-		interviewSections, setInterviewSections, getInterviewSections 
+		interviewSections, setInterviewSections, getInterviewSections,
+		parentSectionOptions, setParentSectionOptions, getParentSectionOptions
 	} = useHookFormDefinitionsDetail()
 	const [info, setInfo] = useState<any>({})
 	const [curIndex, setCurIndex] = useState(-1)
@@ -61,6 +62,12 @@ const SectionProvider = ({ children }: any) => {
 		}
 	}, [id])
 
+	useEffect(() => {
+		if (id && info.Id) {
+			getParentSectionOptions(id, info.Id)
+		}
+	}, [id, info.Id])
+
 	const value = useMemo(
 		() => ({
 			interviewSections,
@@ -69,7 +76,9 @@ const SectionProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange,
+			getInterviewSections,
+			parentSectionOptions
 		}),
 		[
 			interviewSections,
@@ -78,7 +87,9 @@ const SectionProvider = ({ children }: any) => {
 			handleCreate,
 			handleUpdate,
 			handleDelete,
-			handleChange
+			handleChange,
+			getInterviewSections,
+			parentSectionOptions
 		]
 	)
 

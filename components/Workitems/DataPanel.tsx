@@ -103,19 +103,19 @@ const DataPanel = () => {
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.StatusCode) == "Draft" ? () => {} : () => { handleViewInterview(inbox.Id, "/workitems") }}>
                           <Text text="View" size={14} weight="500" color={(inbox.StatusCode) == "Draft" ? "#AAAAAF" : "#202124"} />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems", (inbox.StatusCode), inbox)}>
+                        {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/workitems", (inbox.StatusCode), inbox)}>
                           <Text text="Edit" size={14} weight="500" />
-                        </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.StatusCode) == "Draft" ? () => {} : () => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
+                        </div>}
+                        {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={(inbox.StatusCode) == "Draft" ? () => {} : () => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
                           <Text text="Assign" size={14} weight="500" color={(inbox.StatusCode) == "Draft" ? "#AAAAAF" : "#202124"} />
-                        </div>
+                        </div>}
                         <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDuplicateInterview(inbox.Id)}>
                           <Text text="Duplicate" size={14} weight="500" />
                         </div>
-                        <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
+                        {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
                           <Text text="Cancel" size={14} weight="500" />
-                        </div>
-                        {(inbox.StatusCode) == "Draft" && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
+                        </div>}
+                        {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && (inbox.StatusCode) == "Draft" && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id) }}>
                           <Text text="Delete" size={14} color="#FB5656" weight="500" />
                         </div>}
                       </div>

@@ -24,7 +24,7 @@ export default function Account() {
   }
 
   return (
-    <div className="flex items-center absolute bottom-10 z-40">
+    <div className="flex items-center absolute bottom-10" style={{ zIndex: 102 }}>
       <DropDown
         target={
           <div className="flex items-center gap-4 hover:cursor-pointer">

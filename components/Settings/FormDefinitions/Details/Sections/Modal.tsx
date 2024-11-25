@@ -11,7 +11,7 @@ const FormDefinitionsSectionModal = ({ isOpen, handleClose }: {
 	handleClose: () => void
 }) => {
 
-	const { info, handleChange, handleCreate, curIndex, handleUpdate } = useSection()
+	const { info, handleChange, handleCreate, curIndex, handleUpdate, parentSectionOptions } = useSection()
 
 	return (
 		<RightSide isOpen={isOpen} handleClose={handleClose} width={540}>
@@ -23,6 +23,18 @@ const FormDefinitionsSectionModal = ({ isOpen, handleClose }: {
 					<FormInput label="Section Label" name="Label" info={info} handleChange={handleChange} />
 					<FormInput label="Description" name="Description" info={info} handleChange={handleChange} />
 					<FormInput label="Tag Name" name="TagName" info={info} handleChange={handleChange} />
+					<FormSelect
+						label="Parent Section Id"
+						name="ParentSectionId"
+						info={info}
+						handleChange={handleChange}
+						optionList={[
+							{ vlaue: "--Select--", name: "--Select" },
+							...parentSectionOptions.map((each: any) => ({
+								value: each.Id, name: each.Label
+							}))
+						]}
+					/>
 					<FormInput label="Group Heading" name="GroupHeading" info={info} handleChange={handleChange} />
 					<FormSelect
 						label="Enable section repeatable"
@@ -35,7 +47,7 @@ const FormDefinitionsSectionModal = ({ isOpen, handleClose }: {
 						]}
 					/>
 					{
-						info?.IsRepeatable == 'true' && <div className="mt-4 flex flex-col gap-3 px-4">
+						(info?.IsRepeatable == true || info?.IsRepeatable == 'true') && <div className="mt-4 flex flex-col gap-3 px-4">
 							<FormInput label="Repeating Section Label" name="RepeatSectionLabel" info={info} handleChange={handleChange} />
 							<FormInput label="Question To Repeating Section" name="QuestionToRepeatSection" info={info} handleChange={handleChange} />
 							<FormInput label="Tag Name for Repeating Section" name="RepeatSectionTagName" info={info} handleChange={handleChange} />

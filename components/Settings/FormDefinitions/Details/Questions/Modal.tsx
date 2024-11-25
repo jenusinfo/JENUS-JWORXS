@@ -68,7 +68,7 @@ const FormDefinitionsQuestionModal = ({ isOpen, handleClose }: {
 					/>}
 					{info?.VarType == "SELECT" && <FormSelect
 						label="Global Param"
-						name="GlobalParam"
+						name="GlobalParamId"
 						info={info}
 						handleChange={handleChange}
 						optionList={[{name: "Select Var Type"}, ...globalParams.map((param: any) => ({

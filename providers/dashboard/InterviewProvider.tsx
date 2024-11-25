@@ -1,7 +1,7 @@
 import { useHookForm } from "hooks/FormHook";
 import { useHookInterview } from "hooks/InterviewHook";
 import { INTERVIEWSTATUS, useApp } from "providers/AppProvider";
-import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { IForm } from "types/dashboard";
 import handlebars from "handlebars";
 import { XmlGenerator } from "shared/helper/XmlGenerator";
@@ -23,6 +23,7 @@ const InterviewProvider = ({ children }: any) => {
   const { flowDefinitions } = useHookFlowDefinitions()
   const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
+  const [initialValues, setInitialValues] = useState()
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
@@ -34,25 +35,29 @@ const InterviewProvider = ({ children }: any) => {
   const [isEdit, setIsEdit] = useState(false)
   const { documentConfigurations, getDocumentConfigurations } = useHookFormDefinitionsDetail()
   const [interviewDocuments, setInterviewDocuments] = useState<IInterviewDocument[]>([])
+  const [sectionRefs, setSectionRefs] = useState<any>([])
+  const [errors, setErrors] = useState<any>()
+  const [ref, setRef] = useState(false)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, InterviewSectionId: any, isRepeatable: any, i: any) => {
-    let temp: any = { ...info }
-    if (!isRepeatable) {
-      if (temp[InterviewSectionId] == undefined) {
-        temp[InterviewSectionId] = {}
-      }
-      temp[InterviewSectionId][e.target.name] = e.target.value
-    } else {
-      if (temp[InterviewSectionId] == undefined) {
-        temp[InterviewSectionId] = []
-      }
-      if (temp[InterviewSectionId][i] == undefined) {
-        temp[InterviewSectionId][i] = {}
-      }
-      temp[InterviewSectionId][i][e.target.name] = e.target.value
-    }
-    setInfo(temp)
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, keyArray: string) => {
+
+    let keyArr = keyArray.split("#")
+    let tmp = {...info}
+
+    const func = (tmp: any, keyArr: Array<string>, index: number) => {
+			if (index == keyArray.split("#").length) {
+				tmp[e.target.name] = e.target.value
+				return;
+			}
+			func(tmp[keyArr[0]], keyArray.split("#").slice(index+1, keyArray.split("#").length), index+1)
+		}
+
+    func(tmp, keyArr, 0)
+
+    setInfo(tmp)
   }
+
+  console.log(info)
 
   const handleFlowChange = async (e: any) => {
     if (isEdit && e.target.name == "TaskDefinitionId")
@@ -82,21 +87,21 @@ const InterviewProvider = ({ children }: any) => {
       let formSubject = curForm?.Subject;
       let interviewSubject = '';
 
-      if (formSubject && formSubject != '') {
-        let allSectionValuesArr: any = [];
-        let sectionKeys = Object.keys(info);
+      // if (formSubject && formSubject != '') {
+      //   let allSectionValuesArr: any = [];
+      //   let sectionKeys = Object.keys(info);
 
-        sectionKeys.map(function (sectionId) {
-          let sectionTagName = interviewSection?.filter(function (section: any) {
-            return section.Id == parseInt(sectionId)
-          })[0].TagName;
+      //   sectionKeys.map(function (sectionId) {
+      //     let sectionTagName = interviewSection?.filter(function (section: any) {
+      //       return section.Id == parseInt(sectionId)
+      //     })[0].globalId;
 
-          allSectionValuesArr[sectionTagName] = info[parseInt(sectionId)][0];
-        });
+      //     allSectionValuesArr[sectionTagName] = info[parseInt(sectionId)][0];
+      //   });
 
-        let compiledTemplate = handlebars.compile(formSubject);
-        interviewSubject = compiledTemplate(allSectionValuesArr);
-      }
+      //   let compiledTemplate = handlebars.compile(formSubject);
+      //   interviewSubject = compiledTemplate(allSectionValuesArr);
+      // }
 
       let interviewQuestions: any = []
       formFullInfo[0].Sections?.forEach((each: any) => {
@@ -144,6 +149,13 @@ const InterviewProvider = ({ children }: any) => {
       // }
     }
   };
+
+  const clearSection = async (isRepeatable: boolean, sectionId: number) => {
+    setInfo({
+      ...info,
+      [sectionId]: isRepeatable ? [] : {}
+    })
+  }
 
   const handleFavourite = async (formId: number, isFavourite: boolean) => {
     const res = await UpdateFavourite(formId, isFavourite)
@@ -258,7 +270,55 @@ const InterviewProvider = ({ children }: any) => {
   }
 
   const handleStatusToInProgress = async () => {
-    const res = await http.post(`/Interviews/Sessions/InProgress`, { interviewSessionId: sessionResult.Id })
+    const res = await http.post(`/Interviews/Sessions/InProgress?interviewSessionId=${sessionResult.Id}`, { interviewSessionId: sessionResult.Id }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      }
+    })
+  }
+
+  const validateInterviewForm = () => {
+    let flag = 1
+    formFullInfo[0].Sections.map((section: any, index: number) => {
+      (section.IsRepeatable
+        ? [...Array(section.RepeatSectionLimit
+          ? section.RepeatSectionLimit
+          : info && info[section.Id]
+            ? info[section.Id].length
+            : 0
+        )]
+        : [...Array(1)]
+      ).map((_, i: number) => {
+        section.Questions.map((que: any, j: number) => {
+          if (que.IsRequired) {
+            console.log(que.InterviewSectionId, i, que.TagName)
+            if (section.IsRepeatable) {
+              if (!(info && info[que.InterviewSectionId] && info[que.InterviewSectionId][i][que.TagName])) {
+                flag = 0
+                setErrors({
+                  ...errors,
+                  [`${que.InterviewSectionId}-${i}-${que.TagName}`]: false
+                })
+                return false
+              }
+            } else {
+              if (!(info && info[que.InterviewSectionId] && info[que.InterviewSectionId][que.TagName])) {
+                flag = 0
+                setErrors({
+                  ...errors,
+                  [`${que.InterviewSectionId}-0-${que.TagName}`]: false
+                })
+                return false
+              }
+            }
+          }
+        })
+      })
+    })
+
+    if (flag == 1)
+      return true
   }
 
   useEffect(() => {
@@ -287,6 +347,45 @@ const InterviewProvider = ({ children }: any) => {
     setFilteredForms(forms)
   }, [forms])
 
+  useEffect(() => {
+    if (formStructure) {
+
+      const processControls = (controls: any, temp: any) => {
+        controls.forEach((control: any) => {
+  
+          if (!control.isHidden) {
+            if (control.globalId) {
+              if (control.isRepeatable) {
+                temp[control.globalId] = []
+                temp[control.globalId].push({})
+              } else {
+                temp[control.globalId] =
+                  control.type === "repeater" ? [] :
+                  control.type === "section" ? {} : "";
+              }
+            }
+            
+            if (control.controls) {
+              const nestedTemp = control.isRepeatable ? temp[control.globalId][0] : control.globalId ? temp[control.globalId] : temp;
+              processControls(control.controls, nestedTemp);
+            }
+          }
+        });
+      };
+
+      let controls = formStructure.controls
+      let temp: any = {}
+      processControls(controls, temp)
+      if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
+        setInfo(temp)
+      }
+      if (ref == false) {
+        setInitialValues(temp)
+        setRef(true)
+      }
+    }
+  }, [formStructure])
+
   const value = useMemo(
     () => ({
       step, setStep,
@@ -306,7 +405,9 @@ const InterviewProvider = ({ children }: any) => {
       decisions, setDecisions,
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
-      interviewDocuments, handleStatusToInProgress
+      interviewDocuments, handleStatusToInProgress,
+      clearSection, sectionRefs, validateInterviewForm,
+      errors, initialValues
     }),
     [
       step, setStep,
@@ -326,7 +427,9 @@ const InterviewProvider = ({ children }: any) => {
       decisions, setDecisions,
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
-      interviewDocuments, handleStatusToInProgress
+      interviewDocuments, handleStatusToInProgress,
+      clearSection, sectionRefs, validateInterviewForm,
+      errors, initialValues
     ]
   )
 

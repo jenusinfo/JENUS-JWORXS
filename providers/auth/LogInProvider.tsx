@@ -2,6 +2,7 @@ import { LogInUser } from "lib/auth/login";
 import { useRouter } from "next/router";
 import { useApp } from "providers/AppProvider";
 import { ChangeEvent, createContext, useContext, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { setCookie } from "shared/helper/tokens";
 
 const LogInContext: any = createContext(null)
@@ -27,7 +28,8 @@ const LogInProvider = ({ children }: any) => {
     const res = await LogInUser(info.email, info.password)
 
     if (res == undefined) {
-      alert("Error")
+      toast.error("The user name or password is incorrect.")
+      setLoading(false)
       return;
     }
     setAccount(res)

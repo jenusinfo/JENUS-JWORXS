@@ -1,7 +1,7 @@
 import http from "services/http-common"
 
 export const GetFormStructure = async (id: any) => {
-    const res = await http.get(`/Interviews/Forms/GetQuestionCountByFormId/${id}`)
+    const res = await http.get(`/Interviews/Forms/GetFormStructure/${id}`)
 
     if (res?.status)
         return res.data
@@ -232,4 +232,12 @@ export const CopyInterviewForm = async (id: any) => {
 
     if (res?.status)
         return res?.data
+}
+
+// Get Parent Sections
+export const GetParentSectionOptions = async (formId: any, sectionId: any) => {
+    const res = await http.get(`/Interview/Sections/ParentSectionOptions/${formId}/${sectionId}`)
+
+    if (res?.status)
+        return res.data
 }

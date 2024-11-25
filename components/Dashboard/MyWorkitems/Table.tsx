@@ -92,21 +92,21 @@ export const Table = () => {
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleViewInterview(inbox.Id, "/dashboard")}>
                                     <Text text="View" size={14} weight="500" />
                                   </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard", inbox.StatusCode, inbox)}>
+                                  {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleResumeInterview(inbox.Id, "/dashboard", inbox.StatusCode, inbox)}>
                                     <Text text="Edit" size={14} weight="500" />
-                                  </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
+                                  </div>}
+                                  {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setCurInterviewForm(inbox); setIsAssignOpen(true) }}>
                                     <Text text="Assign" size={14} weight="500" />
-                                  </div>
+                                  </div>}
                                   <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleDuplicateInterview(inbox.Id)}>
                                     <Text text="Duplicate" size={14} weight="500" />
                                   </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
+                                  {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => handleCancelInterview(inbox.Id)}>
                                     <Text text="Cancel" size={14} weight="500" />
-                                  </div>
-                                  <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id.toString()) }}>
+                                  </div>}
+                                  {!(inbox.StatusCode == null || inbox.StatusCode == "Cancelled" || inbox.StatusCode == "Completed") && <div className="px-4 py-2.5 flex items-center gap-2 hover:cursor-pointer hover:bg-blue-100" onClick={() => { setIsDeleteOpen(true); setInterviewId(inbox.Id.toString()) }}>
                                     <Text text="Delete" size={14} color="#FB5656" weight="500" />
-                                  </div>
+                                  </div>}
                                 </div>
                               </DropDown>
                             </td>

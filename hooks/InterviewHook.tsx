@@ -12,7 +12,7 @@ export const useHookInterview = (props: any) => {
         const res = await GetFormStructure(id)
 
         if (res)
-            setFormStructure(res.Data)
+            setFormStructure(res.data)
     }
 
     const getInterviewRules = async (id: any) => {
