@@ -175,6 +175,8 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 	parentIndex: string
 }) => {
 
+	const { formStructure } = useInterview()
+
 	const handleAddRepeatSection = async (sectionId: number, keyArray: string) => {
 		setInfo((prevInfo: any) => {
 			// Deep clone function to create a completely new object
@@ -254,6 +256,40 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 	const handleRemoveRepeatSection = (sectionId: number, i: number) => {
 	}
 
+	const getValue = (tagName: string, i: number, gId: string) => {
+		let globalId = ""
+
+		const getGlobalId = (controls: any) => {
+			controls.forEach((control: any) => {
+				if (control.tagName == tagName) {
+					globalId = control.globalId
+					return;
+				}
+
+				if (control.controls)
+					getGlobalId(control.controls)
+			})
+		}
+
+		getGlobalId(formStructure.controls)
+
+		return globalId ? info[gId][i][globalId] : ""
+	}
+
+	const setRepeatedLabel = (label: string, i: number, gId: string) => {
+		let devidedString = "{{"
+		let index = label.indexOf(devidedString)
+		let defaultString = index != -1 ? label.substring(0, index) : label
+
+		if (index == -1) {
+			return defaultString + " - " + (i + 1)
+		} else {
+			const regex = /{{(.*?)}}/;
+			const match = label.match(regex);
+			return defaultString + getValue(match ? match[1] : "", i, gId)
+		}
+	}
+
 	return (
 		<div className="space-y-4 mt-6">
 			{
@@ -274,7 +310,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 										<div className="border-l border-gray-500 pl-2" id={control.uniqueId+parentIndex+i}>
 											<Text text={
 												control.type == 'section' && control.repeatLabel
-													? control.repeatLabel
+													? setRepeatedLabel(control.repeatLabel, i, control.globalId)
 													: control.label
 											} size={16} weight="600" />
 											<InputPanel
