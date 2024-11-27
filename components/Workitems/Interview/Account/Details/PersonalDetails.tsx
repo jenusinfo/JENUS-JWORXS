@@ -14,7 +14,7 @@ import Text from "shared/core/ui/Text"
 
 const PersonalDetails = () => {
 
-	const { info, info: fullInfo, setInfo, handleChange, formFullInfo, curForm, isEditMode, formStructure, clearSection, errors } = useInterview()
+	const { info, info: fullInfo, setInfo, handleChange, formFullInfo, curForm, isEditMode, formStructure, clearSection, errors, initialValues } = useInterview()
 	const [selectedFiles, setSelectedFiles] = useState<any>()
 
 	if (!formStructure || !info) {
@@ -26,7 +26,7 @@ const PersonalDetails = () => {
 			{
 				formStructure.controls.map((control: any, index: number) => (
 					!control.isHidden &&
-					<div className="border-l border-blue-600 pl-2">
+					<div className="border-l border-blue-600 pl-2" id={control.uniqueId+index}>
 						<Text text={control.label} size={18} weight="700" className="capitalize" />
 						<InputPanel
 							controls={control.controls}
@@ -40,6 +40,8 @@ const PersonalDetails = () => {
 							isRepeatable={false}
 							keyArray={control.globalId ?? ""}
 							fullInfo={fullInfo}
+							initialValues={initialValues}
+							parentIndex={index.toString()}
 						/>
 					</div>
 				))
@@ -68,7 +70,8 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 	return (
 		<>
 			{
-				isEditMode
+				!control.isHidden &&
+				(isEditMode
 					? <>
 						{control.varType == "text" && <FormInput
 							label={control.label}
@@ -150,13 +153,13 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 						size={14}
 						weight="600"
 						color="#000"
-					/>
+					/>)
 			}
 		</>
 	)
 }
 
-const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, isRepeatable, keyArray, fullInfo }: {
+const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, isRepeatable, keyArray, fullInfo, initialValues, parentIndex }: {
 	controls: any
 	isEditMode: boolean
 	info: any
@@ -168,38 +171,87 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 	isRepeatable: boolean
 	keyArray: string
 	fullInfo: any
+	initialValues: any
+	parentIndex: string
 }) => {
 
-	const {initialValues} = useInterview()
-
-	const handleAddRepeatSection = (sectionId: number, keyArray: string) => {
-
-		let NumberRegx = /^[0-9]$/
-		let keyArr = keyArray.split("#")
-
-		let tmp = {...fullInfo}
-		
-		const func = (tmp: any, initialValues: any, keyArr: Array<string>, index: number) => {
-			if (index == keyArray.split("#").length) {
-				tmp[sectionId].push(initialValues[sectionId][0])
-				return;
+	const handleAddRepeatSection = async (sectionId: number, keyArray: string) => {
+		setInfo((prevInfo: any) => {
+			// Deep clone function to create a completely new object
+			const deepClone = (obj: any): any => {
+				if (obj === null || typeof obj !== 'object') return obj;
+				
+				if (Array.isArray(obj)) {
+					return obj.map(item => deepClone(item));
+				}
+				
+				const clonedObj: any = {};
+				for (const key in obj) {
+					if (Object.prototype.hasOwnProperty.call(obj, key)) {
+						clonedObj[key] = deepClone(obj[key]);
+					}
+				}
+				
+				return clonedObj;
+			};
+	
+			// Create a deep clone of the previous info
+			const updatedInfo = deepClone(prevInfo);
+	
+			// Recursive function to update nested value
+			const updateNestedValue = (
+				currentObj: any, 
+				initialValuesObj: any, 
+				keys: string[], 
+				sectionId: number
+			) => {
+				// Base case: if we've reached the end of the key array
+				if (keys.length === 0) {
+					// Determine whether to use the current or initial values based on key
+					const NumberRegx = /^[0-9]$/;
+					const targetArray = currentObj[sectionId];
+					const newItem = initialValuesObj[NumberRegx.test(sectionId.toString()) ? 0 : sectionId][0];
+					
+					targetArray.push(newItem);
+					return currentObj;
+				}
+	
+				// Recursive case
+				const [currentKey, ...remainingKeys] = keys;
+				
+				// Determine the appropriate initialValues object
+				const NumberRegx = /^[0-9]$/;
+				const initialValuesSubObj = NumberRegx.test(currentKey) 
+					? initialValuesObj[0] 
+					: initialValuesObj[currentKey];
+	
+				// Recursively update the nested object
+				updateNestedValue(
+					currentObj[currentKey], 
+					initialValuesSubObj, 
+					remainingKeys, 
+					sectionId
+				);
+	
+				return currentObj;
+			};
+	
+			// Prepare key array
+			const keyArr = keyArray.split("#");
+	
+			// If there are keys, use recursive update
+			if (keyArr.length > 1 || (keyArr.length === 1 && keyArr[0] !== '')) {
+				updateNestedValue(updatedInfo, initialValues, keyArr, sectionId);
+			} else {
+				// Simple case: directly push to the section
+				updatedInfo[sectionId].push(initialValues[sectionId][0]);
 			}
-			func(tmp[keyArr[0]], initialValues[NumberRegx.test(keyArr[0]) ? 0 : keyArr[0]], keyArr.slice(index+1, keyArr.length), index+1)
-		}
-
-		if ((keyArr.length > 1) || (keyArr.length == 1 && keyArr[0] != ''))
-			func(tmp, initialValues, keyArr, 0)
-		else {
-			tmp[sectionId].push(initialValues[sectionId][0])
-		}
-
-		setInfo(tmp)
-	}
+	
+			return updatedInfo;
+		});
+	};
 
 	const handleRemoveRepeatSection = (sectionId: number, i: number) => {
-		let temp = { ...info }
-		temp[sectionId].splice(i, 1)
-		setInfo(temp)
 	}
 
 	return (
@@ -219,7 +271,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 										)]
 										: [...Array(1)]
 									).map((_, i: number) => (
-										<div className="border-l border-gray-500 pl-2">
+										<div className="border-l border-gray-500 pl-2" id={control.uniqueId+parentIndex+i}>
 											<Text text={
 												control.type == 'section' && control.repeatLabel
 													? control.repeatLabel
@@ -237,6 +289,8 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 												setSelectedFiles={setSelectedFiles}
 												keyArray={control.type == 'repeater' ? keyArray : keyArray+(keyArray ? "#" : "")+(control.globalId + (control.isRepeatable ? "#" + i : ""))}
 												fullInfo={fullInfo}
+												initialValues={initialValues}
+												parentIndex={parentIndex+""+i}
 											/>
 										</div>
 									))

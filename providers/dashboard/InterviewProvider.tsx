@@ -23,7 +23,6 @@ const InterviewProvider = ({ children }: any) => {
   const { flowDefinitions } = useHookFlowDefinitions()
   const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
-  const [initialValues, setInitialValues] = useState()
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
@@ -37,27 +36,52 @@ const InterviewProvider = ({ children }: any) => {
   const [interviewDocuments, setInterviewDocuments] = useState<IInterviewDocument[]>([])
   const [sectionRefs, setSectionRefs] = useState<any>([])
   const [errors, setErrors] = useState<any>()
-  const [ref, setRef] = useState(false)
+  const ref = useRef(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, keyArray: string) => {
+    setInfo((prevInfo: any) => {
+      // Deep clone function to create a completely new object
+      const deepClone = (obj: any): any => {
+        if (obj === null || typeof obj !== 'object') return obj;
 
-    let keyArr = keyArray.split("#")
-    let tmp = {...info}
+        if (Array.isArray(obj)) {
+          return obj.map(item => deepClone(item));
+        }
 
-    const func = (tmp: any, keyArr: Array<string>, index: number) => {
-			if (index == keyArray.split("#").length) {
-				tmp[e.target.name] = e.target.value
-				return;
-			}
-			func(tmp[keyArr[0]], keyArray.split("#").slice(index+1, keyArray.split("#").length), index+1)
-		}
+        const clonedObj: any = {};
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            clonedObj[key] = deepClone(obj[key]);
+          }
+        }
 
-    func(tmp, keyArr, 0)
+        return clonedObj;
+      };
 
-    setInfo(tmp)
-  }
+      // Create a deep clone of the previous info
+      const updatedInfo = deepClone(prevInfo);
 
-  console.log(info)
+      // Recursive function to update nested value
+      const updateNestedValue = (obj: any, keys: string[], value: string) => {
+        if (keys.length === 1) {
+          obj[keys[0]] = value;
+          return obj;
+        }
+
+        const [currentKey, ...remainingKeys] = keys;
+        updateNestedValue(obj[currentKey], remainingKeys, value);
+        return obj;
+      };
+
+      // Split the key array and add the target name
+      const fullKeyPath = keyArray.split("#").concat(e.target.name);
+
+      // Update the nested value
+      updateNestedValue(updatedInfo, fullKeyPath, e.target.value);
+
+      return updatedInfo;
+    });
+  };
 
   const handleFlowChange = async (e: any) => {
     if (isEdit && e.target.name == "TaskDefinitionId")
@@ -352,7 +376,7 @@ const InterviewProvider = ({ children }: any) => {
 
       const processControls = (controls: any, temp: any) => {
         controls.forEach((control: any) => {
-  
+
           if (!control.isHidden) {
             if (control.globalId) {
               if (control.isRepeatable) {
@@ -361,10 +385,10 @@ const InterviewProvider = ({ children }: any) => {
               } else {
                 temp[control.globalId] =
                   control.type === "repeater" ? [] :
-                  control.type === "section" ? {} : "";
+                    control.type === "section" ? {} : "";
               }
             }
-            
+
             if (control.controls) {
               const nestedTemp = control.isRepeatable ? temp[control.globalId][0] : control.globalId ? temp[control.globalId] : temp;
               processControls(control.controls, nestedTemp);
@@ -379,12 +403,41 @@ const InterviewProvider = ({ children }: any) => {
       if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
         setInfo(temp)
       }
-      if (ref == false) {
-        setInitialValues(temp)
-        setRef(true)
-      }
     }
   }, [formStructure])
+
+  const initialValues = useMemo(() => {
+    if (formStructure) {
+      const processControls = (controls: any, temp: any) => {
+        controls.forEach((control: any) => {
+          if (!control.isHidden) {
+            if (control.globalId) {
+              if (control.isRepeatable) {
+                temp[control.globalId] = []
+                temp[control.globalId].push({})
+              } else {
+                temp[control.globalId] =
+                  control.type === "repeater" ? [] :
+                    control.type === "section" ? {} : "";
+              }
+            }
+
+            if (control.controls) {
+              const nestedTemp = control.isRepeatable ? temp[control.globalId][0] : control.globalId ? temp[control.globalId] : temp;
+              processControls(control.controls, nestedTemp);
+            }
+          }
+        })
+      };
+
+      let temp: any = {}
+      processControls(formStructure.controls, temp)
+      return JSON.parse(JSON.stringify(temp))
+    }
+    return {}
+  }, [formStructure])
+
+  console.log(initialValues, ref, info)
 
   const value = useMemo(
     () => ({
@@ -414,7 +467,6 @@ const InterviewProvider = ({ children }: any) => {
       info, setInfo, handleChange,
       forms,
       curForm, setCurForm,
-      formStructure,
       formFullInfo,
       formSubmitHandler,
       sessionResult,
@@ -429,7 +481,7 @@ const InterviewProvider = ({ children }: any) => {
       handleGenerateDocument, getInterviewDocuments,
       interviewDocuments, handleStatusToInProgress,
       clearSection, sectionRefs, validateInterviewForm,
-      errors, initialValues
+      errors
     ]
   )
 

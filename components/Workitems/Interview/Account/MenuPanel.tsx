@@ -4,11 +4,13 @@ import Text from "shared/core/ui/Text"
 
 const MenuPanel = () => {
 
-	const { formFullInfo, formStructure, sectionRefs, step } = useInterview()
+	const { formStructure, step, info } = useInterview()
 
-	if (!formStructure) {
+	if (!formStructure || !info) {
 		return <></>
 	}
+
+	// console.log(formStructure, info)
 
 	const handleScrollToSection = (sectionId: any) => {
 		const ref: any = document.getElementById(sectionId)
@@ -28,13 +30,19 @@ const MenuPanel = () => {
 									((j > 0 && section.groupHeading != formStructure.controls[j - 1].groupHeading && section.groupHeading != null) || j == 0)
 									&& <Text text={section.groupHeading} size={11} color="#606168" className="uppercase pt-5" />
 								}
-								<div className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50 pl-2" onClick={() => handleScrollToSection(section.Id)}>
-									<Text text={section.label} size={14} weight="600" color="#202124" className="capitalize truncate whitespace-nowrap" />
+								<div className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50 pl-2" onClick={() => handleScrollToSection(section.uniqueId + j)}>
+									<Text text={section.label} size={14} weight="600" color="#202124" className="truncate whitespace-nowrap" />
 									<div>
 										<MdOutlineChevronRight />
 									</div>
 								</div>
-								<SubSection controls={section.controls} handleScrollToSection={handleScrollToSection} index={1} />
+								<SubSection
+									controls={section.controls}
+									handleScrollToSection={handleScrollToSection}
+									index={1}
+									info={section.globalId ? info[section.globalId] : info}
+									parentIndex={j.toString()}
+								/>
 							</div>
 						))
 					}
@@ -44,43 +52,107 @@ const MenuPanel = () => {
 	)
 }
 
-const SubSection = ({ controls, handleScrollToSection, index }: {
+const SubSection = ({ controls, handleScrollToSection, index, info, parentIndex }: {
 	controls: any
 	handleScrollToSection: any
 	index: number
+	info: any
+	parentIndex: string
 }) => {
+
+	const { formStructure } = useInterview()
+
+	const getValue = (tagName: string, i: number, gId: string) => {
+		let globalId = ""
+
+		const getGlobalId = (controls: any) => {
+			controls.forEach((control: any) => {
+				if (control.tagName == tagName) {
+					globalId = control.globalId
+					return;
+				}
+
+				if (control.controls)
+					getGlobalId(control.controls)
+			})
+		}
+
+		getGlobalId(formStructure.controls)
+
+		return globalId ? info[gId][i][globalId] : ""
+	}
+
+	const setRepeatedLabel = (label: string, i: number, gId: string) => {
+		let devidedString = "{{"
+		let index = label.indexOf(devidedString)
+		let defaultString = index != -1 ? label.substring(0, index) : label
+
+		if (index == -1) {
+			return defaultString + " - " + (i + 1)
+		} else {
+			const regex = /{{(.*?)}}/;
+			const match = label.match(regex);
+			return defaultString + getValue(match ? match[1] : "", i, gId)
+		}
+	}
+
 	return (
 		<>
 			{
 				controls.map((control: any, k: number) => (
 					<>
-						{control.type == "repeater" && <div 
-							className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50" 
-							style={{ paddingLeft: 8 * (control.nestingLevel) + 8 }}
-							onClick={() => handleScrollToSection(control.Id)}
-						>
-							<Text text={control.label} size={14} weight="600" color="#202124" className="capitalize truncate whitespace-nowrap" />
-							<div>
-								<MdOutlineChevronRight />
-							</div>
-						</div>}
-						{control.type == "section" && control.repeatLabel && <div 
-							className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50" 
-							style={{ paddingLeft: 8 * (control.nestingLevel) + 8 }}
-							onClick={() => handleScrollToSection(control.Id)}
-						>
-							<Text text={control.repeatLabel} size={14} weight="600" color="#202124" className="capitalize truncate whitespace-nowrap" />
-							<div>
-								<MdOutlineChevronRight />
-							</div>
-						</div>}
 						{
-							control.type == "section" || control.type == "repeater"
-							? <SubSection controls={control.controls} handleScrollToSection={handleScrollToSection} index={index + 1} />
-							: <></>
+							(
+								control.isRepeatable
+									? [...Array(control.repeatLimit
+										? control.repeatLimit
+										: info[control.globalId]
+											? info[control.globalId].length
+											: 0
+									)]
+									: [...Array(1)]
+							).map((_, i: number) => (
+								<>
+									{control.type == "repeater" && <div
+										className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50"
+										style={{ paddingLeft: 8 * (control.nestingLevel) + 8 }}
+										onClick={() => handleScrollToSection(control.uniqueId + parentIndex + i)}
+									>
+										<Text text={control.label} size={14} weight="600" color="#202124" className="capitalize truncate whitespace-nowrap" />
+										<div>
+											<MdOutlineChevronRight />
+										</div>
+									</div>}
+									{
+										control.type == "section" && control.repeatLabel &&
+										<div
+											className="flex justify-between items-center py-2 hover:cursor-pointer hover:bg-blue-50"
+											style={{ paddingLeft: 8 * (control.nestingLevel) + 8 }}
+											onClick={() => handleScrollToSection(control.uniqueId + parentIndex + i)}
+										>
+											<Text text={setRepeatedLabel(control.repeatLabel, i, control.globalId)} size={14} weight="600" color="#202124" className="truncate whitespace-nowrap" />
+											<div>
+												<MdOutlineChevronRight />
+											</div>
+										</div>
+									}
+									{
+										control.type == "section" || control.type == "repeater"
+											? <SubSection
+												controls={control.controls}
+												handleScrollToSection={handleScrollToSection}
+												index={index + 1}
+												info={control.isRepeatable ? info[control.globalId][i] : control.globalId ? info[control.globalId] : info}
+												parentIndex={parentIndex+i.toString()}
+											/>
+											: <></>
+									}
+								</>
+							))
 						}
 					</>
-				))
+				)
+				)
 			}
 		</>
 	)
