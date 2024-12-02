@@ -47,11 +47,7 @@ const BaseHeader = () => {
 						}
 						: step == 4
 							? () => {
-								if (fromInterview == "/from-step3") {
-									setStep(2)
-								} else {
-									push(fromInterview)
-								}
+								push("/workitems")
 							}
 							: () => setStep(step - 1)
 			}>
@@ -98,8 +94,12 @@ const BaseHeader = () => {
 									let checked = false
 									if (interviewFormStatus == INTERVIEWSTATUS.CREATED) {
 										checked = validateInterviewForm()
-										if (checked)
+										if (checked) {
 											await formSubmitHandler()
+											setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
+											await handleStatusToInProgress();
+											await setStep(step + 2)
+										}
 										else toast.error("Interview Form validation(s) failed!")
 									} else {
 										checked = validateInterviewForm()
@@ -108,7 +108,7 @@ const BaseHeader = () => {
 											setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
 											await handleStatusToInProgress();
 											await setStep(step + 2)
-										}
+										} else toast.error("Interview Form validation(s) failed!")
 									}
 									setNextLoading(false)
 								}}

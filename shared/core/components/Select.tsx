@@ -17,7 +17,7 @@ export default function Select({
     }
 
     return (
-        <select className={classes.select} name={name} value={info[`${name}`] || ""} onChange={handleChange}>
+        <select className={classes.select} name={name} value={(info && info[`${name}`]) || ""} onChange={handleChange}>
             {
                 optionList.map((option: any, index: number) => (
                     <option key={index} value={option.value}>{option.name}</option>

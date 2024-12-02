@@ -228,7 +228,10 @@ export const DeleteDocumentConfiguration = async (id: any) => {
 // Document Configuration End
 
 export const CopyInterviewForm = async (id: any) => {
-    const res = await http.post(`/Interviews/Forms/Copy/${id}`, {})
+    const res = await http.post(`/Interviews/Forms/Copy`, {
+        Id: id,
+        NewVersion: true
+    })
 
     if (res?.status)
         return res?.data

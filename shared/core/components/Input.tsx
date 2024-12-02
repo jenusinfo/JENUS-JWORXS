@@ -17,7 +17,7 @@ const Input = ({
     }
 
     return (
-        <input className={classes.input} style={{ borderColor: isError ? 'red' : '' }} name={name} value={info[`${name}`] || ""} onChange={handleChange} />
+        <input className={classes.input} style={{ borderColor: isError ? 'red' : '' }} name={name} value={(info && info[`${name}`]) || ""} onChange={handleChange} />
     )
 }
 

@@ -11,7 +11,7 @@ const WorkitemsHeader = () => {
         input: "border border-gray-300 rounded-[4px] pl-8 py-2 focus:outline-none text-sm w-[338px]"
     }
     const { push } = useRouter()
-    const { setInterviewFormStatus, setFromInterview, setStep, setInterviewInfo } = useApp()
+    const { setInterviewFormStatus, setFromInterview, setStep, setInterviewInfo, setCurForm } = useApp()
     const { data, search, setSearch } = useWorkitem()
 
     return (
@@ -36,6 +36,7 @@ const WorkitemsHeader = () => {
                         push("/workitems/interview"); 
                         setInterviewFormStatus(INTERVIEWSTATUS.CREATED); 
                         setInterviewInfo(null)
+                        setCurForm(null)
                         setStep(1);
                     }}
                 >Start Interview Form</button>

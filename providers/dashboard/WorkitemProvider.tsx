@@ -59,7 +59,7 @@ const WorkitemProvider = ({ children }: any) => {
       const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
       if (form) {
         setStatusCode(statusCode)
-        setInterviewInfo(JSON.parse(res.Data.JsonData))
+        setInterviewInfo(JSON.parse(res.Data.JsonData == "" ? res.Data.NewJsonData : res.Data.JsonData))
         setInterviewFormStatus(INTERVIEWSTATUS.UPDATED)
         setInterviewId(id)
         push("/workitems/interview")

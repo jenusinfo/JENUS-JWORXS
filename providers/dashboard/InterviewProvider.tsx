@@ -34,9 +34,8 @@ const InterviewProvider = ({ children }: any) => {
   const [isEdit, setIsEdit] = useState(false)
   const { documentConfigurations, getDocumentConfigurations } = useHookFormDefinitionsDetail()
   const [interviewDocuments, setInterviewDocuments] = useState<IInterviewDocument[]>([])
-  const [sectionRefs, setSectionRefs] = useState<any>([])
-  const [errors, setErrors] = useState<any>()
-  const ref = useRef(false)
+  const [nextClicked, setNextClicked] = useState(0)
+  const [checked, setChecked] = useState(true)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, keyArray: string) => {
     setInfo((prevInfo: any) => {
@@ -303,46 +302,10 @@ const InterviewProvider = ({ children }: any) => {
   }
 
   const validateInterviewForm = () => {
-    let flag = 1
-    formFullInfo[0].Sections.map((section: any, index: number) => {
-      (section.IsRepeatable
-        ? [...Array(section.RepeatSectionLimit
-          ? section.RepeatSectionLimit
-          : info && info[section.Id]
-            ? info[section.Id].length
-            : 0
-        )]
-        : [...Array(1)]
-      ).map((_, i: number) => {
-        section.Questions.map((que: any, j: number) => {
-          if (que.IsRequired) {
-            console.log(que.InterviewSectionId, i, que.TagName)
-            if (section.IsRepeatable) {
-              if (!(info && info[que.InterviewSectionId] && info[que.InterviewSectionId][i][que.TagName])) {
-                flag = 0
-                setErrors({
-                  ...errors,
-                  [`${que.InterviewSectionId}-${i}-${que.TagName}`]: false
-                })
-                return false
-              }
-            } else {
-              if (!(info && info[que.InterviewSectionId] && info[que.InterviewSectionId][que.TagName])) {
-                flag = 0
-                setErrors({
-                  ...errors,
-                  [`${que.InterviewSectionId}-0-${que.TagName}`]: false
-                })
-                return false
-              }
-            }
-          }
-        })
-      })
-    })
+    setNextClicked(prev => prev+1)
+    setChecked(true)
 
-    if (flag == 1)
-      return true
+    return checked
   }
 
   useEffect(() => {
@@ -437,8 +400,6 @@ const InterviewProvider = ({ children }: any) => {
     return {}
   }, [formStructure])
 
-  console.log(initialValues, ref, info)
-
   const value = useMemo(
     () => ({
       step, setStep,
@@ -459,8 +420,10 @@ const InterviewProvider = ({ children }: any) => {
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
       interviewDocuments, handleStatusToInProgress,
-      clearSection, sectionRefs, validateInterviewForm,
-      errors, initialValues
+      clearSection, validateInterviewForm,
+      initialValues,
+      nextClicked, setNextClicked,
+      checked, setChecked
     }),
     [
       step, setStep,
@@ -480,8 +443,9 @@ const InterviewProvider = ({ children }: any) => {
       handleSaveFlow, flowDefinitions, documentConfigurations,
       handleGenerateDocument, getInterviewDocuments,
       interviewDocuments, handleStatusToInProgress,
-      clearSection, sectionRefs, validateInterviewForm,
-      errors
+      clearSection, validateInterviewForm,
+      nextClicked, setNextClicked,
+      checked, setChecked
     ]
   )
 

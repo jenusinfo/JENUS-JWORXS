@@ -1,7 +1,7 @@
 import axios from "axios"
 import { GetByGolbalParamId, GetGlobalParams } from "lib/settings/parameters"
 import { useInterview } from "providers/dashboard/InterviewProvider"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FaTrash } from "react-icons/fa6"
 import { IoDocumentText } from "react-icons/io5"
 import { TbTrash } from "react-icons/tb"
@@ -14,7 +14,7 @@ import Text from "shared/core/ui/Text"
 
 const PersonalDetails = () => {
 
-	const { info, info: fullInfo, setInfo, handleChange, formFullInfo, curForm, isEditMode, formStructure, clearSection, errors, initialValues } = useInterview()
+	const { info, info: fullInfo, setInfo, handleChange, isEditMode, formStructure, errors, initialValues, checked, setChecked } = useInterview()
 	const [selectedFiles, setSelectedFiles] = useState<any>()
 
 	if (!formStructure || !info) {
@@ -24,33 +24,37 @@ const PersonalDetails = () => {
 	return (
 		<div className="space-y-10">
 			{
-				formStructure.controls.map((control: any, index: number) => (
-					!control.isHidden &&
-					<div className="border-l border-blue-600 pl-2" id={control.uniqueId+index}>
-						<Text text={control.label} size={18} weight="700" className="capitalize" />
-						<InputPanel
-							controls={control.controls}
-							isEditMode={isEditMode}
-							info={control.globalId ? info[control.globalId] : info}
-							handleChange={handleChange}
-							errors={errors}
-							setInfo={setInfo}
-							selectedFiles={selectedFiles}
-							setSelectedFiles={setSelectedFiles}
-							isRepeatable={false}
-							keyArray={control.globalId ?? ""}
-							fullInfo={fullInfo}
-							initialValues={initialValues}
-							parentIndex={index.toString()}
-						/>
-					</div>
-				))
+				formStructure.controls.map((control: any, index: number) => {
+
+					return (
+						!control.isHidden &&
+						<div className="border-l border-blue-600 pl-2" id={control.uniqueId + index}>
+							<Text text={control.label} size={18} weight="700" className="capitalize" />
+							<InputPanel
+								controls={control.controls}
+								isEditMode={isEditMode}
+								info={control.globalId ? info[control.globalId] : info}
+								handleChange={handleChange}
+								errors={errors}
+								setInfo={setInfo}
+								selectedFiles={selectedFiles}
+								setSelectedFiles={setSelectedFiles}
+								isRepeatable={false}
+								keyArray={control.globalId ?? ""}
+								fullInfo={fullInfo}
+								initialValues={initialValues}
+								parentIndex={index.toString()}
+							/>
+						</div>
+					)
+				}
+				)
 			}
 		</div>
 	)
 }
 
-const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, keyArray }: {
+const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, keyArray, fullInfo }: {
 	control: any
 	isEditMode: boolean
 	info: any
@@ -61,11 +65,71 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 	selectedFiles: any
 	setSelectedFiles: any
 	keyArray: string
+	fullInfo: any
 }) => {
+
+	const { nextClicked, checked, setChecked, formStructure } = useInterview()
 
 	if (!keyArray) {
 		return (<></>)
 	}
+
+	const checkRule = () => {
+		let ruleSetId = control.ruleSetId
+		let ruleSets = formStructure.ruleSets
+		let globalId, ruleId: any, value
+
+		const getGlobalId = (controls: any) => {
+			controls.forEach((control: any) => {
+				control.dependentRules?.forEach((dependentRule: any) => {
+					if (dependentRule.ruleSetId == ruleSetId) {
+						globalId = control.globalId
+						ruleId = dependentRule.ruleId
+						return;
+					}
+				})
+
+				if (control.controls)
+					getGlobalId(control.controls)
+			})
+		}
+
+		getGlobalId(formStructure.controls)
+
+		value = getValueFromGlobalId(fullInfo, globalId)
+
+		let valueToCheck
+		ruleSets.forEach((ruleSet: any) => {
+			ruleSet.rules.forEach((rule: any) => {
+				if (rule.id == ruleId)
+					valueToCheck = rule.valueToCheck
+			})
+		})
+
+		return value == valueToCheck
+	}
+
+	function getValueFromGlobalId(data: any, targetKey: any) {
+		if (typeof data === 'object' && data !== null) {
+			if (Object.prototype.hasOwnProperty.call(data, targetKey)) {
+				return data[targetKey];
+			}
+
+			// Recursively search through all values
+			for (const value of Object.values(data)) {
+				const result: any = getValueFromGlobalId(value, targetKey);
+				if (result !== undefined) {
+					return result;
+				}
+			}
+		}
+
+		return undefined
+	}
+
+	useEffect(() => {
+		setChecked((prev: boolean) => prev && (!control.isRequired || (control.isRequired && info[control.globalId] != "")))
+	}, [info])
 
 	return (
 		<>
@@ -73,12 +137,12 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 				!control.isHidden &&
 				(isEditMode
 					? <>
-						{control.varType == "text" && <FormInput
+						{checkRule() && control.varType == "text" && <FormInput
 							label={control.label}
 							name={control.globalId}
 							info={info}
 							handleChange={(e: any) => handleChange(e, keyArray)}
-							isError={control.IsRequired && errors && errors[`${control.parentUniqueId}-${i}-${control.globalId}`] == false}
+							isError={nextClicked > 0 && control.isRequired && info[control.globalId] == ""}
 						/>}
 						{control.varType == "integer" && <FormNumber
 							label={control.label}
@@ -101,7 +165,7 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 							handleChange={handleChange}
 							keyArray={keyArray}
 						/>}
-						{control.varType == "file" && (
+						{checkRule() && control.varType == "file" && (
 							info && info[control.parentUniqueId] && (
 								!control.isRepeatable
 									? info[control.parentUniqueId][control.globalId]
@@ -142,18 +206,21 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 								/>
 						)}
 					</>
-					: <Text
-						text={
-							info && info[control.parentUniqueId] &&
-							(control.isRepeatable
-								? info[control.parentUniqueId][i] ? info[control.parentUniqueId][i][control.globalId] : ""
-								: info[control.parentUniqueId][control.globalId]
-							)
-						}
-						size={14}
-						weight="600"
-						color="#000"
-					/>)
+					: <div className="flex items-center justify-between">
+						<Text
+							text={control.label}
+						/>
+						<Text
+							text={
+								info && info[control.globalId] ?
+									info[control.globalId] : "-"
+							}
+							size={14}
+							weight="600"
+							color="#000"
+						/>
+					</div>
+				)
 			}
 		</>
 	)
@@ -182,29 +249,29 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 			// Deep clone function to create a completely new object
 			const deepClone = (obj: any): any => {
 				if (obj === null || typeof obj !== 'object') return obj;
-				
+
 				if (Array.isArray(obj)) {
 					return obj.map(item => deepClone(item));
 				}
-				
+
 				const clonedObj: any = {};
 				for (const key in obj) {
 					if (Object.prototype.hasOwnProperty.call(obj, key)) {
 						clonedObj[key] = deepClone(obj[key]);
 					}
 				}
-				
+
 				return clonedObj;
 			};
-	
+
 			// Create a deep clone of the previous info
 			const updatedInfo = deepClone(prevInfo);
-	
+
 			// Recursive function to update nested value
 			const updateNestedValue = (
-				currentObj: any, 
-				initialValuesObj: any, 
-				keys: string[], 
+				currentObj: any,
+				initialValuesObj: any,
+				keys: string[],
 				sectionId: number
 			) => {
 				// Base case: if we've reached the end of the key array
@@ -213,34 +280,34 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 					const NumberRegx = /^[0-9]$/;
 					const targetArray = currentObj[sectionId];
 					const newItem = initialValuesObj[NumberRegx.test(sectionId.toString()) ? 0 : sectionId][0];
-					
+
 					targetArray.push(newItem);
 					return currentObj;
 				}
-	
+
 				// Recursive case
 				const [currentKey, ...remainingKeys] = keys;
-				
+
 				// Determine the appropriate initialValues object
 				const NumberRegx = /^[0-9]$/;
-				const initialValuesSubObj = NumberRegx.test(currentKey) 
-					? initialValuesObj[0] 
+				const initialValuesSubObj = NumberRegx.test(currentKey)
+					? initialValuesObj[0]
 					: initialValuesObj[currentKey];
-	
+
 				// Recursively update the nested object
 				updateNestedValue(
-					currentObj[currentKey], 
-					initialValuesSubObj, 
-					remainingKeys, 
+					currentObj[currentKey],
+					initialValuesSubObj,
+					remainingKeys,
 					sectionId
 				);
-	
+
 				return currentObj;
 			};
-	
+
 			// Prepare key array
 			const keyArr = keyArray.split("#");
-	
+
 			// If there are keys, use recursive update
 			if (keyArr.length > 1 || (keyArr.length === 1 && keyArr[0] !== '')) {
 				updateNestedValue(updatedInfo, initialValues, keyArr, sectionId);
@@ -248,7 +315,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 				// Simple case: directly push to the section
 				updatedInfo[sectionId].push(initialValues[sectionId][0]);
 			}
-	
+
 			return updatedInfo;
 		});
 	};
@@ -307,7 +374,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 										)]
 										: [...Array(1)]
 									).map((_, i: number) => (
-										<div className="border-l border-gray-500 pl-2" id={control.uniqueId+parentIndex+i}>
+										<div className="border-l border-gray-500 pl-2" id={control.uniqueId + parentIndex + i}>
 											<Text text={
 												control.type == 'section' && control.repeatLabel
 													? setRepeatedLabel(control.repeatLabel, i, control.globalId)
@@ -317,16 +384,16 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 												controls={control.controls}
 												isEditMode={isEditMode}
 												isRepeatable={control.isRepeatable}
-												info={control.isRepeatable ? info[control.globalId][i] : control.globalId ? info[control.globalId]: info}
+												info={control.isRepeatable ? info[control.globalId][i] : control.globalId ? info[control.globalId] : info}
 												handleChange={handleChange}
 												errors={errors}
 												setInfo={setInfo}
 												selectedFiles={selectedFiles}
 												setSelectedFiles={setSelectedFiles}
-												keyArray={control.type == 'repeater' ? keyArray : keyArray+(keyArray ? "#" : "")+(control.globalId + (control.isRepeatable ? "#" + i : ""))}
+												keyArray={control.type == 'repeater' ? keyArray : keyArray + (keyArray ? "#" : "") + (control.globalId + (control.isRepeatable ? "#" + i : ""))}
 												fullInfo={fullInfo}
 												initialValues={initialValues}
-												parentIndex={parentIndex+""+i}
+												parentIndex={parentIndex + "" + i}
 											/>
 										</div>
 									))
@@ -334,8 +401,8 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 							</div>
 							{
 								control.type == 'section' && control.repeatLabel &&
-								<button 
-									className="text-xs text-blue-500 underline" 
+								<button
+									className="text-xs text-blue-500 underline"
 									onClick={() => handleAddRepeatSection(control.globalId, keyArray)}
 								>
 									{control.questionToRepeatSection ?? "Add another"}
@@ -353,6 +420,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 							selectedFiles={selectedFiles}
 							setSelectedFiles={setSelectedFiles}
 							keyArray={keyArray}
+							fullInfo={fullInfo}
 						/>
 				))
 			}
