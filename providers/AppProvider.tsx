@@ -70,6 +70,7 @@ const AppProvider = ({ children }: any) => {
   const [statusCode, setStatusCode] = useState("")
   const [fromInterview, setFromInterview] = useState("/dashboard")
   const [sessionResult, setSessionResult] = useState({})
+  const [isEditMode, setIsEditMode] = useState(false)
 
   const getUserInfo = async () => {
     const res = await http.get("/Org/Account/GetUserInfo")
@@ -126,7 +127,9 @@ const AppProvider = ({ children }: any) => {
       sessionResult,
       setSessionResult,
       statusCode,
-      setStatusCode
+      setStatusCode,
+      isEditMode,
+      setIsEditMode
     }),
     [
       MENULIST,
@@ -154,7 +157,9 @@ const AppProvider = ({ children }: any) => {
       sessionResult,
       setSessionResult,
       statusCode,
-      setStatusCode
+      setStatusCode,
+      isEditMode,
+      setIsEditMode
     ]
   )
 

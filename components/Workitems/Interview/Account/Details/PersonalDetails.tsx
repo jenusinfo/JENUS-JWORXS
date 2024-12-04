@@ -14,7 +14,7 @@ import Text from "shared/core/ui/Text"
 
 const PersonalDetails = () => {
 
-	const { info, info: fullInfo, setInfo, handleChange, isEditMode, formStructure, errors, initialValues, checked, setChecked } = useInterview()
+	const { info, info: fullInfo, setInfo, handleChange, isEditMode, formStructure, errors, initialValues, checked, setChecked, handleRemoveField } = useInterview()
 	const [selectedFiles, setSelectedFiles] = useState<any>()
 
 	if (!formStructure || !info) {
@@ -35,6 +35,7 @@ const PersonalDetails = () => {
 								isEditMode={isEditMode}
 								info={control.globalId ? info[control.globalId] : info}
 								handleChange={handleChange}
+								handleRemoveField={handleRemoveField}
 								errors={errors}
 								setInfo={setInfo}
 								selectedFiles={selectedFiles}
@@ -54,12 +55,13 @@ const PersonalDetails = () => {
 	)
 }
 
-const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, keyArray, fullInfo }: {
+const InputObject = ({ control, isEditMode, info, i, handleChange, handleRemoveField, errors, setInfo, selectedFiles, setSelectedFiles, keyArray, fullInfo }: {
 	control: any
 	isEditMode: boolean
 	info: any
 	i: number
 	handleChange: any
+	handleRemoveField: any
 	errors: any
 	setInfo: any
 	selectedFiles: any
@@ -142,6 +144,8 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 							name={control.globalId}
 							info={info}
 							handleChange={(e: any) => handleChange(e, keyArray)}
+							isFormatIcon={true}
+							handleRemove={(e: any) => handleRemoveField(control.globalId, keyArray)}
 							isError={nextClicked > 0 && control.isRequired && info[control.globalId] == ""}
 						/>}
 						{control.varType == "integer" && <FormNumber
@@ -163,6 +167,7 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 							isRepeatable={control.isRepeatable}
 							i={i}
 							handleChange={handleChange}
+							handleRemoveField={handleRemoveField}
 							keyArray={keyArray}
 						/>}
 						{checkRule() && control.varType == "file" && (
@@ -226,11 +231,12 @@ const InputObject = ({ control, isEditMode, info, i, handleChange, errors, setIn
 	)
 }
 
-const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo, selectedFiles, setSelectedFiles, isRepeatable, keyArray, fullInfo, initialValues, parentIndex }: {
+const InputPanel = ({ controls, isEditMode, info, handleChange, handleRemoveField, errors, setInfo, selectedFiles, setSelectedFiles, isRepeatable, keyArray, fullInfo, initialValues, parentIndex }: {
 	controls: any
 	isEditMode: boolean
 	info: any
 	handleChange: any
+	handleRemoveField: any
 	errors: any
 	setInfo: any
 	selectedFiles: any
@@ -394,6 +400,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 												fullInfo={fullInfo}
 												initialValues={initialValues}
 												parentIndex={parentIndex + "" + i}
+												handleRemoveField={handleRemoveField}
 											/>
 										</div>
 									))
@@ -421,6 +428,7 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 							setSelectedFiles={setSelectedFiles}
 							keyArray={keyArray}
 							fullInfo={fullInfo}
+							handleRemoveField={handleRemoveField}
 						/>
 				))
 			}
@@ -428,10 +436,11 @@ const InputPanel = ({ controls, isEditMode, info, handleChange, errors, setInfo,
 	)
 }
 
-const SelectInput = ({ que, info, handleChange, isRepeatable, i, selectOptions, keyArray }: {
+const SelectInput = ({ que, info, handleChange, handleRemoveField, isRepeatable, i, selectOptions, keyArray }: {
 	que: any,
 	info: any,
 	handleChange: any,
+	handleRemoveField: any,
 	isRepeatable: any,
 	i: any,
 	selectOptions: any,
@@ -448,6 +457,8 @@ const SelectInput = ({ que, info, handleChange, isRepeatable, i, selectOptions, 
 			]}
 			info={info}
 			handleChange={(e: any) => handleChange(e, keyArray)}
+			isFormatIcon={true}
+			handleRemove={() => handleRemoveField(que.globalId, keyArray)}
 		/>
 	)
 }

@@ -24,8 +24,6 @@ const SubmissionRequirement = () => {
 		return <div>Loading...</div>
 	}
 
-	console.log(sessionResult)
-
 	return (
 		<div>
 			<div className="bg-[#EEF0FE]">

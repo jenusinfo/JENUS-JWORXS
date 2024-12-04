@@ -19,14 +19,13 @@ const InterviewContext: any = createContext(null)
 
 const InterviewProvider = ({ children }: any) => {
 
-  const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId, sessionResult, setSessionResult } = useApp()
+  const { setLoading, step, setStep, curForm, setCurForm, interviewInfo: info, setInterviewInfo: setInfo, interviewFormStatus, interviewId, sessionResult, setSessionResult, isEditMode, setIsEditMode } = useApp()
   const { flowDefinitions } = useHookFlowDefinitions()
   const { forms, getForms } = useHookForm()
   const [filteredForms, setFilteredForms] = useState(forms)
   const [sessionId, setSessionId] = useState()
   const { formStructure, formFullInfo, interviewSection } = useHookInterview({ formId: curForm?.Id })
   const [search, setSearch] = useState("")
-  const [isEditMode, setIsEditMode] = useState(true)
   const [flowInfo, setFlowInfo] = useState<any>({})
   const [comment, setComment] = useState("")
   const [defaultActivity, setDefaultActivity] = useState<any>()
@@ -81,6 +80,53 @@ const InterviewProvider = ({ children }: any) => {
       return updatedInfo;
     });
   };
+
+  const handleRemoveField = async (eId: string, keyArray: string) => {
+    setInfo((prevInfo: any) => {
+      // Deep clone function to create a completely new object
+      const deepClone = (obj: any): any => {
+        if (obj === null || typeof obj !== 'object') return obj;
+
+        if (Array.isArray(obj)) {
+          return obj.map(item => deepClone(item));
+        }
+
+        const clonedObj: any = {};
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            clonedObj[key] = deepClone(obj[key]);
+          }
+        }
+
+        return clonedObj;
+      };
+
+      // Create a deep clone of the previous info
+      const updatedInfo = deepClone(prevInfo);
+
+      // Recursive function to update nested value
+      const updateNestedValue = (obj: any, keys: string[], value: string) => {
+        if (keys.length === 1) {
+          obj[keys[0]] = value;
+          return obj;
+        }
+
+        const [currentKey, ...remainingKeys] = keys;
+        updateNestedValue(obj[currentKey], remainingKeys, value);
+        return obj;
+      };
+
+      // Split the key array and add the target name
+      const fullKeyPath = keyArray.split("#").concat(eId);
+
+      // Update the nested value
+      updateNestedValue(updatedInfo, fullKeyPath, "");
+
+      return updatedInfo;
+    });
+  }
+
+  console.log(info)
 
   const handleFlowChange = async (e: any) => {
     if (isEdit && e.target.name == "TaskDefinitionId")
@@ -423,7 +469,8 @@ const InterviewProvider = ({ children }: any) => {
       clearSection, validateInterviewForm,
       initialValues,
       nextClicked, setNextClicked,
-      checked, setChecked
+      checked, setChecked,
+      handleRemoveField
     }),
     [
       step, setStep,
@@ -445,7 +492,8 @@ const InterviewProvider = ({ children }: any) => {
       interviewDocuments, handleStatusToInProgress,
       clearSection, validateInterviewForm,
       nextClicked, setNextClicked,
-      checked, setChecked
+      checked, setChecked,
+      handleRemoveField
     ]
   )
 

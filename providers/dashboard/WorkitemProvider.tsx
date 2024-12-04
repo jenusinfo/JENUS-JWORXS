@@ -13,7 +13,7 @@ const WorkitemContext: any = createContext(null)
 const WorkitemProvider = ({ children }: any) => {
 
   const { push } = useRouter()
-  const { group, setCurForm, setStep, setInterviewInfo } = useApp()
+  const { group, setCurForm, setStep, setInterviewInfo, setIsEditMode } = useApp()
   const WorkitemStatuses = ["All", "In-Progress", "Draft", "Completed", null]
   const { hashTags: optionList } = useHookHashTag()
   const assignedList = [
@@ -56,6 +56,7 @@ const WorkitemProvider = ({ children }: any) => {
 
     if (res.Data) {
       setSessionResult(inbox)
+      setIsEditMode(true)
       const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
       if (form) {
         setStatusCode(statusCode)
@@ -77,6 +78,7 @@ const WorkitemProvider = ({ children }: any) => {
 
     if (res.Data) {
       setSessionResult(res.Data)
+      setIsEditMode(false)
       const form = forms.find((each: IForm) => each.Id == res.Data.InterviewFormId)
       if (form) {
         setInterviewInfo(JSON.parse(res.Data.JsonData))

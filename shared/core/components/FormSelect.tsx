@@ -7,6 +7,8 @@ interface IFormSelect {
     info: any
     handleChange: any
     optionList: any
+    isFormatIcon?: boolean
+    handleRemove?: any
 }
 
 export default function FormSelect({
@@ -14,7 +16,9 @@ export default function FormSelect({
     name,
     info,
     handleChange,
-    optionList
+    optionList,
+    isFormatIcon,
+    handleRemove
 }: IFormSelect) {
 
     const classes = {
@@ -24,7 +28,7 @@ export default function FormSelect({
     return (
         <div className={classes.form}>
             <Text text={label} color="#84858c" />
-            <Select name={name} info={info} handleChange={handleChange} optionList={optionList} />
+            <Select name={name} info={info} handleChange={handleChange} optionList={optionList} isFormatIcon={isFormatIcon} handleRemove={handleRemove} />
         </div>
     )
 }

@@ -7,6 +7,8 @@ interface IFormInput {
     info: any
     handleChange: any
     isError?: boolean
+    isFormatIcon?: boolean
+    handleRemove?: any
 }
 
 export default function FormInput({
@@ -14,7 +16,9 @@ export default function FormInput({
     name,
     info,
     handleChange,
-    isError = false
+    isError = false,
+    isFormatIcon = false,
+    handleRemove
 }: IFormInput) {
 
     const classes = {
@@ -24,7 +28,7 @@ export default function FormInput({
     return (
         <div className={classes.form}>
             <Text text={label} color="#84858c" />
-            <Input name={name} info={info} handleChange={handleChange} isError={isError} />
+            <Input name={name} info={info} handleChange={handleChange} isError={isError} isFormatIcon={isFormatIcon} handleRemove={handleRemove} />
         </div>
     )
 }
